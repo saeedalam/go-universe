@@ -1,1 +1,2 @@
-book
+# The book directory is built by mdBook and deployed by GitHub Actions
+# We don't need to exclude it

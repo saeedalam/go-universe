@@ -1,1 +1,0 @@
-# Design Patterns in Go

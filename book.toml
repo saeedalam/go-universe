@@ -3,3 +3,29 @@ authors = ["Saeed.Alam"]
 language = "en"
 src = "src"
 title = "Go Universe"
+description = "A comprehensive guide to Go programming language from basics to advanced topics"
+
+[output.html]
+git-repository-url = "https://github.com/saeedalam/go-universe"
+edit-url-template = "https://github.com/saeedalam/go-universe/edit/main/{path}"
+site-url = "/go-universe/"
+default-theme = "light"
+preferred-dark-theme = "navy"
+copy-fonts = true
+mathjax-support = true
+additional-css = ["theme/custom.css"]
+
+[output.html.search]
+enable = true
+limit-results = 20
+teaser-word-count = 30
+use-boolean-and = true
+boost-title = 2
+boost-hierarchy = 1
+boost-paragraph = 1
+expand = true
+heading-split-level = 3
+
+[output.html.print]
+enable = true
+page-break = true

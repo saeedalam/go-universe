@@ -1,0 +1,1024 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Control Structures - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/your-username/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/your-username/go-universe/edit/main/src/chapters/Chapter-5-Control-Structures.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-5-mastering-control-flow-in-go"><a class="header" href="#chapter-5-mastering-control-flow-in-go"><strong>Chapter 5: Mastering Control Flow in Go</strong></a></h1>
+<p>Control flow determines the execution path of your program—which instructions run, which skip, and which repeat. Go's elegant control structures strike a balance between simplicity and power, giving you everything you need without unnecessary complexity.</p>
+<p>In this chapter, you'll master Go's three primary control structures:</p>
+<ul>
+<li><strong>Conditional execution</strong> with <code>if</code> statements</li>
+<li><strong>Multi-way branching</strong> with <code>switch</code> statements</li>
+<li><strong>Iteration</strong> with the versatile <code>for</code> loop</li>
+</ul>
+<p>You'll learn not just the basic syntax, but also idiomatic patterns, advanced techniques, and Go-specific features that make your code more expressive and efficient.</p>
+<h2 id="51-conditional-logic-with-if-statements"><a class="header" href="#51-conditional-logic-with-if-statements"><strong>5.1 Conditional Logic with <code>if</code> Statements</strong></a></h2>
+<p>The <code>if</code> statement allows your program to make decisions by executing different code blocks based on conditions.</p>
+<h3 id="511-basic-syntax-and-usage"><a class="header" href="#511-basic-syntax-and-usage"><strong>5.1.1 Basic Syntax and Usage</strong></a></h3>
+<pre><code class="language-go">if condition {
+    // Code executed when condition is true
+} else if anotherCondition {
+    // Code executed when anotherCondition is true
+} else {
+    // Code executed when all conditions are false
+}
+</code></pre>
+<p>Here's a simple example to check if a number is positive, negative, or zero:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    num := -5
+
+    if num &gt; 0 {
+        fmt.Println("Positive number")
+    } else if num &lt; 0 {
+        fmt.Println("Negative number")
+    } else {
+        fmt.Println("Zero")
+    }
+}
+</code></pre>
+<h3 id="512-gos-special-feature-initialization-statement"><a class="header" href="#512-gos-special-feature-initialization-statement"><strong>5.1.2 Go's Special Feature: Initialization Statement</strong></a></h3>
+<p>Go allows you to initialize a variable within the <code>if</code> statement itself. This is useful for variables that are only needed within the conditional block:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    // Seed the random number generator
+    rand.Seed(time.Now().UnixNano())
+
+    // Initialize randomNum within the if statement
+    if randomNum := rand.Intn(10); randomNum &lt; 5 {
+        fmt.Println(randomNum, "is less than 5")
+    } else {
+        fmt.Println(randomNum, "is 5 or greater")
+    }
+
+    // randomNum is not accessible here - scoped to the if-else block
+    // fmt.Println(randomNum) // This would cause a compilation error
+}
+</code></pre>
+<p>This feature:</p>
+<ul>
+<li>Keeps variables scoped tightly to where they're used</li>
+<li>Makes code more readable by placing initialization close to its condition</li>
+<li>Reduces the chance of using the variable incorrectly elsewhere</li>
+</ul>
+<h3 id="513-conditional-operators-and-boolean-logic"><a class="header" href="#513-conditional-operators-and-boolean-logic"><strong>5.1.3 Conditional Operators and Boolean Logic</strong></a></h3>
+<p>Go uses standard comparison operators and logical operators:</p>
+<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>==</code></td><td>Equal to</td></tr>
+<tr><td><code>!=</code></td><td>Not equal to</td></tr>
+<tr><td><code>&lt;</code></td><td>Less than</td></tr>
+<tr><td><code>&lt;=</code></td><td>Less than or equal to</td></tr>
+<tr><td><code>&gt;</code></td><td>Greater than</td></tr>
+<tr><td><code>&gt;=</code></td><td>Greater than or equal to</td></tr>
+<tr><td><code>&amp;&amp;</code></td><td>Logical AND</td></tr>
+<tr><td><code>||</code></td><td>Logical OR</td></tr>
+<tr><td><code>!</code></td><td>Logical NOT</td></tr>
+</tbody></table>
+</div>
+<pre><code class="language-go">age := 22
+hasID := true
+
+if age &gt;= 21 &amp;&amp; hasID {
+    fmt.Println("You can enter the venue and purchase alcohol.")
+} else if age &gt;= 18 &amp;&amp; hasID {
+    fmt.Println("You can enter the venue but cannot purchase alcohol.")
+} else {
+    fmt.Println("You cannot enter the venue.")
+}
+</code></pre>
+<h3 id="514-common-pitfalls-with-if-statements"><a class="header" href="#514-common-pitfalls-with-if-statements"><strong>5.1.4 Common Pitfalls with <code>if</code> Statements</strong></a></h3>
+<h4 id="1-forgetting-curly-braces"><a class="header" href="#1-forgetting-curly-braces"><strong>1. Forgetting Curly Braces</strong></a></h4>
+<p>In Go, curly braces are mandatory for <code>if</code> statements, even if there's only one statement in the block:</p>
+<pre><code class="language-go">// Incorrect - will not compile
+if x &gt; 0
+    fmt.Println("Positive")
+
+// Correct
+if x &gt; 0 {
+    fmt.Println("Positive")
+}
+</code></pre>
+<h4 id="2-condition-must-be-a-boolean"><a class="header" href="#2-condition-must-be-a-boolean"><strong>2. Condition Must Be a Boolean</strong></a></h4>
+<p>Unlike some languages, Go requires conditions to be boolean expressions:</p>
+<pre><code class="language-go">value := 5
+
+// Incorrect - will not compile
+if value {
+    fmt.Println("True")
+}
+
+// Correct
+if value != 0 {
+    fmt.Println("Non-zero")
+}
+</code></pre>
+<h4 id="3-accidentally-using-assignment-instead-of-comparison"><a class="header" href="#3-accidentally-using-assignment-instead-of-comparison"><strong>3. Accidentally Using Assignment Instead of Comparison</strong></a></h4>
+<pre><code class="language-go">x := 10
+
+// This assigns 5 to x and then evaluates to true (since 5 is non-zero)
+// Luckily, Go doesn't allow this: "expected boolean expression"
+if x = 5 {
+    fmt.Println("This won't compile")
+}
+
+// For intentional assignment and check, you need to do:
+if x = 5; x &gt; 0 {
+    fmt.Println("x is now 5, which is positive")
+}
+</code></pre>
+<h3 id="515-best-practices-for-conditional-logic"><a class="header" href="#515-best-practices-for-conditional-logic"><strong>5.1.5 Best Practices for Conditional Logic</strong></a></h3>
+<ol>
+<li>
+<p><strong>Keep conditions simple and readable</strong></p>
+<pre><code class="language-go">// Hard to read
+if age &gt;= 18 &amp;&amp; age &lt;= 65 &amp;&amp; !hasDisability &amp;&amp; !isPartTime {
+    // ...
+}
+
+// Better - break it down
+isWorkingAge := age &gt;= 18 &amp;&amp; age &lt;= 65
+isEligible := !hasDisability &amp;&amp; !isPartTime
+if isWorkingAge &amp;&amp; isEligible {
+    // ...
+}
+</code></pre>
+</li>
+<li>
+<p><strong>Return early to reduce nesting</strong></p>
+<pre><code class="language-go">// Deeply nested code is hard to follow
+func processRequest(req Request) Response {
+    if req.IsValid() {
+        if req.HasPermission() {
+            if req.ResourceExists() {
+                // Process valid request
+                return SuccessResponse()
+            } else {
+                return NotFoundResponse()
+            }
+        } else {
+            return ForbiddenResponse()
+        }
+    } else {
+        return BadRequestResponse()
+    }
+}
+
+// Better with early returns
+func processRequest(req Request) Response {
+    if !req.IsValid() {
+        return BadRequestResponse()
+    }
+
+    if !req.HasPermission() {
+        return ForbiddenResponse()
+    }
+
+    if !req.ResourceExists() {
+        return NotFoundResponse()
+    }
+
+    // Process valid request
+    return SuccessResponse()
+}
+</code></pre>
+</li>
+</ol>
+<h2 id="52-multi-way-decisions-with-switch-statements"><a class="header" href="#52-multi-way-decisions-with-switch-statements"><strong>5.2 Multi-Way Decisions with <code>switch</code> Statements</strong></a></h2>
+<p>The <code>switch</code> statement provides a cleaner way to handle multiple conditions, especially when comparing a single value against multiple possible matches.</p>
+<h3 id="521-basic-syntax-and-usage"><a class="header" href="#521-basic-syntax-and-usage"><strong>5.2.1 Basic Syntax and Usage</strong></a></h3>
+<pre><code class="language-go">switch expression {
+case value1:
+    // Code executed when expression == value1
+case value2, value3:
+    // Code executed when expression == value2 OR expression == value3
+default:
+    // Code executed when no cases match
+}
+</code></pre>
+<p>Here's a simple example using a weekday:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    day := "Wednesday"
+
+    switch day {
+    case "Monday":
+        fmt.Println("Start of work week")
+    case "Wednesday":
+        fmt.Println("Middle of work week")
+    case "Friday":
+        fmt.Println("End of work week")
+    case "Saturday", "Sunday":
+        fmt.Println("Weekend!")
+    default:
+        fmt.Println("Regular work day")
+    }
+}
+</code></pre>
+<h3 id="522-gos-switch-unique-features"><a class="header" href="#522-gos-switch-unique-features"><strong>5.2.2 Go's <code>switch</code> Unique Features</strong></a></h3>
+<h4 id="1-automatic-break"><a class="header" href="#1-automatic-break"><strong>1. Automatic Break</strong></a></h4>
+<p>Unlike C, C++, and Java, Go's <code>switch</code> statements <strong>don't fall through</strong> by default. Each case automatically breaks after its code executes:</p>
+<pre><code class="language-go">switch num {
+case 1:
+    fmt.Println("One")
+    // No need for "break" - it's automatic
+case 2:
+    fmt.Println("Two")
+}
+</code></pre>
+<h4 id="2-optional-expression"><a class="header" href="#2-optional-expression"><strong>2. Optional Expression</strong></a></h4>
+<p>Go allows a <code>switch</code> without an expression, which can replace complex <code>if-else</code> chains:</p>
+<pre><code class="language-go">score := 85
+
+switch {
+case score &gt;= 90:
+    fmt.Println("A")
+case score &gt;= 80:
+    fmt.Println("B")
+case score &gt;= 70:
+    fmt.Println("C")
+case score &gt;= 60:
+    fmt.Println("D")
+default:
+    fmt.Println("F")
+}
+</code></pre>
+<h4 id="3-fallthrough"><a class="header" href="#3-fallthrough"><strong>3. Fallthrough</strong></a></h4>
+<p>If you do want a case to fall through to the next one, use the <code>fallthrough</code> keyword:</p>
+<pre><code class="language-go">switch num := 2; num {
+case 1:
+    fmt.Println("One")
+case 2:
+    fmt.Println("Two")
+    fallthrough
+case 3:
+    fmt.Println("Three or more")
+}
+</code></pre>
+<p>This will print both "Two" and "Three or more".</p>
+<h4 id="4-type-switches"><a class="header" href="#4-type-switches"><strong>4. Type Switches</strong></a></h4>
+<p>Go can switch on types, which is especially useful when working with interfaces:</p>
+<pre><code class="language-go">func describe(i interface{}) {
+    switch v := i.(type) {
+    case int:
+        fmt.Printf("Integer: %d\n", v)
+    case string:
+        fmt.Printf("String: %s\n", v)
+    case bool:
+        fmt.Printf("Boolean: %v\n", v)
+    default:
+        fmt.Printf("Unknown type: %T\n", v)
+    }
+}
+
+func main() {
+    describe(42)
+    describe("hello")
+    describe(true)
+    describe(3.14)
+}
+</code></pre>
+<h3 id="523-best-practices-for-switch-statements"><a class="header" href="#523-best-practices-for-switch-statements"><strong>5.2.3 Best Practices for Switch Statements</strong></a></h3>
+<ol>
+<li>
+<p><strong>Prefer <code>switch</code> over long <code>if-else</code> chains</strong></p>
+<pre><code class="language-go">// Long if-else chain
+if input == "y" || input == "Y" {
+    // ...
+} else if input == "n" || input == "N" {
+    // ...
+} else if input == "q" || input == "Q" {
+    // ...
+} else {
+    // ...
+}
+
+// Cleaner with switch
+switch input {
+case "y", "Y":
+    // ...
+case "n", "N":
+    // ...
+case "q", "Q":
+    // ...
+default:
+    // ...
+}
+</code></pre>
+</li>
+<li>
+<p><strong>Use the expressionless <code>switch</code> for range comparisons</strong></p>
+<pre><code class="language-go">switch {
+case age &lt; 13:
+    fmt.Println("Child")
+case age &lt; 20:
+    fmt.Println("Teenager")
+case age &lt; 65:
+    fmt.Println("Adult")
+default:
+    fmt.Println("Senior")
+}
+</code></pre>
+</li>
+<li>
+<p><strong>Be careful with <code>fallthrough</code></strong>
+Use it sparingly and document your intent when you do use it, as it can make code harder to follow.</p>
+</li>
+</ol>
+<h2 id="53-iteration-with-for-loops"><a class="header" href="#53-iteration-with-for-loops"><strong>5.3 Iteration with <code>for</code> Loops</strong></a></h2>
+<p>The <code>for</code> loop is Go's only loop construct, but it's flexible enough to handle all looping scenarios.</p>
+<h3 id="531-basic-syntax-and-variations"><a class="header" href="#531-basic-syntax-and-variations"><strong>5.3.1 Basic Syntax and Variations</strong></a></h3>
+<h4 id="1-standard-three-component-loop"><a class="header" href="#1-standard-three-component-loop"><strong>1. Standard Three-Component Loop</strong></a></h4>
+<pre><code class="language-go">for initialization; condition; post {
+    // Loop body
+}
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-go">for i := 0; i &lt; 5; i++ {
+    fmt.Println(i)
+}
+</code></pre>
+<h4 id="2-while-style-loop"><a class="header" href="#2-while-style-loop"><strong>2. While-Style Loop</strong></a></h4>
+<pre><code class="language-go">for condition {
+    // Loop body
+}
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-go">count := 0
+for count &lt; 5 {
+    fmt.Println(count)
+    count++
+}
+</code></pre>
+<h4 id="3-infinite-loop"><a class="header" href="#3-infinite-loop"><strong>3. Infinite Loop</strong></a></h4>
+<pre><code class="language-go">for {
+    // Loop body
+    if someCondition {
+        break
+    }
+}
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-go">count := 0
+for {
+    fmt.Println(count)
+    count++
+    if count &gt;= 5 {
+        break
+    }
+}
+</code></pre>
+<h4 id="4-iterating-with-range"><a class="header" href="#4-iterating-with-range"><strong>4. Iterating with <code>range</code></strong></a></h4>
+<p>The <code>range</code> form iterates over elements in various data structures:</p>
+<pre><code class="language-go">for key, value := range collection {
+    // Loop body using key and value
+}
+</code></pre>
+<p>Examples:</p>
+<pre><code class="language-go">// Iterating over a slice
+fruits := []string{"Apple", "Banana", "Cherry"}
+for i, fruit := range fruits {
+    fmt.Printf("%d: %s\n", i, fruit)
+}
+
+// Iterating over a map
+ages := map[string]int{
+    "Alice": 25,
+    "Bob":   30,
+    "Carol": 27,
+}
+for name, age := range ages {
+    fmt.Printf("%s is %d years old\n", name, age)
+}
+
+// Iterating over a string (by rune)
+for i, char := range "Hello" {
+    fmt.Printf("%d: %c\n", i, char)
+}
+</code></pre>
+<h3 id="532-loop-control-break-and-continue"><a class="header" href="#532-loop-control-break-and-continue"><strong>5.3.2 Loop Control: <code>break</code> and <code>continue</code></strong></a></h3>
+<h4 id="break"><a class="header" href="#break"><strong><code>break</code></strong></a></h4>
+<p>Exits the innermost loop immediately:</p>
+<pre><code class="language-go">for i := 0; i &lt; 10; i++ {
+    if i == 5 {
+        break // Exits when i reaches 5
+    }
+    fmt.Println(i)
+}
+// Prints: 0 1 2 3 4
+</code></pre>
+<h4 id="continue"><a class="header" href="#continue"><strong><code>continue</code></strong></a></h4>
+<p>Skips to the next iteration:</p>
+<pre><code class="language-go">for i := 0; i &lt; 10; i++ {
+    if i%2 == 0 {
+        continue // Skip even numbers
+    }
+    fmt.Println(i)
+}
+// Prints: 1 3 5 7 9
+</code></pre>
+<h3 id="533-labeled-statements"><a class="header" href="#533-labeled-statements"><strong>5.3.3 Labeled Statements</strong></a></h3>
+<p>Go supports labels to break or continue outer loops:</p>
+<pre><code class="language-go">outer:
+    for i := 0; i &lt; 3; i++ {
+        for j := 0; j &lt; 3; j++ {
+            if i*j &gt;= 3 {
+                fmt.Println("Breaking outer loop when i =", i, "and j =", j)
+                break outer
+            }
+            fmt.Printf("(%d, %d) ", i, j)
+        }
+        fmt.Println()
+    }
+</code></pre>
+<h3 id="534-common-loop-patterns-in-go"><a class="header" href="#534-common-loop-patterns-in-go"><strong>5.3.4 Common Loop Patterns in Go</strong></a></h3>
+<h4 id="1-processing-a-slice"><a class="header" href="#1-processing-a-slice"><strong>1. Processing a Slice</strong></a></h4>
+<pre><code class="language-go">items := []string{"Apple", "Banana", "Cherry"}
+
+// Using index
+for i := 0; i &lt; len(items); i++ {
+    fmt.Println(items[i])
+}
+
+// Using range (preferred)
+for _, item := range items {
+    fmt.Println(item)
+}
+</code></pre>
+<h4 id="2-processing-a-map"><a class="header" href="#2-processing-a-map"><strong>2. Processing a Map</strong></a></h4>
+<pre><code class="language-go">userRoles := map[string]string{
+    "alice": "admin",
+    "bob":   "user",
+    "carol": "manager",
+}
+
+// Note: Map iteration order is not guaranteed
+for user, role := range userRoles {
+    fmt.Printf("%s is a %s\n", user, role)
+}
+</code></pre>
+<h4 id="3-iterating-over-channels"><a class="header" href="#3-iterating-over-channels"><strong>3. Iterating Over Channels</strong></a></h4>
+<pre><code class="language-go">ch := make(chan int)
+
+// In a separate goroutine
+go func() {
+    for i := 0; i &lt; 5; i++ {
+        ch &lt;- i
+    }
+    close(ch)
+}()
+
+// Range over channel until it's closed
+for num := range ch {
+    fmt.Println(num)
+}
+</code></pre>
+<h3 id="535-common-pitfalls-with-loops"><a class="header" href="#535-common-pitfalls-with-loops"><strong>5.3.5 Common Pitfalls with Loops</strong></a></h3>
+<h4 id="1-variable-capture-in-closures"><a class="header" href="#1-variable-capture-in-closures"><strong>1. Variable Capture in Closures</strong></a></h4>
+<pre><code class="language-go">functions := []func(){}
+
+// Incorrect: all functions will print the same value
+for i := 0; i &lt; 5; i++ {
+    functions = append(functions, func() {
+        fmt.Println(i) // Captures reference to i, not its value
+    })
+}
+
+// Correct: create a new variable in each iteration
+for i := 0; i &lt; 5; i++ {
+    i := i // Creates a new variable with the same name (shadowing)
+    functions = append(functions, func() {
+        fmt.Println(i)
+    })
+}
+</code></pre>
+<h4 id="2-modifying-a-slice-while-iterating"><a class="header" href="#2-modifying-a-slice-while-iterating"><strong>2. Modifying a Slice While Iterating</strong></a></h4>
+<pre><code class="language-go">numbers := []int{1, 2, 3, 4, 5}
+
+// Incorrect: unpredictable when modifying the slice you're ranging over
+for i, num := range numbers {
+    if num%2 == 0 {
+        numbers = append(numbers[:i], numbers[i+1:]...) // Don't do this!
+    }
+}
+
+// Correct: use a separate slice or iterate backward
+var filtered []int
+for _, num := range numbers {
+    if num%2 != 0 {
+        filtered = append(filtered, num)
+    }
+}
+numbers = filtered
+</code></pre>
+<h4 id="3-inefficient-string-concatenation-in-loops"><a class="header" href="#3-inefficient-string-concatenation-in-loops"><strong>3. Inefficient String Concatenation in Loops</strong></a></h4>
+<pre><code class="language-go">// Inefficient: creates a new string each iteration
+var result string
+for i := 0; i &lt; 1000; i++ {
+    result += fmt.Sprintf("%d", i)
+}
+
+// Better: use strings.Builder
+var builder strings.Builder
+for i := 0; i &lt; 1000; i++ {
+    builder.WriteString(fmt.Sprintf("%d", i))
+}
+result = builder.String()
+</code></pre>
+<h2 id="54-advanced-control-flow-patterns"><a class="header" href="#54-advanced-control-flow-patterns"><strong>5.4 Advanced Control Flow Patterns</strong></a></h2>
+<h3 id="541-combining-control-structures"><a class="header" href="#541-combining-control-structures"><strong>5.4.1 Combining Control Structures</strong></a></h3>
+<p>Complex algorithms often require nested or sequential control structures:</p>
+<pre><code class="language-go">func processItems(items []int) []int {
+    var results []int
+
+    for _, item := range items {
+        // Skip negative numbers
+        if item &lt; 0 {
+            continue
+        }
+
+        // Process based on value
+        switch {
+        case item%3 == 0 &amp;&amp; item%5 == 0:
+            results = append(results, item*3) // Divisible by both 3 and 5
+        case item%3 == 0:
+            results = append(results, item*2) // Divisible by 3
+        case item%5 == 0:
+            results = append(results, item+1) // Divisible by 5
+        default:
+            results = append(results, item)
+        }
+
+        // Stop after collecting 10 results
+        if len(results) &gt;= 10 {
+            break
+        }
+    }
+
+    return results
+}
+</code></pre>
+<h3 id="542-error-handling-patterns"><a class="header" href="#542-error-handling-patterns"><strong>5.4.2 Error Handling Patterns</strong></a></h3>
+<p>Go's error handling often integrates with control structures:</p>
+<pre><code class="language-go">func processFile(filename string) error {
+    file, err := os.Open(filename)
+    if err != nil {
+        return fmt.Errorf("opening file: %w", err)
+    }
+    defer file.Close()
+
+    scanner := bufio.NewScanner(file)
+    lineCount := 0
+
+    for scanner.Scan() {
+        line := scanner.Text()
+        lineCount++
+
+        if strings.TrimSpace(line) == "" {
+            continue // Skip empty lines
+        }
+
+        if err := processLine(line); err != nil {
+            return fmt.Errorf("processing line %d: %w", lineCount, err)
+        }
+    }
+
+    if err := scanner.Err(); err != nil {
+        return fmt.Errorf("reading file: %w", err)
+    }
+
+    return nil
+}
+</code></pre>
+<h3 id="543-implementing-state-machines"><a class="header" href="#543-implementing-state-machines"><strong>5.4.3 Implementing State Machines</strong></a></h3>
+<p>Control structures are perfect for implementing state machines:</p>
+<pre><code class="language-go">type State int
+
+const (
+    StateInit State = iota
+    StateProcessing
+    StateWaiting
+    StateFinished
+    StateError
+)
+
+func runStateMachine(events &lt;-chan Event) Result {
+    state := StateInit
+    var data Result
+
+    for event := range events {
+        switch state {
+        case StateInit:
+            if event.Type == EventStart {
+                state = StateProcessing
+                data.StartTime = event.Time
+            } else {
+                state = StateError
+                data.Error = fmt.Errorf("unexpected event %v in Init state", event.Type)
+            }
+
+        case StateProcessing:
+            switch event.Type {
+            case EventData:
+                data.Items = append(data.Items, event.Data)
+            case EventPause:
+                state = StateWaiting
+                data.PauseTime = event.Time
+            case EventFinish:
+                state = StateFinished
+                data.EndTime = event.Time
+            default:
+                state = StateError
+                data.Error = fmt.Errorf("unexpected event %v in Processing state", event.Type)
+            }
+
+        case StateWaiting:
+            if event.Type == EventResume {
+                state = StateProcessing
+                data.WaitDuration += event.Time.Sub(data.PauseTime)
+            } else if event.Type == EventFinish {
+                state = StateFinished
+                data.EndTime = event.Time
+                data.WaitDuration += event.Time.Sub(data.PauseTime)
+            } else {
+                state = StateError
+                data.Error = fmt.Errorf("unexpected event %v in Waiting state", event.Type)
+            }
+
+        case StateFinished, StateError:
+            // Terminal states - ignore further events
+            continue
+        }
+
+        if state == StateError {
+            break
+        }
+    }
+
+    return data
+}
+</code></pre>
+<h2 id="55-practical-examples"><a class="header" href="#55-practical-examples"><strong>5.5 Practical Examples</strong></a></h2>
+<h3 id="551-input-validation"><a class="header" href="#551-input-validation"><strong>5.5.1 Input Validation</strong></a></h3>
+<pre><code class="language-go">func validateUserInput(username, email, password string) (bool, string) {
+    if len(username) &lt; 3 {
+        return false, "Username must be at least 3 characters long"
+    }
+
+    if !strings.Contains(email, "@") || !strings.Contains(email, ".") {
+        return false, "Invalid email format"
+    }
+
+    if len(password) &lt; 8 {
+        return false, "Password must be at least 8 characters long"
+    }
+
+    hasUpper := false
+    hasDigit := false
+
+    for _, char := range password {
+        if unicode.IsUpper(char) {
+            hasUpper = true
+        } else if unicode.IsDigit(char) {
+            hasDigit = true
+        }
+
+        if hasUpper &amp;&amp; hasDigit {
+            break
+        }
+    }
+
+    if !hasUpper {
+        return false, "Password must contain at least one uppercase letter"
+    }
+
+    if !hasDigit {
+        return false, "Password must contain at least one digit"
+    }
+
+    return true, ""
+}
+</code></pre>
+<h3 id="552-processing-a-csv-file"><a class="header" href="#552-processing-a-csv-file"><strong>5.5.2 Processing a CSV File</strong></a></h3>
+<pre><code class="language-go">func processCsvFile(filename string) ([]Record, error) {
+    file, err := os.Open(filename)
+    if err != nil {
+        return nil, err
+    }
+    defer file.Close()
+
+    reader := csv.NewReader(file)
+
+    // Read header
+    header, err := reader.Read()
+    if err != nil {
+        return nil, fmt.Errorf("reading header: %w", err)
+    }
+
+    var records []Record
+    lineNum := 1 // Account for header
+
+    for {
+        lineNum++
+        row, err := reader.Read()
+
+        if err == io.EOF {
+            break
+        }
+
+        if err != nil {
+            return nil, fmt.Errorf("reading line %d: %w", lineNum, err)
+        }
+
+        // Ensure correct number of fields
+        if len(row) != len(header) {
+            return nil, fmt.Errorf("line %d: expected %d fields, got %d",
+                lineNum, len(header), len(row))
+        }
+
+        record, err := parseRecord(header, row)
+        if err != nil {
+            return nil, fmt.Errorf("parsing line %d: %w", lineNum, err)
+        }
+
+        records = append(records, record)
+    }
+
+    return records, nil
+}
+</code></pre>
+<h3 id="553-rate-limiting"><a class="header" href="#553-rate-limiting"><strong>5.5.3 Rate Limiting</strong></a></h3>
+<pre><code class="language-go">func rateLimitedProcess(items []Item, ratePerSecond int) {
+    interval := time.Second / time.Duration(ratePerSecond)
+    ticker := time.NewTicker(interval)
+    defer ticker.Stop()
+
+    for _, item := range items {
+        &lt;-ticker.C // Wait for the next tick
+        processItem(item)
+    }
+}
+</code></pre>
+<h2 id="56-practice-exercises"><a class="header" href="#56-practice-exercises"><strong>5.6 Practice Exercises</strong></a></h2>
+<h3 id="exercise-1-fizzbuzz"><a class="header" href="#exercise-1-fizzbuzz"><strong>Exercise 1: FizzBuzz</strong></a></h3>
+<p>Write the classic FizzBuzz program:</p>
+<ul>
+<li>Print numbers from 1 to 100</li>
+<li>For multiples of 3, print "Fizz" instead of the number</li>
+<li>For multiples of 5, print "Buzz" instead of the number</li>
+<li>For multiples of both 3 and 5, print "FizzBuzz"</li>
+</ul>
+<h3 id="exercise-2-prime-number-checker"><a class="header" href="#exercise-2-prime-number-checker"><strong>Exercise 2: Prime Number Checker</strong></a></h3>
+<p>Write a function that checks if a number is prime.</p>
+<h3 id="exercise-3-fibonacci-sequence"><a class="header" href="#exercise-3-fibonacci-sequence"><strong>Exercise 3: Fibonacci Sequence</strong></a></h3>
+<p>Generate the first n numbers in the Fibonacci sequence using a loop.</p>
+<h3 id="exercise-4-word-counter"><a class="header" href="#exercise-4-word-counter"><strong>Exercise 4: Word Counter</strong></a></h3>
+<p>Write a program that counts the occurrences of each word in a string.</p>
+<h3 id="exercise-5-tree-traversal"><a class="header" href="#exercise-5-tree-traversal"><strong>Exercise 5: Tree Traversal</strong></a></h3>
+<p>Implement both depth-first and breadth-first traversal of a simple tree structure.</p>
+<h2 id="57-summary"><a class="header" href="#57-summary"><strong>5.7 Summary</strong></a></h2>
+<p>In this chapter, you've learned:</p>
+<ul>
+<li>How to control the flow of your Go programs using conditional statements, loops, and switches</li>
+<li>Go's unique features like short variable declarations in <code>if</code> statements and the flexible <code>for</code> loop</li>
+<li>Common patterns and best practices for different types of control flow</li>
+<li>How to avoid common pitfalls and write more idiomatic Go code</li>
+</ul>
+<p>These control structures form the backbone of any Go program. By mastering them, you can express complex algorithms clearly and efficiently.</p>
+<p><strong>Next Up</strong>: In Chapter 6, we'll explore Go's approach to functions, including multiple return values, variadic functions, and closures.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-4-Operators-and-Expressions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-6-Functions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-4-Operators-and-Expressions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-6-Functions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
