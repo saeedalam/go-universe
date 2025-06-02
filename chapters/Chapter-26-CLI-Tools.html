@@ -1,0 +1,1995 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>CLI Tools - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-26-CLI-Tools.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-26-building-professional-cli-applications-with-go"><a class="header" href="#chapter-26-building-professional-cli-applications-with-go"><strong>Chapter 26: Building Professional CLI Applications with Go</strong></a></h1>
+<h2 id="261-introduction-to-cli-development-in-go"><a class="header" href="#261-introduction-to-cli-development-in-go"><strong>26.1. Introduction to CLI Development in Go</strong></a></h2>
+<p>Command-Line Interface (CLI) applications are essential tools for developers, DevOps engineers, and system administrators. Go has emerged as one of the premier languages for building CLI tools due to its compilation to single binaries, cross-platform support, strong standard library, and excellent performance characteristics.</p>
+<p>In this chapter, we'll explore how to build professional-grade CLI applications by leveraging Go's strengths and applying advanced concepts from throughout this book.</p>
+<h3 id="why-go-excels-at-cli-applications"><a class="header" href="#why-go-excels-at-cli-applications"><strong>Why Go Excels at CLI Applications</strong></a></h3>
+<p>Go offers several advantages that make it ideal for building command-line tools:</p>
+<ol>
+<li><strong>Single Binary Deployment</strong>: Go compiles to standalone executables with no external dependencies</li>
+<li><strong>Cross-Platform Support</strong>: Easily build for multiple operating systems from a single codebase</li>
+<li><strong>Fast Execution</strong>: Near-instant startup time and efficient runtime performance</li>
+<li><strong>Strong Standard Library</strong>: Built-in support for flags, file operations, and network functionality</li>
+<li><strong>Concurrency Model</strong>: Goroutines allow for efficient parallel operations</li>
+<li><strong>Robust Error Handling</strong>: Explicit error handling improves reliability</li>
+</ol>
+<h3 id="types-of-cli-applications"><a class="header" href="#types-of-cli-applications"><strong>Types of CLI Applications</strong></a></h3>
+<p>We'll cover three main categories of CLI tools, each with increasing complexity:</p>
+<ol>
+<li>
+<p><strong>Single-Command Tools</strong>: Simple utilities with a focused purpose</p>
+<ul>
+<li>Example: A file converter, text processor, or data validator</li>
+</ul>
+</li>
+<li>
+<p><strong>Multi-Command Applications</strong>: Tools with subcommands for different operations</p>
+<ul>
+<li>Example: A deployment tool with commands for different environments</li>
+</ul>
+</li>
+<li>
+<p><strong>Interactive CLI Applications</strong>: Tools that provide an interactive shell</p>
+<ul>
+<li>Example: A database client or infrastructure management console</li>
+</ul>
+</li>
+</ol>
+<h3 id="cli-design-principles"><a class="header" href="#cli-design-principles"><strong>CLI Design Principles</strong></a></h3>
+<p>Before diving into code, let's establish key principles for designing high-quality CLI applications:</p>
+<ol>
+<li><strong>User-Centric Design</strong>: Create an intuitive interface that follows CLI conventions</li>
+<li><strong>Progressive Disclosure</strong>: Show basic options by default, advanced options when requested</li>
+<li><strong>Consistent Feedback</strong>: Provide clear feedback for both success and failure</li>
+<li><strong>Documentation</strong>: Include help text, examples, and error messages</li>
+<li><strong>Testability</strong>: Design for automated testing</li>
+<li><strong>Performance</strong>: Optimize for quick startup and efficient execution</li>
+</ol>
+<h3 id="what-well-build"><a class="header" href="#what-well-build"><strong>What We'll Build</strong></a></h3>
+<p>Throughout this chapter, we'll incrementally build a comprehensive CLI tool called "DevOps Toolkit" that demonstrates advanced Go concepts:</p>
+<ul>
+<li>A multi-command application with nested subcommands</li>
+<li>Interactive prompts and colorful output</li>
+<li>Configuration management with environment variables and config files</li>
+<li>Concurrent operations for improved performance</li>
+<li>Graceful error handling and detailed logging</li>
+<li>Comprehensive testing approach</li>
+<li>Distribution and installation mechanisms</li>
+</ul>
+<p>By the end of this chapter, you'll have the knowledge to build professional, maintainable CLI applications in Go that users will love to use.</p>
+<p>Let's begin by exploring the fundamentals of CLI application structure and gradually progress to advanced patterns and techniques.</p>
+<hr />
+<h2 id="262-fundamentals-of-cli-applications-in-go"><a class="header" href="#262-fundamentals-of-cli-applications-in-go"><strong>26.2. Fundamentals of CLI Applications in Go</strong></a></h2>
+<p>Go's standard library provides the essential building blocks for CLI applications. Before introducing third-party libraries, it's important to understand these fundamentals.</p>
+<h3 id="21-working-with-command-line-arguments"><a class="header" href="#21-working-with-command-line-arguments"><strong>2.1 Working with Command-Line Arguments</strong></a></h3>
+<p>The <code>os.Args</code> slice contains all command-line arguments, with the program name at index 0.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	// Print program name
+	fmt.Printf("Program: %s\n", os.Args[0])
+
+	// Check if arguments were provided
+	if len(os.Args) &lt; 2 {
+		fmt.Println("No arguments provided")
+		os.Exit(1)
+	}
+
+	// Process remaining arguments
+	fmt.Println("Arguments:")
+	for i, arg := range os.Args[1:] {
+		fmt.Printf("  %d: %s\n", i+1, arg)
+	}
+}
+</code></pre>
+<p>While <code>os.Args</code> provides basic access to arguments, it lacks structure for complex applications.</p>
+<h3 id="22-structured-command-line-parsing-with-flag-package"><a class="header" href="#22-structured-command-line-parsing-with-flag-package"><strong>2.2 Structured Command-Line Parsing with flag Package</strong></a></h3>
+<p>Go's standard <code>flag</code> package provides structured parsing for command-line flags.</p>
+<pre><code class="language-go">package main
+
+import (
+	"flag"
+	"fmt"
+	"os"
+	"strings"
+)
+
+func main() {
+	// Define flags with type, name, default value, and help text
+	verbose := flag.Bool("verbose", false, "Enable verbose output")
+	level := flag.Int("level", 1, "Set the processing level (1-5)")
+	output := flag.String("output", "stdout", "Output destination")
+
+	// Define short-form flag aliases
+	flag.BoolVar(verbose, "v", false, "Enable verbose output (shorthand)")
+
+	// Custom usage message
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] [ARGUMENTS]\n\nOptions:\n", os.Args[0])
+		flag.PrintDefaults()
+		fmt.Fprintf(os.Stderr, "\nExample: %s -v -level 3 file.txt\n", os.Args[0])
+	}
+
+	// Parse command-line flags
+	flag.Parse()
+
+	// Access the remaining non-flag arguments
+	args := flag.Args()
+
+	// Use the flags in your application
+	if *verbose {
+		fmt.Println("Verbose mode enabled")
+		fmt.Printf("Processing level: %d\n", *level)
+		fmt.Printf("Output destination: %s\n", *output)
+	}
+
+	if len(args) == 0 {
+		fmt.Println("No input files specified")
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	fmt.Printf("Processing files: %s\n", strings.Join(args, ", "))
+}
+</code></pre>
+<p>The <code>flag</code> package works well for simple applications but becomes unwieldy for complex command structures. Let's address this limitation.</p>
+<h3 id="23-custom-command-structures"><a class="header" href="#23-custom-command-structures"><strong>2.3 Custom Command Structures</strong></a></h3>
+<p>For applications with multiple commands, we can build a simple command framework:</p>
+<pre><code class="language-go">package main
+
+import (
+	"flag"
+	"fmt"
+	"os"
+)
+
+// Command represents a subcommand with its own flags and behavior
+type Command struct {
+	Name        string
+	Description string
+	Run         func(args []string) error
+	Flags       *flag.FlagSet
+}
+
+func main() {
+	// Define available commands
+	commands := map[string]*Command{
+		"create": {
+			Name:        "create",
+			Description: "Create a new resource",
+			Flags:       flag.NewFlagSet("create", flag.ExitOnError),
+			Run:         runCreateCommand,
+		},
+		"delete": {
+			Name:        "delete",
+			Description: "Delete an existing resource",
+			Flags:       flag.NewFlagSet("delete", flag.ExitOnError),
+			Run:         runDeleteCommand,
+		},
+		"list": {
+			Name:        "list",
+			Description: "List available resources",
+			Flags:       flag.NewFlagSet("list", flag.ExitOnError),
+			Run:         runListCommand,
+		},
+	}
+
+	// Add specific flags to each command
+	force := commands["delete"].Flags.Bool("force", false, "Force deletion without confirmation")
+	format := commands["list"].Flags.String("format", "table", "Output format (table, json, yaml)")
+
+	// Show usage if no arguments
+	if len(os.Args) &lt; 2 {
+		printUsage(commands)
+		os.Exit(1)
+	}
+
+	// Get the command name (first argument)
+	commandName := os.Args[1]
+
+	// Look up the command
+	cmd, exists := commands[commandName]
+	if !exists {
+		fmt.Fprintf(os.Stderr, "Unknown command: %s\n\n", commandName)
+		printUsage(commands)
+		os.Exit(1)
+	}
+
+	// Parse the remaining arguments
+	cmd.Flags.Parse(os.Args[2:])
+
+	// Run the command
+	if err := cmd.Run(cmd.Flags.Args()); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
+		os.Exit(1)
+	}
+
+	// Showcase the flags (would be used in the actual command functions)
+	if commandName == "delete" &amp;&amp; *force {
+		fmt.Println("Force flag was set for delete command")
+	}
+
+	if commandName == "list" {
+		fmt.Printf("List format: %s\n", *format)
+	}
+}
+
+func printUsage(commands map[string]*Command) {
+	fmt.Fprintf(os.Stderr, "Usage: %s COMMAND [OPTIONS] [ARGUMENTS]\n\nAvailable commands:\n", os.Args[0])
+	for name, cmd := range commands {
+		fmt.Fprintf(os.Stderr, "  %s: %s\n", name, cmd.Description)
+	}
+	fmt.Fprintf(os.Stderr, "\nRun '%s COMMAND --help' for command-specific help.\n", os.Args[0])
+}
+
+func runCreateCommand(args []string) error {
+	fmt.Println("Running create command with args:", args)
+	return nil
+}
+
+func runDeleteCommand(args []string) error {
+	fmt.Println("Running delete command with args:", args)
+	return nil
+}
+
+func runListCommand(args []string) error {
+	fmt.Println("Running list command with args:", args)
+	return nil
+}
+</code></pre>
+<p>This pattern provides a foundation for multi-command applications but still requires significant boilerplate. This is why libraries like Cobra are popular for complex CLI tools.</p>
+<h2 id="263-building-advanced-cli-applications-with-cobra"><a class="header" href="#263-building-advanced-cli-applications-with-cobra"><strong>26.3. Building Advanced CLI Applications with Cobra</strong></a></h2>
+<p>Cobra is the de facto standard for building advanced CLI applications in Go. Used by Kubernetes, Hugo, GitHub CLI, and many other popular tools, it provides a robust framework for creating complex command structures with minimal boilerplate.</p>
+<h3 id="31-cobra-architecture"><a class="header" href="#31-cobra-architecture"><strong>3.1 Cobra Architecture</strong></a></h3>
+<p>Cobra follows a command-based architecture with three main components:</p>
+<ol>
+<li><strong>Commands</strong>: Represent actions that users can take</li>
+<li><strong>Flags</strong>: Arguments that modify command behavior</li>
+<li><strong>Arguments</strong>: Positional arguments passed to commands</li>
+</ol>
+<p>Let's build a comprehensive example of a DevOps toolkit application with multiple nested commands:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"os"
+	"strings"
+	"time"
+
+	"github.com/spf13/cobra"
+)
+
+func main() {
+	// Create the root command
+	rootCmd := &amp;cobra.Command{
+		Use:   "devtool",
+		Short: "A DevOps toolkit for managing infrastructure",
+		Long: `DevTool is a comprehensive DevOps toolkit that provides
+commands for managing servers, containers, and deployment workflows.
+Complete documentation is available at https://example.com/devtool`,
+		Version: "1.0.0",
+		// Add a custom help template
+		DisableAutoGenTag: true,
+	}
+
+	// Add global flags
+	var verbose bool
+	var configFile string
+	rootCmd.PersistentFlags().BoolVarP(&amp;verbose, "verbose", "v", false, "Enable verbose output")
+	rootCmd.PersistentFlags().StringVar(&amp;configFile, "config", "", "Config file (default is $HOME/.devtool.yaml)")
+
+	// Create server command
+	serverCmd := &amp;cobra.Command{
+		Use:   "server",
+		Short: "Manage servers",
+		Long:  `Commands for managing server infrastructure including provisioning, configuration, and monitoring.`,
+	}
+
+	// Create server list command
+	serverListCmd := &amp;cobra.Command{
+		Use:   "list [flags]",
+		Short: "List available servers",
+		Long:  `List all servers registered in the system with their current status and details.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			// Extract flags
+			format, _ := cmd.Flags().GetString("format")
+			region, _ := cmd.Flags().GetString("region")
+
+			// Show what would happen in a real application
+			fmt.Printf("Listing servers (format: %s, region: %s)\n", format, region)
+
+			// Simulate fetching servers
+			servers := []string{"web-01", "web-02", "db-01"}
+
+			// Use verbose mode if enabled
+			if verbose {
+				fmt.Println("Verbose: Fetching server details including status, IP, and uptime")
+				for _, server := range servers {
+					fmt.Printf("Server: %s, Region: %s, Status: Running\n", server, region)
+				}
+			} else {
+				for _, server := range servers {
+					fmt.Println(server)
+				}
+			}
+		},
+		// Add command usage examples
+		Example: `  # List all servers in table format
+  devtool server list
+
+  # List servers in JSON format
+  devtool server list --format json
+
+  # List servers in a specific region
+  devtool server list --region us-west-2`,
+	}
+
+	// Add flags to server list command
+	serverListCmd.Flags().StringP("format", "f", "table", "Output format (table, json, yaml)")
+	serverListCmd.Flags().StringP("region", "r", "all", "Filter servers by region")
+
+	// Create server create command
+	serverCreateCmd := &amp;cobra.Command{
+		Use:   "create NAME",
+		Short: "Create a new server",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// Extract args and flags
+			name := args[0]
+			region, _ := cmd.Flags().GetString("region")
+			size, _ := cmd.Flags().GetString("size")
+
+			// Validate input
+			if !strings.HasPrefix(name, "srv-") {
+				return fmt.Errorf("server name must start with 'srv-'")
+			}
+
+			// Log action based on verbose flag
+			if verbose {
+				fmt.Printf("Creating server %s in region %s with size %s\n", name, region, size)
+				fmt.Println("Verbose: Initializing server resources...")
+				time.Sleep(1 * time.Second)
+				fmt.Println("Verbose: Configuring networking...")
+				time.Sleep(1 * time.Second)
+				fmt.Println("Verbose: Starting services...")
+				time.Sleep(1 * time.Second)
+			}
+
+			fmt.Printf("Server %s created successfully\n", name)
+			return nil
+		},
+	}
+
+	// Add flags to server create command
+	serverCreateCmd.Flags().StringP("region", "r", "us-east-1", "Server region")
+	serverCreateCmd.Flags().StringP("size", "s", "medium", "Server size (small, medium, large)")
+
+	// Create container command
+	containerCmd := &amp;cobra.Command{
+		Use:   "container",
+		Short: "Manage containers",
+		Long:  `Commands for managing containers including building, running, and monitoring.`,
+		Aliases: []string{"cont", "c"},
+	}
+
+	// Create container run command
+	containerRunCmd := &amp;cobra.Command{
+		Use:   "run IMAGE",
+		Short: "Run a container",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			image := args[0]
+			detach, _ := cmd.Flags().GetBool("detach")
+			port, _ := cmd.Flags().GetInt("port")
+
+			if detach {
+				fmt.Printf("Running %s in detached mode on port %d\n", image, port)
+			} else {
+				fmt.Printf("Running %s in interactive mode on port %d\n", image, port)
+				fmt.Println("Container output would appear here...")
+			}
+		},
+	}
+
+	// Add flags to container run command
+	containerRunCmd.Flags().BoolP("detach", "d", false, "Run container in background")
+	containerRunCmd.Flags().IntP("port", "p", 8080, "Port to expose")
+
+	// Add subcommands to their parents
+	serverCmd.AddCommand(serverListCmd, serverCreateCmd)
+	containerCmd.AddCommand(containerRunCmd)
+	rootCmd.AddCommand(serverCmd, containerCmd)
+
+	// Execute the root command
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+</code></pre>
+<h3 id="32-best-practices-for-cobra-commands"><a class="header" href="#32-best-practices-for-cobra-commands"><strong>3.2 Best Practices for Cobra Commands</strong></a></h3>
+<p>When building CLI applications with Cobra, follow these best practices:</p>
+<ol>
+<li>
+<p><strong>Command Structure</strong></p>
+<ul>
+<li>Group related commands under a parent command</li>
+<li>Use hierarchical commands for logical organization</li>
+<li>Limit nesting to 2-3 levels for usability</li>
+</ul>
+</li>
+<li>
+<p><strong>Command Naming</strong></p>
+<ul>
+<li>Use simple, clear verbs for commands (create, delete, list)</li>
+<li>Provide aliases for common abbreviations</li>
+<li>Be consistent with naming across similar commands</li>
+</ul>
+</li>
+<li>
+<p><strong>Documentation</strong></p>
+<ul>
+<li>Include Short and Long descriptions for all commands</li>
+<li>Add Examples showing common use cases</li>
+<li>Use DisableAutoGenTag to manage documentation generation</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling</strong></p>
+<ul>
+<li>Use RunE instead of Run to return errors properly</li>
+<li>Return descriptive errors that guide users to a solution</li>
+<li>Validate input early and provide clear error messages</li>
+</ul>
+</li>
+</ol>
+<h3 id="33-advanced-cobra-techniques"><a class="header" href="#33-advanced-cobra-techniques"><strong>3.3 Advanced Cobra Techniques</strong></a></h3>
+<p>Let's explore some advanced techniques for building sophisticated CLI tools with Cobra.</p>
+<h4 id="command-groups-and-organization"><a class="header" href="#command-groups-and-organization"><strong>Command Groups and Organization</strong></a></h4>
+<p>For complex applications, organizing commands into logical groups improves usability:</p>
+<pre><code class="language-go">// Create a command factory function for related commands
+func createDeploymentCommands() *cobra.Command {
+	deployCmd := &amp;cobra.Command{
+		Use:   "deploy",
+		Short: "Deployment related commands",
+	}
+
+	// Add subcommands
+	deployCmd.AddCommand(
+		createDeployStartCommand(),
+		createDeployStopCommand(),
+		createDeployStatusCommand(),
+	)
+
+	return deployCmd
+}
+
+func createDeployStartCommand() *cobra.Command {
+	return &amp;cobra.Command{
+		Use:   "start [environment]",
+		Short: "Start a deployment",
+		Run: func(cmd *cobra.Command, args []string) {
+			// Implementation
+		},
+	}
+}
+
+// Then in main():
+rootCmd.AddCommand(createDeploymentCommands())
+</code></pre>
+<h4 id="custom-validation"><a class="header" href="#custom-validation"><strong>Custom Validation</strong></a></h4>
+<p>Implement custom validation for arguments and flags:</p>
+<pre><code class="language-go">// Custom validator for port range
+func validatePortRange(cmd *cobra.Command, args []string) error {
+	port, _ := cmd.Flags().GetInt("port")
+
+	if port &lt; 1024 || port &gt; 65535 {
+		return fmt.Errorf("port must be between 1024 and 65535")
+	}
+	return nil
+}
+
+// Add to command
+cmd.PreRunE = validatePortRange
+</code></pre>
+<h4 id="dynamic-command-completion"><a class="header" href="#dynamic-command-completion"><strong>Dynamic Command Completion</strong></a></h4>
+<p>Add shell completion support for dynamic values:</p>
+<pre><code class="language-go">// Add shell completion for region flag
+serverCreateCmd.Flags().SetAnnotation("region", cobra.BashCompCustom, []string{"__devtool_get_regions"})
+
+// Register a function to generate completions
+rootCmd.BashCompletionFunction = `
+__devtool_get_regions() {
+    local regions=("us-east-1" "us-west-1" "eu-central-1" "ap-southeast-1")
+    COMPREPLY=( $(compgen -W "${regions[*]}" -- ${cur}) )
+}
+`
+</code></pre>
+<h2 id="264-user-experience-enhancements"><a class="header" href="#264-user-experience-enhancements"><strong>26.4. User Experience Enhancements</strong></a></h2>
+<p>Creating a CLI tool with an excellent user experience differentiates professional applications from basic scripts. Let's explore techniques to enhance your CLI's usability.</p>
+<h3 id="41-rich-terminal-output"><a class="header" href="#41-rich-terminal-output"><strong>4.1 Rich Terminal Output</strong></a></h3>
+<p>Modern CLI applications use color and formatting to improve readability and highlight important information.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"os"
+	"time"
+
+	"github.com/fatih/color"
+	"github.com/briandowns/spinner"
+)
+
+func main() {
+	// Create colored output functions
+	success := color.New(color.FgGreen, color.Bold).PrintlnFunc()
+	warning := color.New(color.FgYellow).PrintlnFunc()
+	error := color.New(color.FgRed, color.Bold).PrintlnFunc()
+	info := color.New(color.FgCyan).PrintlnFunc()
+
+	// Use colored output
+	info("Starting application deployment...")
+
+	// Show a spinner for long-running operations
+	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s.Prefix = "Deploying: "
+	s.Start()
+
+	// Simulate work
+	time.Sleep(2 * time.Second)
+	s.Stop()
+
+	// Show progress for multi-step operations
+	fmt.Println("Deployment progress:")
+	steps := []string{
+		"Building application",
+		"Running tests",
+		"Creating infrastructure",
+		"Deploying application",
+		"Configuring network",
+	}
+
+	for i, step := range steps {
+		fmt.Printf("  [%d/%d] ", i+1, len(steps))
+
+		if i &lt; 3 {
+			s = spinner.New(spinner.CharSets[11], 100*time.Millisecond)
+			s.Suffix = " " + step
+			s.Start()
+			time.Sleep(1 * time.Second)
+			s.Stop()
+			success("✓ " + step)
+		} else if i == 3 {
+			warning("⚠ " + step + " (with warnings)")
+		} else {
+			error("✗ " + step + " (failed)")
+			fmt.Println("    Detailed error message would appear here")
+		}
+	}
+
+	// Use tables for structured data
+	fmt.Println("\nDeployment Status:")
+	fmt.Println("┌────────────────┬─────────────┬────────────┐")
+	fmt.Println("│ Component      │ Status      │ Time       │")
+	fmt.Println("├────────────────┼─────────────┼────────────┤")
+	fmt.Println("│ API Server     │ Running     │ 12.3s      │")
+	fmt.Println("│ Database       │ Running     │ 5.7s       │")
+	fmt.Println("│ Frontend       │ Failed      │ 8.2s       │")
+	fmt.Println("└────────────────┴─────────────┴────────────┘")
+
+	// Summary with color coding
+	fmt.Println("\nDeployment Result:")
+	warning("Deployment completed with issues")
+	fmt.Println("Run 'deploy logs frontend' to view error details")
+}
+</code></pre>
+<p>For more sophisticated output:</p>
+<ol>
+<li>Use the <a href="https://github.com/rivo/tview">tview</a> or <a href="https://github.com/gizak/termui">termui</a> packages for interactive terminal UIs</li>
+<li>Try <a href="https://github.com/charmbracelet/lipgloss">lipgloss</a> for sophisticated styling</li>
+<li>Consider <a href="https://github.com/charmbracelet/bubbletea">bubbletea</a> for terminal applications with complex interfaces</li>
+</ol>
+<h3 id="42-interactive-input"><a class="header" href="#42-interactive-input"><strong>4.2 Interactive Input</strong></a></h3>
+<p>Enhance user interaction with prompts and suggestions using the <a href="https://github.com/AlecAivazis/survey">survey</a> package:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+
+	"github.com/AlecAivazis/survey/v2"
+)
+
+func main() {
+	// Simple input prompt
+	var name string
+	namePrompt := &amp;survey.Input{
+		Message: "What is your name?",
+		Default: "User",
+	}
+	survey.AskOne(namePrompt, &amp;name)
+
+	// Selection from a list
+	var region string
+	regionPrompt := &amp;survey.Select{
+		Message: "Choose a deployment region:",
+		Options: []string{"us-east-1", "us-west-2", "eu-central-1", "ap-southeast-1"},
+		Default: "us-east-1",
+	}
+	survey.AskOne(regionPrompt, &amp;region)
+
+	// Multi-select
+	var services []string
+	servicesPrompt := &amp;survey.MultiSelect{
+		Message: "Select services to deploy:",
+		Options: []string{"API Gateway", "Lambda Functions", "DynamoDB", "S3 Buckets", "CloudFront"},
+	}
+	survey.AskOne(servicesPrompt, &amp;services)
+
+	// Confirmation
+	var confirm bool
+	confirmPrompt := &amp;survey.Confirm{
+		Message: fmt.Sprintf("Deploy %d services to %s?", len(services), region),
+		Default: false,
+	}
+	survey.AskOne(confirmPrompt, &amp;confirm)
+
+	if confirm {
+		fmt.Printf("Deploying to %s: %v\n", region, services)
+	} else {
+		fmt.Println("Deployment cancelled")
+	}
+
+	// Advanced: multi-question survey
+	var answers struct {
+		Environment string
+		Replicas    int
+		Debug       bool
+		Tags        []string
+	}
+
+	questions := []*survey.Question{
+		{
+			Name: "environment",
+			Prompt: &amp;survey.Select{
+				Message: "Deployment environment:",
+				Options: []string{"dev", "staging", "production"},
+				Default: "dev",
+			},
+		},
+		{
+			Name: "replicas",
+			Prompt: &amp;survey.Input{
+				Message: "Number of replicas:",
+				Default: "3",
+			},
+			Validate: survey.Required,
+		},
+		{
+			Name: "debug",
+			Prompt: &amp;survey.Confirm{
+				Message: "Enable debug mode?",
+				Default: false,
+			},
+		},
+		{
+			Name: "tags",
+			Prompt: &amp;survey.MultiSelect{
+				Message: "Select tags:",
+				Options: []string{"frontend", "backend", "database", "monitoring"},
+			},
+		},
+	}
+
+	survey.Ask(questions, &amp;answers)
+	fmt.Printf("Configuration: %+v\n", answers)
+}
+</code></pre>
+<h3 id="43-progress-feedback-for-long-operations"><a class="header" href="#43-progress-feedback-for-long-operations"><strong>4.3 Progress Feedback for Long Operations</strong></a></h3>
+<p>For operations that take time, provide appropriate feedback:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/schollz/progressbar/v3"
+)
+
+func main() {
+	// Simple progress bar
+	bar := progressbar.Default(100)
+	for i := 0; i &lt; 100; i++ {
+		bar.Add(1)
+		time.Sleep(50 * time.Millisecond)
+	}
+
+	// Advanced progress bar with custom options
+	fmt.Println("\nDownloading large file:")
+	bar = progressbar.NewOptions(1000,
+		progressbar.OptionEnableColorCodes(true),
+		progressbar.OptionShowBytes(true),
+		progressbar.OptionSetWidth(50),
+		progressbar.OptionSetDescription("[cyan]Downloading:[reset]"),
+		progressbar.OptionSetTheme(progressbar.Theme{
+			Saucer:        "[green]=[reset]",
+			SaucerHead:    "[green]&gt;[reset]",
+			SaucerPadding: " ",
+			BarStart:      "[",
+			BarEnd:        "]",
+		}),
+	)
+
+	// Simulate downloading chunks
+	for i := 0; i &lt; 1000; i++ {
+		bar.Add(1)
+		time.Sleep(5 * time.Millisecond)
+	}
+
+	fmt.Println("\nComplete!")
+}
+</code></pre>
+<h2 id="265-configuration-management"><a class="header" href="#265-configuration-management"><strong>26.5. Configuration Management</strong></a></h2>
+<p>Professional CLI tools need robust configuration management. Let's explore advanced configuration techniques using Viper.</p>
+<h3 id="51-multi-level-configuration-with-viper"><a class="header" href="#51-multi-level-configuration-with-viper"><strong>5.1 Multi-level Configuration with Viper</strong></a></h3>
+<p>Viper allows for configuration from multiple sources with clear precedence:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+)
+
+func main() {
+	var cfgFile string
+
+	rootCmd := &amp;cobra.Command{
+		Use:   "myapp",
+		Short: "Application with advanced configuration",
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			// Initialize configuration
+			return initConfig(cfgFile)
+		},
+	}
+
+	// Add config flag
+	rootCmd.PersistentFlags().StringVar(&amp;cfgFile, "config", "", "config file (default is $HOME/.myapp.yaml)")
+
+	// Sample command that uses config
+	rootCmd.AddCommand(&amp;cobra.Command{
+		Use:   "show-config",
+		Short: "Display current configuration",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Current Configuration:")
+			fmt.Printf("Database URL: %s\n", viper.GetString("database.url"))
+			fmt.Printf("Database Username: %s\n", viper.GetString("database.username"))
+			fmt.Printf("API Key: %s\n", viper.GetString("api.key"))
+			fmt.Printf("Debug Mode: %v\n", viper.GetBool("debug"))
+			fmt.Printf("Log Level: %s\n", viper.GetString("logging.level"))
+			fmt.Printf("Server Port: %d\n", viper.GetInt("server.port"))
+		},
+	})
+
+	rootCmd.Execute()
+}
+
+func initConfig(cfgFile string) error {
+	// Configuration precedence (highest to lowest):
+	// 1. Command line flags
+	// 2. Environment variables
+	// 3. Configuration file
+	// 4. Default values
+
+	// 1. Set defaults
+	viper.SetDefault("database.url", "localhost:5432")
+	viper.SetDefault("database.username", "user")
+	viper.SetDefault("api.key", "")
+	viper.SetDefault("debug", false)
+	viper.SetDefault("logging.level", "info")
+	viper.SetDefault("server.port", 8080)
+
+	// 2. Configuration file settings
+	if cfgFile != "" {
+		// Use config file from the flag
+		viper.SetConfigFile(cfgFile)
+	} else {
+		// Find home directory
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return err
+		}
+
+		// Search for config in home directory with name ".myapp" (without extension)
+		viper.AddConfigPath(home)
+		viper.AddConfigPath(".")
+		viper.SetConfigName(".myapp")
+	}
+
+	// Set environment variable prefix
+	viper.SetEnvPrefix("MYAPP")
+
+	// Replace dots with underscores in env vars (e.g., database.url -&gt; MYAPP_DATABASE_URL)
+	viper.AutomaticEnv()
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	// Read the configuration file
+	if err := viper.ReadInConfig(); err != nil {
+		// Config file not found, ignore error if it's just not found
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			return err
+		}
+	} else {
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
+
+	return nil
+}
+</code></pre>
+<h3 id="52-working-with-different-configuration-formats"><a class="header" href="#52-working-with-different-configuration-formats"><strong>5.2 Working with Different Configuration Formats</strong></a></h3>
+<p>Viper supports multiple configuration formats:</p>
+<pre><code class="language-go">// Load YAML configuration
+viper.SetConfigType("yaml")
+
+// Example YAML (.myapp.yaml):
+// database:
+//   url: postgres://localhost:5432/mydb
+//   username: admin
+//   password: secret
+// api:
+//   key: abcd1234
+// debug: true
+// logging:
+//   level: debug
+// server:
+//   port: 3000
+
+// Load JSON configuration
+viper.SetConfigType("json")
+
+// Example JSON (.myapp.json):
+// {
+//   "database": {
+//     "url": "postgres://localhost:5432/mydb",
+//     "username": "admin",
+//     "password": "secret"
+//   },
+//   "api": {
+//     "key": "abcd1234"
+//   },
+//   "debug": true,
+//   "logging": {
+//     "level": "debug"
+//   },
+//   "server": {
+//     "port": 3000
+//   }
+// }
+
+// Load TOML configuration
+viper.SetConfigType("toml")
+
+// Example TOML (.myapp.toml):
+// [database]
+// url = "postgres://localhost:5432/mydb"
+// username = "admin"
+// password = "secret"
+//
+// [api]
+// key = "abcd1234"
+//
+// debug = true
+//
+// [logging]
+// level = "debug"
+//
+// [server]
+// port = 3000
+</code></pre>
+<h3 id="53-dynamic-configuration-reloading"><a class="header" href="#53-dynamic-configuration-reloading"><strong>5.3 Dynamic Configuration Reloading</strong></a></h3>
+<p>For long-running applications, implement configuration reloading:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+	"syscall"
+	"time"
+
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
+)
+
+func main() {
+	// Initialize configuration
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("Error reading config file: %s", err)
+	}
+
+	// Watch for configuration changes
+	viper.WatchConfig()
+	viper.OnConfigChange(func(e fsnotify.Event) {
+		fmt.Println("Config file changed:", e.Name)
+		// Update any runtime configuration here
+		// For example, change log levels, connection parameters, etc.
+		updateAppConfig()
+	})
+
+	// Start application with initial configuration
+	updateAppConfig()
+
+	// Run a simple web server as an example
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Server running on port %d\n", viper.GetInt("server.port"))
+		fmt.Fprintf(w, "Debug mode: %v\n", viper.GetBool("debug"))
+		fmt.Fprintf(w, "Log level: %s\n", viper.GetString("logging.level"))
+	})
+
+	log.Printf("Starting server on port %d\n", viper.GetInt("server.port"))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", viper.GetInt("server.port")), nil))
+}
+
+func updateAppConfig() {
+	// Update logger configuration
+	if viper.GetBool("debug") {
+		log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Llongfile)
+		log.Println("Debug mode enabled")
+	} else {
+		log.SetFlags(log.Ldate | log.Ltime)
+		log.Println("Debug mode disabled")
+	}
+
+	// Other runtime configuration updates...
+}
+</code></pre>
+<h3 id="54-secure-configuration"><a class="header" href="#54-secure-configuration"><strong>5.4 Secure Configuration</strong></a></h3>
+<p>For sensitive information, implement secure configuration handling:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/spf13/viper"
+	"golang.org/x/crypto/nacl/secretbox"
+	"encoding/base64"
+)
+
+// Simplified secure configuration handling
+func main() {
+	// Setup viper
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+
+	// Read normal configuration
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Printf("Error reading config file: %s\n", err)
+		os.Exit(1)
+	}
+
+	// Get database credentials - first try environment variables
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+
+	// If not in environment, try encrypted config
+	if dbUser == "" || dbPass == "" {
+		// Get encryption key from environment (never store in config)
+		encKey := os.Getenv("CONFIG_ENCRYPTION_KEY")
+		if encKey == "" {
+			fmt.Println("Missing CONFIG_ENCRYPTION_KEY environment variable")
+			os.Exit(1)
+		}
+
+		// Get encrypted credentials from config
+		encDbConfig := viper.GetString("database.encrypted_credentials")
+		if encDbConfig == "" {
+			fmt.Println("No encrypted database credentials found in config")
+			os.Exit(1)
+		}
+
+		// Decrypt credentials
+		credentials, err := decryptCredentials(encDbConfig, encKey)
+	if err != nil {
+			fmt.Printf("Failed to decrypt credentials: %s\n", err)
+			os.Exit(1)
+		}
+
+		dbUser = credentials["username"]
+		dbPass = credentials["password"]
+	}
+
+	// Use the credentials
+	fmt.Printf("Using database credentials - User: %s, Password: %s\n", dbUser, maskPassword(dbPass))
+}
+
+// Simplified decryption function
+func decryptCredentials(encryptedData, key string) (map[string]string, error) {
+	// In a real implementation, this would use secretbox or another proper
+	// encryption library to decrypt the data securely
+
+	// Simulated decryption for the example
+	return map[string]string{
+		"username": "secureuser",
+		"password": "securepassword",
+	}, nil
+}
+
+// Mask password for display
+func maskPassword(password string) string {
+	if len(password) &lt;= 4 {
+		return "****"
+	}
+	return password[:2] + "****" + password[len(password)-2:]
+}
+</code></pre>
+<h2 id="266-testing-cli-applications"><a class="header" href="#266-testing-cli-applications"><strong>26.6. Testing CLI Applications</strong></a></h2>
+<p>Testing is a crucial part of CLI application development. Let's explore different testing approaches and tools.</p>
+<h3 id="61-unit-testing"><a class="header" href="#61-unit-testing"><strong>6.1 Unit Testing</strong></a></h3>
+<p>Unit tests are used to test individual functions or methods.</p>
+<pre><code class="language-go">package main
+
+import (
+	"testing"
+)
+
+func TestRunCreateCommand(t *testing.T) {
+	// Test cases
+	testCases := []struct {
+		name     string
+		args     []string
+		expected error
+	}{
+		{"valid_args", []string{"create", "srv-123", "-r", "us-east-1", "-s", "medium"}, nil},
+		{"invalid_name", []string{"create", "srv-123", "-r", "us-east-1", "-s", "medium"}, fmt.Errorf("server name must start with 'srv-'")},
+		{"missing_args", []string{"create"}, fmt.Errorf("server name must be provided")},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			err := runCreateCommand(tc.args)
+			if err != tc.expected {
+				t.Errorf("expected error: %v, got: %v", tc.expected, err)
+			}
+		})
+	}
+}
+</code></pre>
+<h3 id="62-integration-testing"><a class="header" href="#62-integration-testing"><strong>6.2 Integration Testing</strong></a></h3>
+<p>Integration tests are used to test the interaction between different components of the application.</p>
+<pre><code class="language-go">package main
+
+import (
+	"testing"
+)
+
+func TestRunListCommand(t *testing.T) {
+	// Test cases
+	testCases := []struct {
+		name     string
+		args     []string
+		expected string
+	}{
+		{"valid_args", []string{"list", "--format", "json"}, "Listing servers (format: json, region: all)\n"},
+		{"invalid_format", []string{"list", "--format", "invalid"}, "Error: invalid format: invalid\n"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			output := runListCommand(tc.args)
+			if output != tc.expected {
+				t.Errorf("expected output: %q, got: %q", tc.expected, output)
+			}
+		})
+	}
+}
+</code></pre>
+<h3 id="63-acceptance-testing"><a class="header" href="#63-acceptance-testing"><strong>6.3 Acceptance Testing</strong></a></h3>
+<p>Acceptance tests are used to test the end-to-end functionality of the application.</p>
+<pre><code class="language-go">package main
+
+import (
+	"testing"
+)
+
+func TestRunDevTool(t *testing.T) {
+	// Test cases
+	testCases := []struct {
+		name     string
+		args     []string
+		expected string
+	}{
+		{"valid_args", []string{"devtool", "server", "list"}, "Listing servers (format: table, region: all)\n"},
+		{"invalid_command", []string{"devtool", "invalid"}, "Error: unknown command: invalid\n"},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			output := runDevTool(tc.args)
+			if output != tc.expected {
+				t.Errorf("expected output: %q, got: %q", tc.expected, output)
+			}
+		})
+	}
+}
+</code></pre>
+<hr />
+<h2 id="267-distributing-cli-applications"><a class="header" href="#267-distributing-cli-applications"><strong>26.7. Distributing CLI Applications</strong></a></h2>
+<p>Professional CLI tools require proper packaging and distribution mechanisms. Let's explore how to distribute your Go CLI applications.</p>
+<h3 id="71-cross-platform-compilation"><a class="header" href="#71-cross-platform-compilation"><strong>7.1 Cross-Platform Compilation</strong></a></h3>
+<p>One of Go's strengths is its ability to cross-compile for different platforms from a single development environment:</p>
+<pre><code class="language-go">// Build for multiple platforms
+// For Linux
+GOOS=linux GOARCH=amd64 go build -o bin/myapp-linux-amd64
+
+// For macOS
+GOOS=darwin GOARCH=amd64 go build -o bin/myapp-darwin-amd64
+
+// For Windows
+GOOS=windows GOARCH=amd64 go build -o bin/myapp-windows-amd64.exe
+</code></pre>
+<p>For more systematic cross-compilation, create a build script:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+)
+
+type BuildTarget struct {
+	OS   string
+	Arch string
+}
+
+func main() {
+	// Define targets
+	targets := []BuildTarget{
+		{"linux", "amd64"},
+		{"linux", "arm64"},
+		{"darwin", "amd64"},
+		{"darwin", "arm64"},
+		{"windows", "amd64"},
+	}
+
+	appName := "devtool"
+	outputDir := "dist"
+
+	// Create output directory
+	os.MkdirAll(outputDir, 0755)
+
+	// Build for each target
+	for _, target := range targets {
+		fmt.Printf("Building for %s/%s...\n", target.OS, target.Arch)
+
+		outputFile := filepath.Join(outputDir, fmt.Sprintf("%s-%s-%s", appName, target.OS, target.Arch))
+		if target.OS == "windows" {
+			outputFile += ".exe"
+		}
+
+		cmd := exec.Command("go", "build", "-o", outputFile, "./cmd/devtool")
+		cmd.Env = append(os.Environ(),
+			fmt.Sprintf("GOOS=%s", target.OS),
+			fmt.Sprintf("GOARCH=%s", target.Arch),
+		)
+
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			fmt.Printf("Error building for %s/%s: %v\n%s\n", target.OS, target.Arch, err, output)
+			continue
+		}
+
+		fmt.Printf("Built %s\n", outputFile)
+	}
+}
+</code></pre>
+<h3 id="72-using-goreleaser"><a class="header" href="#72-using-goreleaser"><strong>7.2 Using GoReleaser</strong></a></h3>
+<p><a href="https://goreleaser.com/">GoReleaser</a> automates the building, packaging, and releasing of Go applications:</p>
+<ol>
+<li><strong>Installation</strong>:</li>
+</ol>
+<pre><code class="language-bash">go install github.com/goreleaser/goreleaser@latest
+</code></pre>
+<ol start="2">
+<li><strong>Configuration</strong> (<code>.goreleaser.yml</code>):</li>
+</ol>
+<pre><code class="language-yaml">project_name: devtool
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    main: ./cmd/devtool
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+archives:
+  - format_overrides:
+      - goos: windows
+        format: zip
+    replacements:
+      darwin: macos
+    files:
+      - README.md
+      - LICENSE
+      - completions/*
+
+brews:
+  - name: devtool
+    tap:
+      owner: yourorg
+      name: homebrew-tap
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    homepage: https://github.com/yourorg/devtool
+    description: A DevOps toolkit for managing infrastructure
+    license: MIT
+
+nfpms:
+  - package_name: devtool
+    homepage: https://github.com/yourorg/devtool
+    description: A DevOps toolkit for managing infrastructure
+    maintainer: Your Name &lt;your.email@example.com&gt;
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    dependencies:
+      - git
+
+snapcrafts:
+  - name: devtool
+    summary: A DevOps toolkit for managing infrastructure
+    description: |
+      DevTool is a comprehensive DevOps toolkit that provides
+      commands for managing servers, containers, and deployment workflows.
+    grade: stable
+    confinement: strict
+    publish: true
+</code></pre>
+<ol start="3">
+<li><strong>Run GoReleaser</strong>:</li>
+</ol>
+<pre><code class="language-bash"># For testing
+goreleaser release --snapshot --rm-dist
+
+# For actual release
+goreleaser release
+</code></pre>
+<h3 id="73-shell-completions"><a class="header" href="#73-shell-completions"><strong>7.3 Shell Completions</strong></a></h3>
+<p>Professional CLI tools provide shell completions to improve usability:</p>
+<pre><code class="language-go">package main
+
+import (
+	"os"
+
+	"github.com/spf13/cobra"
+)
+
+func main() {
+	// Create root command
+	rootCmd := &amp;cobra.Command{
+		Use:   "devtool",
+		Short: "A DevOps toolkit",
+	}
+
+	// Add completion command
+	completionCmd := &amp;cobra.Command{
+		Use:   "completion [bash|zsh|fish|powershell]",
+		Short: "Generate completion script",
+		Long: `To load completions:
+
+Bash:
+  $ source &lt;(devtool completion bash)
+
+Zsh:
+  # If shell completion is not already enabled:
+  $ echo "autoload -U compinit; compinit" &gt;&gt; ~/.zshrc
+
+  $ devtool completion zsh &gt; "${fpath[1]}/_devtool"
+
+Fish:
+  $ devtool completion fish &gt; ~/.config/fish/completions/devtool.fish
+
+PowerShell:
+  PS&gt; devtool completion powershell | Out-String | Invoke-Expression
+`,
+		DisableFlagsInUseLine: true,
+		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},
+		Args:                  cobra.ExactValidArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			switch args[0] {
+			case "bash":
+				cmd.Root().GenBashCompletion(os.Stdout)
+			case "zsh":
+				cmd.Root().GenZshCompletion(os.Stdout)
+			case "fish":
+				cmd.Root().GenFishCompletion(os.Stdout, true)
+			case "powershell":
+				cmd.Root().GenPowerShellCompletionWithDesc(os.Stdout)
+			}
+		},
+	}
+
+	rootCmd.AddCommand(completionCmd)
+
+	// Execute
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(1)
+	}
+}
+</code></pre>
+<h3 id="74-installation-scripts"><a class="header" href="#74-installation-scripts"><strong>7.4 Installation Scripts</strong></a></h3>
+<p>Provide easy installation scripts for your users:</p>
+<pre><code class="language-bash">#!/bin/bash
+# install.sh - DevTool installer
+
+set -e
+
+# Determine OS and architecture
+OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+ARCH="$(uname -m)"
+
+# Map architecture
+case "${ARCH}" in
+    x86_64) ARCH="amd64" ;;
+    aarch64) ARCH="arm64" ;;
+    *) echo "Unsupported architecture: ${ARCH}"; exit 1 ;;
+esac
+
+# Set install directory
+INSTALL_DIR="/usr/local/bin"
+if [ ! -d "$INSTALL_DIR" ] || [ ! -w "$INSTALL_DIR" ]; then
+    INSTALL_DIR="$HOME/.local/bin"
+    mkdir -p "$INSTALL_DIR"
+fi
+
+# Download URL
+VERSION="1.0.0"
+DOWNLOAD_URL="https://github.com/yourorg/devtool/releases/download/v${VERSION}/devtool-${OS}-${ARCH}"
+if [ "$OS" = "windows" ]; then
+    DOWNLOAD_URL="${DOWNLOAD_URL}.exe"
+fi
+
+echo "Downloading DevTool ${VERSION} for ${OS}/${ARCH}..."
+curl -L "$DOWNLOAD_URL" -o "${INSTALL_DIR}/devtool"
+chmod +x "${INSTALL_DIR}/devtool"
+
+echo "DevTool installed to ${INSTALL_DIR}/devtool"
+
+# Check if directory is in PATH
+if [[ ":$PATH:" != *":${INSTALL_DIR}:"* ]]; then
+    echo "Warning: ${INSTALL_DIR} is not in your PATH"
+    echo "Add it to your PATH by adding this line to your shell profile:"
+    echo "  export PATH=\"\$PATH:${INSTALL_DIR}\""
+fi
+</code></pre>
+<h2 id="268-building-a-complete-cli-project"><a class="header" href="#268-building-a-complete-cli-project"><strong>26.8. Building a Complete CLI Project</strong></a></h2>
+<p>Let's consolidate our learning by designing a complete CLI application structure.</p>
+<h3 id="81-project-structure"><a class="header" href="#81-project-structure"><strong>8.1 Project Structure</strong></a></h3>
+<p>A well-organized CLI project follows this structure:</p>
+<pre><code>devtool/
+├── cmd/
+│   └── devtool/
+│       └── main.go         # Entry point
+├── internal/               # Private application code
+│   ├── commands/           # Command implementations
+│   │   ├── root.go
+│   │   ├── server.go
+│   │   └── container.go
+│   ├── config/             # Configuration handling
+│   │   └── config.go
+│   └── utils/              # Utility functions
+│       └── display.go
+├── pkg/                    # Public libraries
+│   └── api/                # API client
+│       └── client.go
+├── scripts/                # Build and release scripts
+│   ├── build.sh
+│   └── install.sh
+├── completions/            # Shell completions
+│   ├── devtool.bash
+│   └── devtool.zsh
+├── dist/                   # Build artifacts
+├── .goreleaser.yml         # GoReleaser config
+├── go.mod
+├── go.sum
+├── LICENSE
+└── README.md
+</code></pre>
+<h3 id="82-main-application-entry-point"><a class="header" href="#82-main-application-entry-point"><strong>8.2 Main Application Entry Point</strong></a></h3>
+<p>The main.go file serves as the entry point:</p>
+<pre><code class="language-go">// cmd/devtool/main.go
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/yourorg/devtool/internal/commands"
+	"github.com/yourorg/devtool/internal/config"
+)
+
+// Version information - set during build
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
+func main() {
+	// Initialize configuration
+	if err := config.Init(); err != nil {
+		fmt.Fprintf(os.Stderr, "Error initializing configuration: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Create root command with version info
+	rootCmd := commands.NewRootCmd(version, commit, date)
+
+	// Execute
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(1)
+	}
+}
+</code></pre>
+<h3 id="83-command-implementation"><a class="header" href="#83-command-implementation"><strong>8.3 Command Implementation</strong></a></h3>
+<p>Commands are organized in separate files:</p>
+<pre><code class="language-go">// internal/commands/root.go
+package commands
+
+import (
+	"github.com/spf13/cobra"
+)
+
+func NewRootCmd(version, commit, date string) *cobra.Command {
+	rootCmd := &amp;cobra.Command{
+		Use:     "devtool",
+		Short:   "A DevOps toolkit for managing infrastructure",
+		Version: formatVersion(version, commit, date),
+	}
+
+	// Add global flags
+	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "Enable verbose output")
+
+	// Add subcommands
+	rootCmd.AddCommand(
+		NewServerCmd(),
+		NewContainerCmd(),
+		NewCompletionCmd(),
+	)
+
+	return rootCmd
+}
+
+func formatVersion(version, commit, date string) string {
+	return version + "\ncommit: " + commit + "\nbuilt at: " + date
+}
+
+// internal/commands/server.go
+package commands
+
+import (
+	"github.com/spf13/cobra"
+)
+
+func NewServerCmd() *cobra.Command {
+	serverCmd := &amp;cobra.Command{
+		Use:   "server",
+		Short: "Manage servers",
+	}
+
+	// Add subcommands
+	serverCmd.AddCommand(
+		NewServerListCmd(),
+		NewServerCreateCmd(),
+	)
+
+	return serverCmd
+}
+
+func NewServerListCmd() *cobra.Command {
+	cmd := &amp;cobra.Command{
+		Use:   "list",
+		Short: "List servers",
+		RunE:  runServerListCmd,
+	}
+
+	cmd.Flags().StringP("format", "f", "table", "Output format (table, json, yaml)")
+	cmd.Flags().StringP("region", "r", "all", "Filter by region")
+
+	return cmd
+}
+
+func runServerListCmd(cmd *cobra.Command, args []string) error {
+	// Implementation here
+	return nil
+}
+</code></pre>
+<h3 id="84-configuration-handling"><a class="header" href="#84-configuration-handling"><strong>8.4 Configuration Handling</strong></a></h3>
+<p>Centralized configuration management:</p>
+<pre><code class="language-go">// internal/config/config.go
+package config
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/spf13/viper"
+)
+
+// Config stores the application configuration
+type Config struct {
+	Debug    bool
+	LogLevel string
+	Server   ServerConfig
+	API      APIConfig
+}
+
+type ServerConfig struct {
+	URL      string
+	Username string
+	Password string
+}
+
+type APIConfig struct {
+	Key       string
+	Endpoint  string
+	Timeout   int
+	RetryMax  int
+}
+
+// Global config instance
+var AppConfig Config
+
+// Init initializes the configuration
+func Init() error {
+	// Set defaults
+	viper.SetDefault("debug", false)
+	viper.SetDefault("loglevel", "info")
+	viper.SetDefault("server.url", "https://api.example.com")
+	viper.SetDefault("api.timeout", 30)
+	viper.SetDefault("api.retrymax", 3)
+
+	// Configuration file
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+
+	// Search paths
+	home, err := os.UserHomeDir()
+	if err == nil {
+		viper.AddConfigPath(filepath.Join(home, ".devtool"))
+	}
+	viper.AddConfigPath(".")
+
+	// Environment variables
+	viper.SetEnvPrefix("DEVTOOL")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	viper.AutomaticEnv()
+
+	// Read configuration
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			return fmt.Errorf("failed to read config file: %w", err)
+		}
+	}
+
+	// Unmarshal config
+	if err := viper.Unmarshal(&amp;AppConfig); err != nil {
+		return fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+
+	return nil
+}
+
+// GetConfig returns the current configuration
+func GetConfig() Config {
+	return AppConfig
+}
+</code></pre>
+<h3 id="85-utility-functions"><a class="header" href="#85-utility-functions"><strong>8.5 Utility Functions</strong></a></h3>
+<p>Reusable utility functions:</p>
+<pre><code class="language-go">// internal/utils/display.go
+package utils
+
+import (
+	"fmt"
+	"io"
+	"os"
+	"strings"
+	"text/tabwriter"
+
+	"github.com/fatih/color"
+)
+
+var (
+	Success = color.New(color.FgGreen, color.Bold).SprintfFunc()
+	Warning = color.New(color.FgYellow).SprintfFunc()
+	Error   = color.New(color.FgRed, color.Bold).SprintfFunc()
+	Info    = color.New(color.FgCyan).SprintfFunc()
+)
+
+// FormatTable formats data as a table
+func FormatTable(writer io.Writer, headers []string, rows [][]string) {
+	w := tabwriter.NewWriter(writer, 0, 0, 2, ' ', 0)
+
+	// Print headers
+	fmt.Fprintln(w, strings.Join(headers, "\t"))
+
+	// Print separator
+	separators := make([]string, len(headers))
+	for i := range separators {
+		separators[i] = strings.Repeat("-", len(headers[i]))
+	}
+	fmt.Fprintln(w, strings.Join(separators, "\t"))
+
+	// Print rows
+	for _, row := range rows {
+		fmt.Fprintln(w, strings.Join(row, "\t"))
+	}
+
+	w.Flush()
+}
+
+// PrintError prints an error message to stderr
+func PrintError(format string, a ...interface{}) {
+	fmt.Fprintf(os.Stderr, Error(format, a...)+"\n")
+}
+
+// PrintSuccess prints a success message
+func PrintSuccess(format string, a ...interface{}) {
+	fmt.Printf(Success(format, a...)+"\n")
+}
+</code></pre>
+<h2 id="269-summary-and-best-practices"><a class="header" href="#269-summary-and-best-practices"><strong>26.9. Summary and Best Practices</strong></a></h2>
+<h3 id="91-best-practices-for-cli-applications"><a class="header" href="#91-best-practices-for-cli-applications"><strong>9.1 Best Practices for CLI Applications</strong></a></h3>
+<ol>
+<li>
+<p><strong>Design Principles</strong></p>
+<ul>
+<li>Follow the Unix philosophy: do one thing and do it well</li>
+<li>Use consistent naming and command structure</li>
+<li>Provide sensible defaults but allow customization</li>
+<li>Follow the principle of least surprise</li>
+</ul>
+</li>
+<li>
+<p><strong>User Experience</strong></p>
+<ul>
+<li>Provide clear, concise help text and examples</li>
+<li>Use colors and formatting to enhance readability</li>
+<li>Show progress for long-running operations</li>
+<li>Support both interactive and non-interactive modes</li>
+</ul>
+</li>
+<li>
+<p><strong>Code Organization</strong></p>
+<ul>
+<li>Separate command logic from business logic</li>
+<li>Organize commands hierarchically</li>
+<li>Use interfaces for testability</li>
+<li>Handle errors gracefully with useful messages</li>
+</ul>
+</li>
+<li>
+<p><strong>Performance</strong></p>
+<ul>
+<li>Optimize startup time for frequently used commands</li>
+<li>Use concurrency for I/O-bound operations</li>
+<li>Profile and benchmark critical paths</li>
+<li>Consider memory usage for large data sets</li>
+</ul>
+</li>
+<li>
+<p><strong>Distribution</strong></p>
+<ul>
+<li>Support multiple platforms and architectures</li>
+<li>Provide easy installation methods</li>
+<li>Include documentation and examples</li>
+<li>Automate the release process</li>
+</ul>
+</li>
+</ol>
+<h3 id="92-learning-from-successful-cli-tools"><a class="header" href="#92-learning-from-successful-cli-tools"><strong>9.2 Learning From Successful CLI Tools</strong></a></h3>
+<p>Study these popular Go CLI tools for inspiration:</p>
+<ol>
+<li><strong>Kubernetes CLI (kubectl)</strong>: Complex but consistent command structure</li>
+<li><strong>HashiCorp Tools (terraform, vault)</strong>: Excellent documentation and UX</li>
+<li><strong>GitHub CLI (gh)</strong>: Intuitive interface and integration patterns</li>
+<li><strong>Hugo</strong>: Fast performance and powerful configuration</li>
+</ol>
+<h3 id="93-further-learning-resources"><a class="header" href="#93-further-learning-resources"><strong>9.3 Further Learning Resources</strong></a></h3>
+<ol>
+<li>
+<p><strong>Books</strong></p>
+<ul>
+<li>"Command-Line Rust" by Ken Youens-Clark (principles apply to Go)</li>
+<li>"Powerful Command-Line Applications in Go" by Ricardo Gerardi</li>
+</ul>
+</li>
+<li>
+<p><strong>Libraries</strong></p>
+<ul>
+<li><a href="https://github.com/spf13/cobra">spf13/cobra</a>: Command-line framework</li>
+<li><a href="https://github.com/spf13/viper">spf13/viper</a>: Configuration management</li>
+<li><a href="https://github.com/charmbracelet/bubbletea">charmbracelet/bubbletea</a>: Terminal UI framework</li>
+<li><a href="https://github.com/AlecAivazis/survey">AlecAivazis/survey</a>: Interactive prompts</li>
+</ul>
+</li>
+<li>
+<p><strong>Tools</strong></p>
+<ul>
+<li><a href="https://goreleaser.com/">goreleaser</a>: Automate releases</li>
+<li><a href="https://golangci-lint.run/">golangci-lint</a>: Linting for Go projects</li>
+</ul>
+</li>
+</ol>
+<h2 id="2610-exercises"><a class="header" href="#2610-exercises"><strong>26.10. Exercises</strong></a></h2>
+<ol>
+<li>
+<p><strong>Basic CLI Tool</strong>: Create a simple file manipulation tool with commands for listing, copying, and moving files.</p>
+</li>
+<li>
+<p><strong>Interactive CLI</strong>: Build an interactive tool for managing a to-do list with storage in a local JSON file.</p>
+</li>
+<li>
+<p><strong>API Client</strong>: Develop a CLI client for a RESTful API (GitHub, weather service, etc.) with caching and configuration.</p>
+</li>
+<li>
+<p><strong>DevOps Tool</strong>: Create a deployment tool that can manage configurations across environments.</p>
+</li>
+<li>
+<p><strong>Advanced Project</strong>: Build a comprehensive CLI application that incorporates all the concepts from this chapter, including a plugin system for extensibility.</p>
+</li>
+</ol>
+<p>By completing these exercises, you'll gain practical experience with the concepts and patterns introduced in this chapter, preparing you for building professional-grade CLI applications in Go.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-25-Performance.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-27-Platform-Engineering.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-25-Performance.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-27-Platform-Engineering.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

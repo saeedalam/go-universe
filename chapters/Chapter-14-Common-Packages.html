@@ -1,0 +1,1016 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Common Packages - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-14-Common-Packages.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-14-common-packages-in-go"><a class="header" href="#chapter-14-common-packages-in-go"><strong>Chapter 14: Common Packages in Go</strong></a></h1>
+<p>Go's standard library is extensive and provides a rich set of tools for everyday programming tasks. Rather than relying heavily on third-party libraries, Go encourages developers to leverage its standard library, which is well-designed, thoroughly tested, and optimized for performance.</p>
+<p>In this chapter, we'll explore some of the most commonly used packages in Go's standard library, including <code>fmt</code> for formatted I/O, <code>time</code> for date and time operations, <code>math/rand</code> for random number generation, and others. Understanding these packages will help you write idiomatic Go code and solve common programming problems efficiently.</p>
+<h2 id="141-the-fmt-package"><a class="header" href="#141-the-fmt-package"><strong>14.1 The fmt Package</strong></a></h2>
+<p>The <code>fmt</code> package provides functions for formatted I/O operations, similar to C's printf and scanf functions. It's one of the most frequently used packages in Go programs.</p>
+<h3 id="1411-printing-to-standard-output"><a class="header" href="#1411-printing-to-standard-output"><strong>14.1.1 Printing to Standard Output</strong></a></h3>
+<p>The <code>fmt</code> package offers several functions for printing to standard output:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    // Print without a newline
+    fmt.Print("Hello, ")
+    fmt.Print("world!\n")
+
+    // Print with a newline
+    fmt.Println("Hello, world!")
+
+    // Formatted print
+    fmt.Printf("My name is %s and I'm %d years old.\n", "Alice", 30)
+
+    // Print with dynamic padding and alignment
+    fmt.Printf("|%-10s|%10s|\n", "Left", "Right")
+    fmt.Printf("|%-10d|%10d|\n", 123, 456)
+}
+</code></pre>
+<p>Output:</p>
+<pre><code>Hello, world!
+Hello, world!
+My name is Alice and I'm 30 years old.
+|Left      |     Right|
+|123       |       456|
+</code></pre>
+<h3 id="1412-formatting-verbs"><a class="header" href="#1412-formatting-verbs"><strong>14.1.2 Formatting Verbs</strong></a></h3>
+<p>The <code>fmt</code> package supports various formatting verbs for different types:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    // General
+    fmt.Printf("%v\n", 123)         // Default format: 123
+    fmt.Printf("%#v\n", "hello")    // Go syntax format: "hello"
+    fmt.Printf("%T\n", 123.45)      // Type: float64
+
+    // Integer
+    fmt.Printf("%d\n", 123)         // Decimal: 123
+    fmt.Printf("%b\n", 5)           // Binary: 101
+    fmt.Printf("%o\n", 10)          // Octal: 12
+    fmt.Printf("%x\n", 15)          // Hex: f
+    fmt.Printf("%X\n", 15)          // Hex: F
+
+    // Float
+    fmt.Printf("%f\n", 123.456)     // Decimal: 123.456000
+    fmt.Printf("%.2f\n", 123.456)   // Precision: 123.46
+    fmt.Printf("%e\n", 123.456)     // Scientific: 1.234560e+02
+
+    // String
+    fmt.Printf("%s\n", "hello")     // String: hello
+    fmt.Printf("%q\n", "hello")     // Quoted: "hello"
+
+    // Boolean
+    fmt.Printf("%t\n", true)        // Boolean: true
+
+    // Pointer
+    x := 10
+    fmt.Printf("%p\n", &amp;x)          // Pointer: 0xc000016098
+}
+</code></pre>
+<h3 id="1413-string-formatting"><a class="header" href="#1413-string-formatting"><strong>14.1.3 String Formatting</strong></a></h3>
+<p>The <code>fmt</code> package provides functions to format strings without printing them:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    // Sprintf returns a formatted string
+    name := "Bob"
+    age := 25
+    greeting := fmt.Sprintf("Hello, %s! You are %d years old.", name, age)
+    fmt.Println(greeting)
+
+    // Formatting a float with specific precision
+    pi := 3.14159265359
+    piStr := fmt.Sprintf("Pi: %.3f", pi)
+    fmt.Println(piStr)
+
+    // Using width and precision
+    formatted := fmt.Sprintf("|%10.2f|%-10.2f|", 12.34, 56.78)
+    fmt.Println(formatted)
+}
+</code></pre>
+<p>Output:</p>
+<pre><code>Hello, Bob! You are 25 years old.
+Pi: 3.142
+|     12.34|56.78     |
+</code></pre>
+<h3 id="1414-reading-input"><a class="header" href="#1414-reading-input"><strong>14.1.4 Reading Input</strong></a></h3>
+<p>The <code>fmt</code> package also provides functions for reading formatted input:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    var name string
+    var age int
+
+    fmt.Print("Enter your name: ")
+    fmt.Scan(&amp;name)
+
+    fmt.Print("Enter your age: ")
+    fmt.Scan(&amp;age)
+
+    fmt.Printf("Hello, %s! You are %d years old.\n", name, age)
+
+    // Reading multiple values
+    var x, y int
+    fmt.Print("Enter two numbers: ")
+    count, err := fmt.Scanf("%d %d", &amp;x, &amp;y)
+    if err != nil {
+        fmt.Println("Error:", err)
+    } else {
+        fmt.Printf("Read %d values. Sum: %d\n", count, x+y)
+    }
+}
+</code></pre>
+<p>Note: When running this program, you'll need to provide input via the command line.</p>
+<h2 id="142-the-time-package"><a class="header" href="#142-the-time-package"><strong>14.2 The time Package</strong></a></h2>
+<p>The <code>time</code> package provides functionality for measuring and displaying time.</p>
+<h3 id="1421-getting-the-current-time"><a class="header" href="#1421-getting-the-current-time"><strong>14.2.1 Getting the Current Time</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    // Get current time
+    now := time.Now()
+    fmt.Println("Current time:", now)
+
+    // Extract components
+    fmt.Println("Year:", now.Year())
+    fmt.Println("Month:", now.Month())
+    fmt.Println("Day:", now.Day())
+    fmt.Println("Hour:", now.Hour())
+    fmt.Println("Minute:", now.Minute())
+    fmt.Println("Second:", now.Second())
+
+    // Get weekday
+    fmt.Println("Weekday:", now.Weekday())
+
+    // Get day of year
+    fmt.Println("Day of year:", now.YearDay())
+}
+</code></pre>
+<p>Output (will vary):</p>
+<pre><code>Current time: 2023-05-10 14:30:45.123456789 +0200 CEST
+Year: 2023
+Month: May
+Day: 10
+Hour: 14
+Minute: 30
+Second: 45
+Weekday: Wednesday
+Day of year: 130
+</code></pre>
+<h3 id="1422-creating-time-values"><a class="header" href="#1422-creating-time-values"><strong>14.2.2 Creating Time Values</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    // Create a specific time
+    t := time.Date(2023, time.January, 15, 14, 30, 45, 0, time.UTC)
+    fmt.Println("Created time:", t)
+
+    // Parse time from string
+    t1, err := time.Parse("2006-01-02 15:04:05", "2023-05-10 14:30:45")
+    if err != nil {
+        fmt.Println("Error:", err)
+    } else {
+        fmt.Println("Parsed time:", t1)
+    }
+
+    // Parse with timezone
+    loc, _ := time.LoadLocation("America/New_York")
+    t2, _ := time.ParseInLocation("2006-01-02 15:04:05", "2023-05-10 14:30:45", loc)
+    fmt.Println("Parsed time with location:", t2)
+}
+</code></pre>
+<p>Output:</p>
+<pre><code>Created time: 2023-01-15 14:30:45 +0000 UTC
+Parsed time: 2023-05-10 14:30:45 +0000 UTC
+Parsed time with location: 2023-05-10 14:30:45 -0400 EDT
+</code></pre>
+<p>Note the special format string used in <code>time.Parse</code>. Go uses a reference time (January 2, 2006 at 15:04:05 in time zone MST) to define the format layout.</p>
+<h3 id="1423-time-formatting"><a class="header" href="#1423-time-formatting"><strong>14.2.3 Time Formatting</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    t := time.Date(2023, time.April, 15, 14, 30, 45, 0, time.UTC)
+
+    // Predefined formats
+    fmt.Println(t.Format(time.RFC3339))      // 2023-04-15T14:30:45Z
+    fmt.Println(t.Format(time.RFC822))       // 15 Apr 23 14:30 UTC
+    fmt.Println(t.Format(time.RFC1123))      // Sat, 15 Apr 2023 14:30:45 UTC
+
+    // Custom formats
+    fmt.Println(t.Format("2006-01-02"))      // 2023-04-15
+    fmt.Println(t.Format("15:04:05"))        // 14:30:45
+    fmt.Println(t.Format("Monday, January 2, 2006")) // Saturday, April 15, 2023
+    fmt.Println(t.Format("3:04 PM"))         // 2:30 PM
+}
+</code></pre>
+<h3 id="1424-time-calculations"><a class="header" href="#1424-time-calculations"><strong>14.2.4 Time Calculations</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    now := time.Now()
+
+    // Add duration
+    future := now.Add(24 * time.Hour)
+    fmt.Println("Tomorrow:", future.Format("2006-01-02"))
+
+    // Subtract duration
+    past := now.Add(-72 * time.Hour)
+    fmt.Println("3 days ago:", past.Format("2006-01-02"))
+
+    // Add by units
+    laterDate := now.AddDate(1, 2, 3) // 1 year, 2 months, 3 days
+    fmt.Println("Later date:", laterDate.Format("2006-01-02"))
+
+    // Time difference
+    start := time.Date(2023, time.January, 1, 0, 0, 0, 0, time.UTC)
+    end := time.Date(2023, time.December, 31, 23, 59, 59, 0, time.UTC)
+    diff := end.Sub(start)
+    fmt.Printf("Time difference: %.2f days\n", diff.Hours()/24)
+
+    // Compare times
+    fmt.Println("Before:", now.Before(future))
+    fmt.Println("After:", now.After(past))
+    fmt.Println("Equal:", now.Equal(now))
+}
+</code></pre>
+<p>Output (will vary):</p>
+<pre><code>Tomorrow: 2023-05-11
+3 days ago: 2023-05-07
+Later date: 2024-07-13
+Time difference: 364.00 days
+Before: true
+After: true
+Equal: true
+</code></pre>
+<h3 id="1425-timers-and-tickers"><a class="header" href="#1425-timers-and-tickers"><strong>14.2.5 Timers and Tickers</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    // One-time timer
+    timer := time.NewTimer(2 * time.Second)
+    fmt.Println("Timer started at", time.Now().Format("15:04:05"))
+
+    &lt;-timer.C // Block until timer fires
+    fmt.Println("Timer fired at", time.Now().Format("15:04:05"))
+
+    // Simple sleep
+    fmt.Println("Sleeping for 1 second...")
+    time.Sleep(1 * time.Second)
+    fmt.Println("Awake!")
+
+    // Recurring ticker
+    ticker := time.NewTicker(500 * time.Millisecond)
+    counter := 0
+
+    // Run ticker for 3 seconds
+    go func() {
+        for t := range ticker.C {
+            counter++
+            fmt.Println("Tick at", t.Format("15:04:05.000"))
+            if counter &gt;= 6 {
+                ticker.Stop()
+                break
+            }
+        }
+    }()
+
+    // Wait for ticker to finish
+    time.Sleep(3 * time.Second)
+    fmt.Println("Ticker stopped")
+}
+</code></pre>
+<p>Output (will vary):</p>
+<pre><code>Timer started at 14:30:45
+Timer fired at 14:30:47
+Sleeping for 1 second...
+Awake!
+Tick at 14:30:48.500
+Tick at 14:30:49.000
+Tick at 14:30:49.500
+Tick at 14:30:50.000
+Tick at 14:30:50.500
+Tick at 14:30:51.000
+Ticker stopped
+</code></pre>
+<h2 id="143-the-mathrand-package"><a class="header" href="#143-the-mathrand-package"><strong>14.3 The math/rand Package</strong></a></h2>
+<p>The <code>math/rand</code> package implements pseudo-random number generators for various distributions.</p>
+<h3 id="1431-basic-random-number-generation"><a class="header" href="#1431-basic-random-number-generation"><strong>14.3.1 Basic Random Number Generation</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    // Without seeding, you'll get the same sequence every time
+    fmt.Println("Without seed:")
+    for i := 0; i &lt; 3; i++ {
+        fmt.Println(rand.Intn(100)) // Random int [0, 100)
+    }
+
+    // Seed with current time for different sequences each run
+    rand.Seed(time.Now().UnixNano())
+    fmt.Println("\nWith time seed:")
+    for i := 0; i &lt; 3; i++ {
+        fmt.Println(rand.Intn(100)) // Random int [0, 100)
+    }
+}
+</code></pre>
+<p>Note: In Go 1.20+, you don't need to explicitly seed the random number generator as it's automatically seeded with a random value at program startup.</p>
+<h3 id="1432-different-random-distributions"><a class="header" href="#1432-different-random-distributions"><strong>14.3.2 Different Random Distributions</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    rand.Seed(time.Now().UnixNano())
+
+    // Integer between 0 and n-1
+    fmt.Println("rand.Intn(10):", rand.Intn(10))
+
+    // Float64 in range [0.0, 1.0)
+    fmt.Println("rand.Float64():", rand.Float64())
+
+    // Integer in range [min, max)
+    min, max := 5, 15
+    rangeInt := min + rand.Intn(max-min)
+    fmt.Printf("Random integer in range [%d, %d): %d\n", min, max, rangeInt)
+
+    // Float64 in range [min, max)
+    minF, maxF := 5.0, 15.0
+    rangeFloat := minF + rand.Float64()*(maxF-minF)
+    fmt.Printf("Random float in range [%.2f, %.2f): %.2f\n", minF, maxF, rangeFloat)
+
+    // Normal distribution (bell curve)
+    // mean=0, stddev=1
+    fmt.Println("Normal distribution:", rand.NormFloat64())
+
+    // Exponential distribution
+    // rate=1
+    fmt.Println("Exponential distribution:", rand.ExpFloat64())
+}
+</code></pre>
+<h3 id="1433-random-shuffling"><a class="header" href="#1433-random-shuffling"><strong>14.3.3 Random Shuffling</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    rand.Seed(time.Now().UnixNano())
+
+    // Shuffle a slice
+    numbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+    fmt.Println("Original:", numbers)
+
+    rand.Shuffle(len(numbers), func(i, j int) {
+        numbers[i], numbers[j] = numbers[j], numbers[i]
+    })
+
+    fmt.Println("Shuffled:", numbers)
+
+    // Random permutation
+    perm := rand.Perm(5) // [0,5) permutation
+    fmt.Println("Random permutation:", perm)
+}
+</code></pre>
+<p>Output (will vary):</p>
+<pre><code>Original: [1 2 3 4 5 6 7 8 9 10]
+Shuffled: [7 2 6 9 1 4 8 3 10 5]
+Random permutation: [3 1 0 4 2]
+</code></pre>
+<h3 id="1434-creating-a-random-source"><a class="header" href="#1434-creating-a-random-source"><strong>14.3.4 Creating a Random Source</strong></a></h3>
+<p>For concurrent applications, it's better to create separate sources to avoid lock contention:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    // Create a random source
+    source := rand.NewSource(time.Now().UnixNano())
+    r := rand.New(source)
+
+    // Use the custom random generator
+    for i := 0; i &lt; 3; i++ {
+        fmt.Println(r.Intn(100))
+    }
+
+    // Creating multiple sources for concurrent use
+    source1 := rand.NewSource(time.Now().UnixNano())
+    r1 := rand.New(source1)
+
+    source2 := rand.NewSource(time.Now().UnixNano() + 1)
+    r2 := rand.New(source2)
+
+    fmt.Println("\nFrom r1:", r1.Intn(100))
+    fmt.Println("From r2:", r2.Intn(100))
+}
+</code></pre>
+<h2 id="144-other-essential-packages"><a class="header" href="#144-other-essential-packages"><strong>14.4 Other Essential Packages</strong></a></h2>
+<h3 id="1441-the-strings-package"><a class="header" href="#1441-the-strings-package"><strong>14.4.1 The strings Package</strong></a></h3>
+<p>The <code>strings</code> package provides functions for manipulating UTF-8 encoded strings.</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "strings"
+)
+
+func main() {
+    s := "Hello, Go World!"
+
+    // Basic functions
+    fmt.Println("Contains 'Go':", strings.Contains(s, "Go"))
+    fmt.Println("HasPrefix:", strings.HasPrefix(s, "Hello"))
+    fmt.Println("HasSuffix:", strings.HasSuffix(s, "World!"))
+    fmt.Println("Count of 'o':", strings.Count(s, "o"))
+    fmt.Println("Index of 'Go':", strings.Index(s, "Go"))
+
+    // Transformations
+    fmt.Println("ToUpper:", strings.ToUpper(s))
+    fmt.Println("ToLower:", strings.ToLower(s))
+    fmt.Println("Replace:", strings.Replace(s, "o", "0", 2)) // Replace first 2 occurrences
+    fmt.Println("ReplaceAll:", strings.ReplaceAll(s, "o", "0"))
+
+    // Trimming
+    padded := "  trimmed  "
+    fmt.Println("Trim spaces:", strings.TrimSpace(padded))
+
+    // Splitting and joining
+    parts := strings.Split(s, ", ")
+    fmt.Println("Split:", parts)
+    joined := strings.Join(parts, " &amp; ")
+    fmt.Println("Joined:", joined)
+
+    // Checking if string contains only certain characters
+    fmt.Println("Only digits:", strings.ContainsAny("12345", "0123456789"))
+    fmt.Println("Any vowels:", strings.ContainsAny("hello", "aeiou"))
+
+    // Builder for efficient string concatenation
+    var builder strings.Builder
+    builder.WriteString("Hello")
+    builder.WriteString(", ")
+    builder.WriteString("world")
+    builder.WriteString("!")
+    result := builder.String()
+    fmt.Println("Built string:", result)
+}
+</code></pre>
+<p>Output:</p>
+<pre><code>Contains 'Go': true
+HasPrefix: true
+HasSuffix: true
+Count of 'o': 2
+Index of 'Go': 7
+ToUpper: HELLO, GO WORLD!
+ToLower: hello, go world!
+Replace: Hell0, G0 World!
+ReplaceAll: Hell0, G0 W0rld!
+Trim spaces: trimmed
+Split: [Hello Go World!]
+Joined: Hello &amp; Go World!
+Only digits: true
+Any vowels: true
+Built string: Hello, world!
+</code></pre>
+<h3 id="1442-the-strconv-package"><a class="header" href="#1442-the-strconv-package"><strong>14.4.2 The strconv Package</strong></a></h3>
+<p>The <code>strconv</code> package provides functions for converting strings to various data types and vice versa.</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "strconv"
+)
+
+func main() {
+    // String to integer
+    i, err := strconv.Atoi("123")
+    if err == nil {
+        fmt.Println("String to int:", i)
+    }
+
+    // Integer to string
+    s := strconv.Itoa(456)
+    fmt.Println("Int to string:", s)
+
+    // Parse boolean
+    b, _ := strconv.ParseBool("true")
+    fmt.Println("String to bool:", b)
+
+    // Parse float
+    f, _ := strconv.ParseFloat("3.14159", 64)
+    fmt.Println("String to float64:", f)
+
+    // Parse int with base
+    hex, _ := strconv.ParseInt("1a", 16, 0)
+    fmt.Println("Hex string to int:", hex)
+
+    // Format boolean
+    bs := strconv.FormatBool(true)
+    fmt.Println("Bool to string:", bs)
+
+    // Format float
+    fs := strconv.FormatFloat(3.14159, 'f', 2, 64) // 'f' format, 2 decimal places
+    fmt.Println("Float to string (fixed):", fs)
+
+    es := strconv.FormatFloat(3.14159, 'e', 2, 64) // 'e' format, 2 decimal places
+    fmt.Println("Float to string (scientific):", es)
+
+    // Format int with base
+    is := strconv.FormatInt(26, 16) // Base 16 (hex)
+    fmt.Println("Int to hex string:", is)
+}
+</code></pre>
+<p>Output:</p>
+<pre><code>String to int: 123
+Int to string: 456
+String to bool: true
+String to float64: 3.14159
+Hex string to int: 26
+Bool to string: true
+Float to string (fixed): 3.14
+Float to string (scientific): 3.14e+00
+Int to hex string: 1a
+</code></pre>
+<h3 id="1443-the-sort-package"><a class="header" href="#1443-the-sort-package"><strong>14.4.3 The sort Package</strong></a></h3>
+<p>The <code>sort</code> package provides primitives for sorting slices and user-defined collections.</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "sort"
+)
+
+func main() {
+    // Sorting ints
+    numbers := []int{3, 1, 4, 1, 5, 9, 2, 6}
+    fmt.Println("Before sort:", numbers)
+    sort.Ints(numbers)
+    fmt.Println("After sort:", numbers)
+
+    // Sorting strings
+    names := []string{"Charlie", "Alice", "Bob", "David"}
+    fmt.Println("Before sort:", names)
+    sort.Strings(names)
+    fmt.Println("After sort:", names)
+
+    // Sorting floats
+    floats := []float64{3.14, 1.41, 2.71, 1.62}
+    fmt.Println("Before sort:", floats)
+    sort.Float64s(floats)
+    fmt.Println("After sort:", floats)
+
+    // Checking if sorted
+    fmt.Println("Ints sorted:", sort.IntsAreSorted(numbers))
+
+    // Searching in sorted slice (binary search)
+    idx := sort.SearchInts(numbers, 5)
+    fmt.Println("Index of 5:", idx)
+
+    // Custom sort: sort by length of string
+    fruits := []string{"banana", "kiwi", "apple", "strawberry", "fig"}
+    fmt.Println("Before custom sort:", fruits)
+
+    sort.Slice(fruits, func(i, j int) bool {
+        return len(fruits[i]) &lt; len(fruits[j])
+    })
+
+    fmt.Println("After custom sort (by length):", fruits)
+
+    // Sorting structs
+    type Person struct {
+        Name string
+        Age  int
+    }
+
+    people := []Person{
+        {"Alice", 25},
+        {"Bob", 30},
+        {"Charlie", 20},
+    }
+
+    // Sort by age
+    sort.Slice(people, func(i, j int) bool {
+        return people[i].Age &lt; people[j].Age
+    })
+
+    fmt.Println("People sorted by age:")
+    for _, p := range people {
+        fmt.Printf("  %s: %d\n", p.Name, p.Age)
+    }
+}
+</code></pre>
+<p>Output:</p>
+<pre><code>Before sort: [3 1 4 1 5 9 2 6]
+After sort: [1 1 2 3 4 5 6 9]
+Before sort: [Charlie Alice Bob David]
+After sort: [Alice Bob Charlie David]
+Before sort: [3.14 1.41 2.71 1.62]
+After sort: [1.41 1.62 2.71 3.14]
+Ints sorted: true
+Index of 5: 4
+Before custom sort: [banana kiwi apple strawberry fig]
+After custom sort (by length): [fig kiwi apple banana strawberry]
+People sorted by age:
+  Charlie: 20
+  Alice: 25
+  Bob: 30
+</code></pre>
+<h2 id="145-exercises"><a class="header" href="#145-exercises"><strong>14.5 Exercises</strong></a></h2>
+<h3 id="exercise-1-string-processing-with-the-fmt-and-strings-packages"><a class="header" href="#exercise-1-string-processing-with-the-fmt-and-strings-packages"><strong>Exercise 1: String Processing with the fmt and strings Packages</strong></a></h3>
+<p>Create a program that reads a sentence from the user, counts the number of words, and prints the words in reverse order.</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "strings"
+)
+
+func main() {
+    var input string
+
+    fmt.Print("Enter a sentence: ")
+    fmt.Scanln(&amp;input)
+
+    // Split the sentence into words
+    words := strings.Fields(input)
+
+    // Count the words
+    fmt.Printf("Word count: %d\n", len(words))
+
+    // Print words in reverse order
+    fmt.Println("Words in reverse order:")
+    for i := len(words) - 1; i &gt;= 0; i-- {
+        fmt.Println(words[i])
+    }
+}
+</code></pre>
+<h3 id="exercise-2-time-calculations"><a class="header" href="#exercise-2-time-calculations"><strong>Exercise 2: Time Calculations</strong></a></h3>
+<p>Create a program that calculates the time difference between two dates and displays it in years, months, days, hours, minutes, and seconds.</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "time"
+)
+
+func main() {
+    // Parse two time values
+    t1, _ := time.Parse("2006-01-02 15:04:05", "2020-01-01 00:00:00")
+    t2, _ := time.Parse("2006-01-02 15:04:05", "2023-06-15 12:30:45")
+
+    // Calculate the difference
+    diff := t2.Sub(t1)
+
+    // Extract days, hours, minutes, seconds
+    days := int(diff.Hours() / 24)
+    hours := int(diff.Hours()) % 24
+    minutes := int(diff.Minutes()) % 60
+    seconds := int(diff.Seconds()) % 60
+
+    // For years and months, use a different approach
+    years := 0
+    months := 0
+
+    // Start from t1 and add years until we exceed t2
+    currentTime := t1
+    for currentTime.AddDate(1, 0, 0).Before(t2) {
+        currentTime = currentTime.AddDate(1, 0, 0)
+        years++
+    }
+
+    // Add months until we exceed t2
+    for currentTime.AddDate(0, 1, 0).Before(t2) {
+        currentTime = currentTime.AddDate(0, 1, 0)
+        months++
+    }
+
+    // Calculate remaining days
+    remainingDays := int(t2.Sub(currentTime).Hours() / 24)
+
+    fmt.Printf("Time difference: %d years, %d months, %d days, %d hours, %d minutes, %d seconds\n",
+        years, months, remainingDays, hours, minutes, seconds)
+    fmt.Printf("Total days: %d\n", days)
+}
+</code></pre>
+<h3 id="exercise-3-random-number-game"><a class="header" href="#exercise-3-random-number-game"><strong>Exercise 3: Random Number Game</strong></a></h3>
+<p>Create a number guessing game where the computer generates a random number and the user tries to guess it. The program should provide hints ("higher" or "lower") after each guess.</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "time"
+)
+
+func main() {
+    rand.Seed(time.Now().UnixNano())
+
+    // Generate a random number between 1 and 100
+    target := rand.Intn(100) + 1
+
+    fmt.Println("I'm thinking of a number between 1 and 100.")
+    fmt.Println("Try to guess it!")
+
+    attempts := 0
+    for {
+        var guess int
+        fmt.Print("Your guess: ")
+        fmt.Scan(&amp;guess)
+        attempts++
+
+        if guess &lt; target {
+            fmt.Println("Higher!")
+        } else if guess &gt; target {
+            fmt.Println("Lower!")
+        } else {
+            fmt.Printf("Correct! You guessed it in %d attempts.\n", attempts)
+            break
+        }
+    }
+}
+</code></pre>
+<h2 id="146-summary"><a class="header" href="#146-summary"><strong>14.6 Summary</strong></a></h2>
+<p>In this chapter, we've explored some of the most commonly used packages in Go's standard library:</p>
+<ul>
+<li><strong>fmt</strong>: For formatted I/O operations, including printing, scanning, and string formatting</li>
+<li><strong>time</strong>: For working with dates, times, durations, and timers</li>
+<li><strong>math/rand</strong>: For generating random numbers and shuffling collections</li>
+<li><strong>strings</strong>: For manipulating and processing strings</li>
+<li><strong>strconv</strong>: For converting between strings and other data types</li>
+<li><strong>sort</strong>: For sorting slices and user-defined collections</li>
+</ul>
+<p>These packages form the foundation of many Go programs and provide essential functionality for everyday programming tasks. By mastering these packages, you'll be able to write idiomatic Go code that is both efficient and maintainable.</p>
+<p>Go's standard library is much more extensive than what we've covered here. As you continue your Go journey, explore other packages like <code>io</code>, <code>os</code>, <code>net/http</code>, <code>encoding/json</code>, and more, which provide functionality for file I/O, networking, and data encoding/decoding.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-13-Concurrency-Patterns.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-15-File-IO.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-13-Concurrency-Patterns.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-15-File-IO.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

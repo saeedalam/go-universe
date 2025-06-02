@@ -1,0 +1,1352 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Cloud-Native Go - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-34-Cloud-Native-Go.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-34-cloud-native-go"><a class="header" href="#chapter-34-cloud-native-go"><strong>Chapter 34: Cloud Native Go</strong></a></h1>
+<h2 id="341-introduction-to-cloud-native-go"><a class="header" href="#341-introduction-to-cloud-native-go"><strong>34.1 Introduction to Cloud Native Go</strong></a></h2>
+<p>The landscape of application deployment has fundamentally changed with the rise of cloud computing. Modern Go applications are increasingly designed to be "cloud native" - built specifically to leverage cloud infrastructure and services. This chapter explores the principles, practices, and tools for developing and deploying Go applications in cloud environments.</p>
+<p>Go's efficiency, small binary size, and low memory footprint make it particularly well-suited for cloud environments where resources directly impact costs. Additionally, Go's standard library and ecosystem provide excellent support for building distributed systems that thrive in cloud architectures.</p>
+<h3 id="3411-cloud-native-principles"><a class="header" href="#3411-cloud-native-principles"><strong>34.1.1 Cloud Native Principles</strong></a></h3>
+<p>Cloud native applications adhere to several key principles:</p>
+<ol>
+<li>
+<p><strong>Containerization</strong>: Applications are packaged in containers, ensuring consistency across development, testing, and production environments.</p>
+</li>
+<li>
+<p><strong>Microservices Architecture</strong>: Applications are designed as collections of loosely coupled services rather than monolithic codebases.</p>
+</li>
+<li>
+<p><strong>Automation</strong>: Infrastructure provisioning, deployment, scaling, and operations are automated.</p>
+</li>
+<li>
+<p><strong>Observability</strong>: Applications expose metrics, logs, and traces to facilitate monitoring and debugging in distributed systems.</p>
+</li>
+<li>
+<p><strong>Resilience</strong>: Applications are designed to handle failures gracefully through strategies like circuit breaking, retries, and graceful degradation.</p>
+</li>
+<li>
+<p><strong>Scalability</strong>: Applications can scale horizontally to handle varying loads efficiently.</p>
+</li>
+</ol>
+<p>Go's language features and ecosystem align perfectly with these principles, making it an excellent choice for cloud native applications.</p>
+<h3 id="3412-the-go-advantage-in-cloud-environments"><a class="header" href="#3412-the-go-advantage-in-cloud-environments"><strong>34.1.2 The Go Advantage in Cloud Environments</strong></a></h3>
+<p>Go offers several advantages when building cloud native applications:</p>
+<ol>
+<li>
+<p><strong>Fast Compilation and Startup</strong>: Go applications compile quickly and start almost instantly, making them ideal for dynamic cloud environments where instances may be frequently created or destroyed.</p>
+</li>
+<li>
+<p><strong>Static Binaries</strong>: Go produces self-contained binaries with no external dependencies, simplifying containerization and deployment.</p>
+</li>
+<li>
+<p><strong>Efficient Resource Usage</strong>: Go's low memory footprint and efficient garbage collection reduce cloud infrastructure costs.</p>
+</li>
+<li>
+<p><strong>Built-in Concurrency</strong>: Go's goroutines and channels provide an elegant model for handling concurrent operations common in cloud services.</p>
+</li>
+<li>
+<p><strong>Strong Standard Library</strong>: Go's standard library includes robust networking, HTTP, and JSON support, reducing the need for external dependencies.</p>
+</li>
+</ol>
+<p>Throughout this chapter, we'll explore how to leverage these advantages to build, deploy, and operate Go applications in cloud environments.</p>
+<h2 id="342-containerizing-go-applications"><a class="header" href="#342-containerizing-go-applications"><strong>34.2 Containerizing Go Applications</strong></a></h2>
+<p>In the cloud native world, containers serve as the primary packaging mechanism for applications. This section explores best practices for containerizing Go applications.</p>
+<h3 id="3421-creating-efficient-docker-images-for-go"><a class="header" href="#3421-creating-efficient-docker-images-for-go"><strong>34.2.1 Creating Efficient Docker Images for Go</strong></a></h3>
+<p>When containerizing Go applications, creating efficient Docker images is crucial. Here's a pattern for multi-stage builds that produces minimal images:</p>
+<pre><code class="language-dockerfile"># Build stage
+FROM golang:1.20-alpine AS build
+
+# Set working directory
+WORKDIR /app
+
+# Copy go.mod and go.sum files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+
+# Final stage
+FROM alpine:latest
+
+# Install necessary runtime dependencies
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /root/
+
+# Copy the binary from the build stage
+COPY --from=build /app/app .
+
+# Expose application port
+EXPOSE 8080
+
+# Run the application
+CMD ["./app"]
+</code></pre>
+<p>This multi-stage build approach creates a final image that contains only the compiled Go binary and essential runtime dependencies, resulting in a much smaller image.</p>
+<h3 id="3422-optimizing-docker-image-size"><a class="header" href="#3422-optimizing-docker-image-size"><strong>34.2.2 Optimizing Docker Image Size</strong></a></h3>
+<p>Further optimize your Docker images with these techniques:</p>
+<ol>
+<li>
+<p><strong>Use Alpine as Base Image</strong>: Alpine Linux is much smaller than other distributions.</p>
+</li>
+<li>
+<p><strong>Strip Debugging Information</strong>: Add <code>-ldflags="-s -w"</code> to your build command to remove debugging information from the binary.</p>
+</li>
+<li>
+<p><strong>Minimize Layers</strong>: Combine related commands to reduce the number of layers in your image.</p>
+</li>
+<li>
+<p><strong>Exclude Unnecessary Files</strong>: Use <code>.dockerignore</code> to exclude files not needed in the build context.</p>
+</li>
+</ol>
+<pre><code class="language-dockerfile"># Example of optimized build
+FROM golang:1.20-alpine AS build
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+# Build with flags to reduce binary size
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-s -w" -o app .
+
+# Use distroless base image for even smaller images
+FROM gcr.io/distroless/static:nonroot
+
+# Copy the binary
+COPY --from=build /app/app /app
+
+# Use non-root user
+USER nonroot:nonroot
+
+# Run the binary
+ENTRYPOINT ["/app"]
+</code></pre>
+<h3 id="3423-container-security-for-go-applications"><a class="header" href="#3423-container-security-for-go-applications"><strong>34.2.3 Container Security for Go Applications</strong></a></h3>
+<p>Implement these security best practices for containerized Go applications:</p>
+<ol>
+<li>
+<p><strong>Run as Non-Root User</strong>: Avoid running your application as root in the container.</p>
+</li>
+<li>
+<p><strong>Use Read-Only File Systems</strong>: Mount the file system as read-only where possible.</p>
+</li>
+<li>
+<p><strong>Scan Images for Vulnerabilities</strong>: Use tools like Trivy or Clair to scan your container images.</p>
+</li>
+<li>
+<p><strong>Keep Base Images Updated</strong>: Regularly update base images to include security patches.</p>
+</li>
+<li>
+<p><strong>Minimize Included Packages</strong>: Include only necessary packages in your container.</p>
+</li>
+</ol>
+<pre><code class="language-dockerfile">FROM golang:1.20-alpine AS build
+
+# ... build steps ...
+
+FROM alpine:latest
+
+# Create a non-root user
+RUN adduser -D -g '' appuser
+
+# Copy the binary
+COPY --from=build /app/app /app
+
+# Use the non-root user
+USER appuser
+
+# Make the filesystem read-only
+VOLUME ["/tmp"]
+
+# Run with explicit read-only flag when launching:
+# docker run --read-only --tmpfs /tmp:rw,exec,size=1g myapp
+ENTRYPOINT ["/app"]
+</code></pre>
+<h2 id="343-kubernetes-for-go-applications"><a class="header" href="#343-kubernetes-for-go-applications"><strong>34.3 Kubernetes for Go Applications</strong></a></h2>
+<p>Kubernetes has emerged as the de facto standard for orchestrating containerized applications. This section covers deploying and managing Go applications on Kubernetes.</p>
+<h3 id="3431-basic-kubernetes-deployment"><a class="header" href="#3431-basic-kubernetes-deployment"><strong>34.3.1 Basic Kubernetes Deployment</strong></a></h3>
+<p>Here's a basic Kubernetes deployment for a Go application:</p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-app
+  labels:
+    app: go-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-app
+  template:
+    metadata:
+      labels:
+        app: go-app
+    spec:
+      containers:
+        - name: go-app
+          image: your-registry/go-app:1.0.0
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          env:
+            - name: LOG_LEVEL
+              value: "info"
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: go-app-config
+                  key: db_host
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: go-app-secrets
+                  key: db_password
+</code></pre>
+<p>Complementing the deployment, you'll typically need a service to expose your application:</p>
+<pre><code class="language-yaml">apiVersion: v1
+kind: Service
+metadata:
+  name: go-app-service
+  labels:
+    app: go-app
+spec:
+  selector:
+    app: go-app
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
+</code></pre>
+<h3 id="3432-configuring-health-checks-for-go-applications"><a class="header" href="#3432-configuring-health-checks-for-go-applications"><strong>34.3.2 Configuring Health Checks for Go Applications</strong></a></h3>
+<p>Health checks are crucial for Kubernetes to manage your application properly. Implement a health endpoint in your Go application:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"database/sql"
+	"encoding/json"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	_ "github.com/lib/pq"
+)
+
+// Application dependencies
+type Application struct {
+	DB     *sql.DB
+	Config *Config
+	Logger *log.Logger
+}
+
+// Health represents the structure of our health check response
+type Health struct {
+	Status    string `json:"status"`
+	Version   string `json:"version"`
+	DBStatus  string `json:"dbStatus"`
+	Timestamp string `json:"timestamp"`
+}
+
+func main() {
+	// Initialize application dependencies
+	app := setupApplication()
+	defer app.DB.Close()
+
+	// Set up HTTP server
+	mux := http.NewServeMux()
+
+	// API routes
+	mux.HandleFunc("/api/v1/users", app.handleUsers)
+
+	// Health check endpoint
+	mux.HandleFunc("/health", app.handleHealth)
+
+	// Create server with proper timeouts
+	srv := &amp;http.Server{
+		Addr:         ":8080",
+		Handler:      mux,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
+
+	// Start server in a goroutine
+	go func() {
+		app.Logger.Printf("Starting server on port 8080")
+		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+			app.Logger.Fatalf("Server failed: %v", err)
+		}
+	}()
+
+	// Set up graceful shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	&lt;-quit
+
+	app.Logger.Println("Shutting down server...")
+
+	// Create context with timeout for shutdown
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		app.Logger.Fatalf("Server forced to shutdown: %v", err)
+	}
+
+	app.Logger.Println("Server gracefully stopped")
+}
+
+// handleHealth responds with the application's health status
+func (app *Application) handleHealth(w http.ResponseWriter, r *http.Request) {
+	health := Health{
+		Status:    "UP",
+		Version:   "1.0.0",
+		DBStatus:  "UP",
+		Timestamp: time.Now().Format(time.RFC3339),
+	}
+
+	// Check database connection
+	if err := app.DB.Ping(); err != nil {
+		app.Logger.Printf("Database health check failed: %v", err)
+		health.Status = "DEGRADED"
+		health.DBStatus = "DOWN"
+		w.WriteHeader(http.StatusServiceUnavailable)
+	} else {
+		w.WriteHeader(http.StatusOK)
+	}
+
+	// Return JSON response
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(health)
+}
+
+// setupApplication initializes all application dependencies
+func setupApplication() *Application {
+	// Initialize logger
+	logger := log.New(os.Stdout, "GO-APP: ", log.LstdFlags|log.Lshortfile)
+
+	// Load configuration
+	config := loadConfig()
+
+	// Initialize database connection
+	db, err := sql.Open("postgres", config.DatabaseURL)
+	if err != nil {
+		logger.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	// Configure connection pool
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(5)
+	db.SetConnMaxLifetime(5 * time.Minute)
+
+	// Verify database connection
+	if err := db.Ping(); err != nil {
+		logger.Fatalf("Failed to ping database: %v", err)
+	}
+
+	return &amp;Application{
+		DB:     db,
+		Config: config,
+		Logger: logger,
+	}
+}
+
+// Config holds application configuration
+type Config struct {
+	DatabaseURL string
+	LogLevel    string
+	// Add other configuration fields as needed
+}
+
+// loadConfig loads application configuration from environment variables
+func loadConfig() *Config {
+	return &amp;Config{
+		DatabaseURL: os.Getenv("DATABASE_URL"),
+		LogLevel:    os.Getenv("LOG_LEVEL"),
+	}
+}
+
+// handleUsers is a placeholder for a user API endpoint
+func (app *Application) handleUsers(w http.ResponseWriter, r *http.Request) {
+	// Implementation omitted for brevity
+}
+
+### **34.3.3 Resource Management for Go Applications**
+
+Go applications are typically resource-efficient, but proper resource allocation is still crucial:
+
+```yaml
+resources:
+  limits:
+    cpu: "500m"      # 0.5 CPU cores maximum
+    memory: "128Mi"  # 128 MB memory maximum
+  requests:
+    cpu: "100m"      # 0.1 CPU cores requested
+    memory: "64Mi"   # 64 MB memory requested
+</code></pre>
+<p>Benchmark your application to determine appropriate values. Go applications often have:</p>
+<ol>
+<li><strong>Low memory footprint</strong>: Start with modest memory allocations (64-128 MB)</li>
+<li><strong>Efficient CPU usage</strong>: Request less CPU than you might for applications in other languages</li>
+<li><strong>Quick startup</strong>: Short readiness probe initial delays (5-10 seconds)</li>
+</ol>
+<h3 id="3434-configuration-management-with-kubernetes"><a class="header" href="#3434-configuration-management-with-kubernetes"><strong>34.3.4 Configuration Management with Kubernetes</strong></a></h3>
+<p>Manage your Go application's configuration using ConfigMaps and Secrets:</p>
+<pre><code class="language-yaml"># ConfigMap for non-sensitive configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: go-app-config
+data:
+  db_host: "postgres.default.svc.cluster.local"
+  db_port: "5432"
+  db_name: "myapp"
+  log_level: "info"
+  allowed_origins: "example.com,api.example.com"
+  config.yaml: |
+    server:
+      port: 8080
+      timeout: 30s
+    features:
+      audit_logging: true
+      rate_limiting: true
+    metrics:
+      enabled: true
+      path: /metrics
+
+# Secret for sensitive configuration
+apiVersion: v1
+kind: Secret
+metadata:
+  name: go-app-secrets
+type: Opaque
+data:
+  db_user: cG9zdGdyZXM=  # base64 encoded "postgres"
+  db_password: c2VjcmV0  # base64 encoded "secret"
+  api_key: dG9wLXNlY3JldC1rZXk=  # base64 encoded "top-secret-key"
+</code></pre>
+<p>In your Go application, read these values from environment variables:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+	"strconv"
+	"strings"
+	"time"
+
+	"gopkg.in/yaml.v3"
+)
+
+// Config represents the application configuration
+type Config struct {
+	Server struct {
+		Port    int           `yaml:"port"`
+		Timeout time.Duration `yaml:"timeout"`
+	} `yaml:"server"`
+	Database struct {
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
+		Name     string `yaml:"name"`
+		User     string `yaml:"user"`
+		Password string `yaml:"password"`
+	} `yaml:"database"`
+	Features struct {
+		AuditLogging bool `yaml:"audit_logging"`
+		RateLimiting bool `yaml:"rate_limiting"`
+	} `yaml:"features"`
+	Metrics struct {
+		Enabled bool   `yaml:"enabled"`
+		Path    string `yaml:"path"`
+	} `yaml:"metrics"`
+	AllowedOrigins []string `yaml:"allowed_origins"`
+	APIKey         string   `yaml:"api_key"`
+}
+
+// LoadConfig loads configuration from environment variables and files
+func LoadConfig() (*Config, error) {
+	var config Config
+
+	// Load config from file if present
+	configPath := os.Getenv("CONFIG_PATH")
+	if configPath != "" {
+		configFile, err := os.ReadFile(configPath)
+		if err != nil {
+			return nil, fmt.Errorf("failed to read config file: %w", err)
+		}
+
+		if err := yaml.Unmarshal(configFile, &amp;config); err != nil {
+			return nil, fmt.Errorf("failed to parse config file: %w", err)
+		}
+	}
+
+	// Override with environment variables
+	if port, err := strconv.Atoi(getEnvOrDefault("SERVER_PORT", "")); err == nil &amp;&amp; port &gt; 0 {
+		config.Server.Port = port
+	} else if config.Server.Port == 0 {
+		config.Server.Port = 8080 // Default port
+	}
+
+	if timeout, err := time.ParseDuration(getEnvOrDefault("SERVER_TIMEOUT", "")); err == nil {
+		config.Server.Timeout = timeout
+	} else if config.Server.Timeout == 0 {
+		config.Server.Timeout = 30 * time.Second // Default timeout
+	}
+
+	// Database configuration
+	config.Database.Host = getEnvOrDefault("DB_HOST", config.Database.Host)
+
+	if dbPort, err := strconv.Atoi(getEnvOrDefault("DB_PORT", "")); err == nil &amp;&amp; dbPort &gt; 0 {
+		config.Database.Port = dbPort
+	} else if config.Database.Port == 0 {
+		config.Database.Port = 5432 // Default PostgreSQL port
+	}
+
+	config.Database.Name = getEnvOrDefault("DB_NAME", config.Database.Name)
+	config.Database.User = getEnvOrDefault("DB_USER", config.Database.User)
+	config.Database.Password = getEnvOrDefault("DB_PASSWORD", config.Database.Password)
+
+	// Features
+	if auditLogging, err := strconv.ParseBool(getEnvOrDefault("FEATURE_AUDIT_LOGGING", "")); err == nil {
+		config.Features.AuditLogging = auditLogging
+	}
+
+	if rateLimiting, err := strconv.ParseBool(getEnvOrDefault("FEATURE_RATE_LIMITING", "")); err == nil {
+		config.Features.RateLimiting = rateLimiting
+	}
+
+	// Allowed origins
+	if origins := getEnvOrDefault("ALLOWED_ORIGINS", ""); origins != "" {
+		config.AllowedOrigins = strings.Split(origins, ",")
+	}
+
+	// API key (sensitive)
+	config.APIKey = getEnvOrDefault("API_KEY", config.APIKey)
+
+	return &amp;config, nil
+}
+
+// getEnvOrDefault returns the environment variable value or the default if not set
+func getEnvOrDefault(key, defaultValue string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return defaultValue
+}
+
+func main() {
+	config, err := LoadConfig()
+	if err != nil {
+		log.Fatalf("Failed to load configuration: %v", err)
+	}
+
+	log.Printf("Starting server on port %d", config.Server.Port)
+	log.Printf("Connected to database %s on %s:%d",
+		config.Database.Name, config.Database.Host, config.Database.Port)
+
+	// Start application with configuration
+	// ...
+}
+</code></pre>
+<h3 id="3435-horizontal-pod-autoscaling-for-go-applications"><a class="header" href="#3435-horizontal-pod-autoscaling-for-go-applications"><strong>34.3.5 Horizontal Pod Autoscaling for Go Applications</strong></a></h3>
+<p>Set up horizontal pod autoscaling to automatically adjust your application's resources:</p>
+<pre><code class="language-yaml">apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: go-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: go-app
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 30
+</code></pre>
+<p>For this to work effectively, your Go application should expose metrics. Use Prometheus metrics and the Prometheus Adapter in Kubernetes:</p>
+<pre><code class="language-go">package main
+
+import (
+	"log"
+	"net/http"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+)
+
+var (
+	// Define Prometheus metrics
+	httpRequestsTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "http_requests_total",
+			Help: "Total number of HTTP requests",
+		},
+		[]string{"method", "endpoint", "status"},
+	)
+
+	httpRequestDuration = prometheus.NewHistogramVec(
+		prometheus.HistogramOpts{
+			Name:    "http_request_duration_seconds",
+			Help:    "HTTP request duration in seconds",
+			Buckets: prometheus.DefBuckets,
+		},
+		[]string{"method", "endpoint"},
+	)
+
+	// Add more metrics as needed
+)
+
+func init() {
+	// Register metrics with Prometheus
+	prometheus.MustRegister(httpRequestsTotal)
+	prometheus.MustRegister(httpRequestDuration)
+}
+
+func main() {
+	// Set up HTTP server
+	mux := http.NewServeMux()
+
+	// API routes with instrumentation
+	mux.Handle("/api/v1/users", instrumentHandler("/api/v1/users", handleUsers()))
+
+	// Expose Prometheus metrics
+	mux.Handle("/metrics", promhttp.Handler())
+
+	// Health check endpoint
+	mux.HandleFunc("/health", handleHealth)
+
+	// Start server
+	log.Println("Starting server on :8080")
+	if err := http.ListenAndServe(":8080", mux); err != nil {
+		log.Fatalf("Server failed: %v", err)
+	}
+}
+
+// instrumentHandler wraps an HTTP handler with Prometheus instrumentation
+func instrumentHandler(path string, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Create a custom response writer to capture status code
+		rw := newResponseWriter(w)
+
+		// Record request duration
+		timer := prometheus.NewTimer(httpRequestDuration.WithLabelValues(r.Method, path))
+		defer timer.ObserveDuration()
+
+		// Call the next handler
+		next.ServeHTTP(rw, r)
+
+		// Record request count
+		httpRequestsTotal.WithLabelValues(r.Method, path, http.StatusText(rw.statusCode)).Inc()
+	})
+}
+
+// responseWriter wraps http.ResponseWriter to capture the status code
+type responseWriter struct {
+	http.ResponseWriter
+	statusCode int
+}
+
+func newResponseWriter(w http.ResponseWriter) *responseWriter {
+	return &amp;responseWriter{w, http.StatusOK}
+}
+
+func (rw *responseWriter) WriteHeader(code int) {
+	rw.statusCode = code
+	rw.ResponseWriter.WriteHeader(code)
+}
+
+// Handler implementations
+func handleUsers() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Implementation omitted for brevity
+	})
+}
+
+func handleHealth(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"status":"UP"}`))
+}
+</code></pre>
+<h3 id="3436-implementing-zero-downtime-deployments"><a class="header" href="#3436-implementing-zero-downtime-deployments"><strong>34.3.6 Implementing Zero-Downtime Deployments</strong></a></h3>
+<p>Configure your Kubernetes deployment for zero-downtime updates:</p>
+<pre><code class="language-yaml">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-app
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  # ... rest of deployment spec ...
+</code></pre>
+<p>Ensure your Go application handles termination signals gracefully:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+)
+
+func main() {
+	// Create server
+	srv := &amp;http.Server{
+		Addr:    ":8080",
+		Handler: setupRoutes(),
+	}
+
+	// Start server in a goroutine
+	go func() {
+		log.Println("Starting server...")
+		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+			log.Fatalf("Server error: %v", err)
+		}
+	}()
+
+	// Set up graceful shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	&lt;-quit
+
+	log.Println("Received shutdown signal, waiting for connections to close...")
+
+	// Give existing connections time to complete
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatalf("Server forced to shutdown: %v", err)
+	}
+
+	log.Println("Server gracefully stopped")
+}
+
+func setupRoutes() http.Handler {
+	mux := http.NewServeMux()
+	// Configure routes
+	// ...
+	return mux
+}
+</code></pre>
+<h2 id="344-serverless-go"><a class="header" href="#344-serverless-go"><strong>34.4 Serverless Go</strong></a></h2>
+<p>Serverless computing offers a compelling model for certain types of Go applications. This section explores deploying Go applications in serverless environments.</p>
+<h3 id="3441-aws-lambda-with-go"><a class="header" href="#3441-aws-lambda-with-go"><strong>34.4.1 AWS Lambda with Go</strong></a></h3>
+<p>AWS Lambda supports Go natively. Here's how to create a Lambda function in Go:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"encoding/json"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+)
+
+type Response struct {
+	StatusCode int    `json:"statusCode"`
+	Body       string `json:"body"`
+}
+
+func HandleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	// Parse the request
+	name := request.QueryStringParameters["name"]
+	if name == "" {
+		name = "World"
+	}
+
+	// Create the response
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Headers: map[string]string{
+			"Content-Type": "application/json",
+		},
+		Body: `{"message":"Hello, ` + name + `!"}`,
+	}, nil
+}
+
+func main() {
+	lambda.Start(HandleRequest)
+}
+</code></pre>
+<p>Build and deploy your Lambda function:</p>
+<pre><code class="language-bash">GOOS=linux GOARCH=amd64 go build -o main main.go
+zip function.zip main
+aws lambda create-function \
+  --function-name go-lambda \
+  --runtime go1.x \
+  --handler main \
+  --zip-file fileb://function.zip \
+  --role arn:aws:iam::123456789012:role/lambda-role
+</code></pre>
+<h3 id="3442-google-cloud-functions-with-go"><a class="header" href="#3442-google-cloud-functions-with-go"><strong>34.4.2 Google Cloud Functions with Go</strong></a></h3>
+<p>Google Cloud Functions also supports Go. Here's an example:</p>
+<pre><code class="language-go">package function
+
+import (
+	"fmt"
+	"net/http"
+)
+
+// HelloWorld is an HTTP Cloud Function.
+func HelloWorld(w http.ResponseWriter, r *http.Request) {
+	name := r.URL.Query().Get("name")
+	if name == "" {
+		name = "World"
+	}
+
+	fmt.Fprintf(w, "Hello, %s!", name)
+}
+</code></pre>
+<p>Deploy using the Google Cloud SDK:</p>
+<pre><code class="language-bash">gcloud functions deploy HelloWorld \
+  --runtime go116 \
+  --trigger-http \
+  --allow-unauthenticated
+</code></pre>
+<h3 id="3443-optimizing-go-for-serverless-environments"><a class="header" href="#3443-optimizing-go-for-serverless-environments"><strong>34.4.3 Optimizing Go for Serverless Environments</strong></a></h3>
+<p>Optimize your Go serverless functions:</p>
+<ol>
+<li>
+<p><strong>Cold Start Optimization</strong>: Keep your binary small and minimize dependencies.</p>
+</li>
+<li>
+<p><strong>Connection Reuse</strong>: Reuse database connections and HTTP clients across invocations.</p>
+</li>
+<li>
+<p><strong>Memory Management</strong>: Set appropriate memory limits and clean up resources.</p>
+</li>
+</ol>
+<pre><code class="language-go">// Example of connection reuse in Lambda
+package main
+
+import (
+	"context"
+	"database/sql"
+	"github.com/aws/aws-lambda-go/lambda"
+	_ "github.com/lib/pq"
+	"log"
+	"sync"
+)
+
+// Global variables for reuse across invocations
+var (
+	db   *sql.DB
+	once sync.Once
+)
+
+// initDB initializes the database connection
+func initDB() {
+	var err error
+	db, err = sql.Open("postgres", "postgres://user:password@host:port/dbname")
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	// Set connection pool parameters
+	db.SetMaxOpenConns(5)
+	db.SetMaxIdleConns(5)
+}
+
+func HandleRequest(ctx context.Context, event interface{}) (string, error) {
+	// Initialize DB connection if not already done
+	once.Do(initDB)
+
+	// Use the connection
+	var count int
+	err := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM items").Scan(&amp;count)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("Found %d items", count), nil
+}
+
+func main() {
+	lambda.Start(HandleRequest)
+}
+</code></pre>
+<h2 id="345-continuous-deployment-for-go-applications"><a class="header" href="#345-continuous-deployment-for-go-applications"><strong>34.5 Continuous Deployment for Go Applications</strong></a></h2>
+<p>Automating the deployment process is essential for cloud native applications. This section covers setting up continuous integration and deployment (CI/CD) pipelines for Go applications.</p>
+<h3 id="3451-github-actions-for-go"><a class="header" href="#3451-github-actions-for-go"><strong>34.5.1 GitHub Actions for Go</strong></a></h3>
+<p>Here's a GitHub Actions workflow for testing, building, and deploying a Go application:</p>
+<pre><code class="language-yaml">name: Go CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.20.x
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Test
+        run: go test -v ./...
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' &amp;&amp; github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: yourusername/go-app:latest,yourusername/go-app:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Set Kubernetes context
+        uses: azure/k8s-set-context@v3
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Update deployment
+        run: |
+          kubectl set image deployment/go-app go-app=yourusername/go-app:${{ github.sha }}
+          kubectl rollout status deployment/go-app
+</code></pre>
+<h3 id="3452-gitops-with-argocd"><a class="header" href="#3452-gitops-with-argocd"><strong>34.5.2 GitOps with ArgoCD</strong></a></h3>
+<p>GitOps is a paradigm where Git repositories serve as the source of truth for declarative infrastructure and applications. ArgoCD is a popular tool for implementing GitOps on Kubernetes.</p>
+<pre><code class="language-yaml"># argocd-application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: go-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/yourusername/go-app-deploy.git
+    targetRevision: HEAD
+    path: kubernetes
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: go-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+</code></pre>
+<h3 id="3453-blue-green-and-canary-deployments"><a class="header" href="#3453-blue-green-and-canary-deployments"><strong>34.5.3 Blue-Green and Canary Deployments</strong></a></h3>
+<p>Implement advanced deployment strategies for safer releases:</p>
+<h4 id="blue-green-deployment-with-kubernetes"><a class="header" href="#blue-green-deployment-with-kubernetes"><strong>Blue-Green Deployment with Kubernetes</strong></a></h4>
+<pre><code class="language-yaml"># Blue deployment (current)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-app-blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-app
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: go-app
+        version: blue
+    spec:
+      containers:
+        - name: go-app
+          image: yourusername/go-app:v1
+---
+# Green deployment (new)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-app-green
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-app
+      version: green
+  template:
+    metadata:
+      labels:
+        app: go-app
+        version: green
+    spec:
+      containers:
+        - name: go-app
+          image: yourusername/go-app:v2
+---
+# Service (pointing to blue initially)
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-app
+spec:
+  selector:
+    app: go-app
+    version: blue
+  ports:
+    - port: 80
+      targetPort: 8080
+</code></pre>
+<p>To switch traffic, update the service selector:</p>
+<pre><code class="language-bash">kubectl patch service go-app -p '{"spec":{"selector":{"version":"green"}}}'
+</code></pre>
+<h4 id="canary-deployment-with-istio"><a class="header" href="#canary-deployment-with-istio"><strong>Canary Deployment with Istio</strong></a></h4>
+<pre><code class="language-yaml">apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: go-app
+spec:
+  hosts:
+    - go-app
+  http:
+    - route:
+        - destination:
+            host: go-app
+            subset: v1
+          weight: 90
+        - destination:
+            host: go-app
+            subset: v2
+          weight: 10
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: go-app
+spec:
+  host: go-app
+  subsets:
+    - name: v1
+      labels:
+        version: v1
+    - name: v2
+      labels:
+        version: v2
+</code></pre>
+<p>Gradually increase the weight of v2 as confidence grows.</p>
+<h2 id="346-conclusion"><a class="header" href="#346-conclusion"><strong>34.6 Conclusion</strong></a></h2>
+<p>Cloud native Go combines the efficiency and simplicity of the Go language with modern cloud infrastructure to create highly scalable, resilient applications. By embracing containerization, Kubernetes orchestration, serverless computing, and automated deployment pipelines, you can leverage the full potential of Go in cloud environments.</p>
+<p>The principles and practices covered in this chapter provide a foundation for building and operating Go applications that thrive in the cloud. As cloud technologies continue to evolve, Go's pragmatic design and excellent performance characteristics make it an ideal language for tackling the challenges of distributed systems and microservices architectures.</p>
+<p>Remember that becoming truly cloud native is not just about adopting specific technologies, but also embracing the cultural and architectural shifts that enable organizations to move faster, scale efficiently, and respond to change with agility. Go's simplicity and productivity make it an excellent companion on this journey.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-33-High-Performance-Go.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-35-Go-for-AI-and-LLMs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-33-High-Performance-Go.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-35-Go-for-AI-and-LLMs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

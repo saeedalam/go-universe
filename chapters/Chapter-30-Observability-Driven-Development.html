@@ -1,0 +1,2246 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Observability-Driven Development - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-30-Observability-Driven-Development.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-30-observability-driven-development-with-go"><a class="header" href="#chapter-30-observability-driven-development-with-go"><strong>Chapter 30: Observability-Driven Development with Go</strong></a></h1>
+<h2 id="301-introduction-to-observability-driven-development"><a class="header" href="#301-introduction-to-observability-driven-development"><strong>30.1 Introduction to Observability-Driven Development</strong></a></h2>
+<p>Observability-Driven Development (ODD) is an approach to software engineering that places observability at the core of the development process. Rather than treating monitoring and observability as an afterthought, ODD integrates them into the development lifecycle from the beginning, making systems that are designed to be understood, debugged, and improved.</p>
+<p>In today's complex, distributed systems, understanding what's happening inside your applications is more important than ever. Traditional monitoring approaches that focus on predefined metrics and known failure modes are no longer sufficient. Modern systems require deep, comprehensive observability that allows engineers to ask new questions about system behavior without deploying new code.</p>
+<p>Go, with its robust standard library, excellent performance characteristics, and growing ecosystem of observability tools, is an ideal language for implementing Observability-Driven Development. In this chapter, we'll explore how to apply ODD principles to Go applications, covering everything from basic instrumentation to advanced observability patterns.</p>
+<h3 id="3011-what-is-observability"><a class="header" href="#3011-what-is-observability"><strong>30.1.1 What is Observability?</strong></a></h3>
+<p>Observability originates from control theory and refers to how well a system's internal states can be understood from its external outputs. In software engineering, observability means having enough data about your system's behavior to understand:</p>
+<ul>
+<li>What's happening right now</li>
+<li>What happened in the past</li>
+<li>Why it's happening</li>
+<li>What might happen next</li>
+</ul>
+<p>The three pillars of observability are:</p>
+<ol>
+<li><strong>Logs</strong>: Time-stamped records of discrete events that occurred in the system</li>
+<li><strong>Metrics</strong>: Numeric measurements of system behavior sampled over time</li>
+<li><strong>Traces</strong>: Records of requests as they flow through distributed systems</li>
+</ol>
+<p>When combined, these pillars provide a comprehensive view of your application's behavior, allowing you to understand complex interactions and troubleshoot issues effectively.</p>
+<h3 id="3012-from-monitoring-to-observability"><a class="header" href="#3012-from-monitoring-to-observability"><strong>30.1.2 From Monitoring to Observability</strong></a></h3>
+<p>Traditional monitoring focuses on watching known metrics and alerting when predefined thresholds are crossed. While valuable, this approach has limitations:</p>
+<ul>
+<li>It only shows what you know to look for</li>
+<li>It's reactive rather than proactive</li>
+<li>It doesn't help with unknown unknowns</li>
+</ul>
+<p>Observability expands on monitoring by:</p>
+<ul>
+<li>Allowing exploration of system behavior</li>
+<li>Supporting hypothesis-driven debugging</li>
+<li>Enabling the discovery of unknown issues</li>
+<li>Facilitating root cause analysis</li>
+</ul>
+<p>Observability doesn't replace monitoring—it enhances it. Good observability makes monitoring more effective by providing context and depth to alerts.</p>
+<h3 id="3013-core-principles-of-observability-driven-development"><a class="header" href="#3013-core-principles-of-observability-driven-development"><strong>30.1.3 Core Principles of Observability-Driven Development</strong></a></h3>
+<p>Observability-Driven Development is guided by several key principles:</p>
+<ol>
+<li><strong>Design for Observability</strong>: Make observability a first-class concern in system design</li>
+<li><strong>Instrument Everything</strong>: Add comprehensive instrumentation to code from the start</li>
+<li><strong>Collect the Right Data</strong>: Gather data that provides insight, not just volume</li>
+<li><strong>Context is King</strong>: Ensure all telemetry data contains relevant context</li>
+<li><strong>Correlation is Critical</strong>: Make it possible to correlate data across the three pillars</li>
+<li><strong>Test Observability</strong>: Verify that your observability features work as expected</li>
+<li><strong>Continuous Improvement</strong>: Use observability data to drive system improvements</li>
+</ol>
+<p>By following these principles, you create systems that are easier to understand, debug, and evolve.</p>
+<h3 id="3014-benefits-of-observability-driven-development"><a class="header" href="#3014-benefits-of-observability-driven-development"><strong>30.1.4 Benefits of Observability-Driven Development</strong></a></h3>
+<p>Adopting ODD provides numerous benefits:</p>
+<ul>
+<li><strong>Reduced Mean Time to Resolution (MTTR)</strong>: Quickly identify and fix issues</li>
+<li><strong>Improved System Reliability</strong>: Catch problems before they affect users</li>
+<li><strong>Better Development Velocity</strong>: Make changes with confidence</li>
+<li><strong>Enhanced Collaboration</strong>: Share a common understanding of system behavior</li>
+<li><strong>Data-Driven Decisions</strong>: Base improvements on actual usage patterns</li>
+<li><strong>Improved User Experience</strong>: Identify and address performance issues proactively</li>
+</ul>
+<p>These benefits compound over time, making ODD an investment that pays increasing dividends as systems grow in complexity.</p>
+<h2 id="302-building-observable-go-applications"><a class="header" href="#302-building-observable-go-applications"><strong>30.2 Building Observable Go Applications</strong></a></h2>
+<p>Creating observable Go applications starts with proper instrumentation. In this section, we'll explore how to add observability to Go code using both standard library features and popular third-party packages.</p>
+<h3 id="3021-logging-in-go"><a class="header" href="#3021-logging-in-go"><strong>30.2.1 Logging in Go</strong></a></h3>
+<p>Logs are often the first observability tool developers reach for. They provide a detailed record of what happened in your application and are invaluable for debugging and understanding system behavior.</p>
+<h4 id="using-the-standard-library"><a class="header" href="#using-the-standard-library"><strong>Using the Standard Library</strong></a></h4>
+<p>Go's standard library includes the <code>log</code> package, which provides basic logging functionality:</p>
+<pre><code class="language-go">package main
+
+import (
+    "log"
+    "os"
+)
+
+func main() {
+    // Create a logger that writes to stdout with a custom prefix and flags
+    logger := log.New(os.Stdout, "APP: ", log.Ldate|log.Ltime|log.Lshortfile)
+
+    // Log messages at different levels
+    logger.Println("This is an informational message")
+    logger.Printf("Processing item %d", 123)
+    logger.Fatal("This is a fatal error") // Logs and calls os.Exit(1)
+}
+</code></pre>
+<p>While the standard library's logging is functional, it's fairly basic. For production applications, you'll typically want a more feature-rich logging solution.</p>
+<h4 id="structured-logging-with-zerolog"><a class="header" href="#structured-logging-with-zerolog"><strong>Structured Logging with zerolog</strong></a></h4>
+<p>Structured logging improves upon traditional text-based logging by organizing log data into consistent, queryable fields. The <code>zerolog</code> package is a popular choice for structured logging in Go:</p>
+<pre><code class="language-go">package main
+
+import (
+    "os"
+    "time"
+
+    "github.com/rs/zerolog"
+    "github.com/rs/zerolog/log"
+)
+
+func main() {
+    // Configure global logger
+    zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+    log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339})
+
+    // Basic structured logging
+    log.Info().
+        Str("service", "order-api").
+        Int("user_id", 123).
+        Str("action", "order_created").
+        Int("order_id", 456).
+        Msg("Order successfully created")
+
+    // Log with error
+    err := processOrder(456)
+    if err != nil {
+        log.Error().
+            Err(err).
+            Int("order_id", 456).
+            Msg("Failed to process order")
+    }
+}
+
+func processOrder(orderID int) error {
+    // Process order logic...
+    return nil
+}
+</code></pre>
+<p>Structured logging offers several advantages:</p>
+<ul>
+<li><strong>Consistent format</strong>: Logs are machine-parseable and have a consistent structure</li>
+<li><strong>Better filtering</strong>: Filter logs based on specific fields rather than text patterns</li>
+<li><strong>Enhanced context</strong>: Add rich context to every log entry</li>
+<li><strong>Easier analysis</strong>: Aggregate and analyze logs more effectively</li>
+</ul>
+<h4 id="context-aware-logging"><a class="header" href="#context-aware-logging"><strong>Context-Aware Logging</strong></a></h4>
+<p>In distributed systems, it's crucial to correlate logs across services. One approach is to use context-aware logging:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "net/http"
+
+    "github.com/google/uuid"
+    "github.com/rs/zerolog"
+    "github.com/rs/zerolog/log"
+)
+
+// contextKey is a type for context keys to avoid collisions
+type contextKey string
+
+const requestIDKey = contextKey("requestID")
+
+// RequestIDMiddleware adds a unique request ID to each request context
+func RequestIDMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Generate or retrieve request ID
+        requestID := r.Header.Get("X-Request-ID")
+        if requestID == "" {
+            requestID = uuid.New().String()
+        }
+
+        // Add request ID to response headers
+        w.Header().Set("X-Request-ID", requestID)
+
+        // Create context with request ID
+        ctx := context.WithValue(r.Context(), requestIDKey, requestID)
+
+        // Call next handler with updated context
+        next.ServeHTTP(w, r.WithContext(ctx))
+    })
+}
+
+// LogMiddleware logs details about each request
+func LogMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Extract request ID from context
+        requestID, _ := r.Context().Value(requestIDKey).(string)
+
+        // Create logger with request context
+        logger := log.With().
+            Str("request_id", requestID).
+            Str("method", r.Method).
+            Str("path", r.URL.Path).
+            Str("remote_addr", r.RemoteAddr).
+            Logger()
+
+        // Store logger in context
+        ctx := logger.WithContext(r.Context())
+
+        // Log request start
+        logger.Info().Msg("Request started")
+
+        // Call next handler
+        next.ServeHTTP(w, r.WithContext(ctx))
+
+        // Log request completion
+        logger.Info().Msg("Request completed")
+    })
+}
+
+// GetLoggerFromContext extracts the logger from context
+func GetLoggerFromContext(ctx context.Context) zerolog.Logger {
+    if logger, ok := zerolog.Ctx(ctx); ok {
+        return *logger
+    }
+    return log.Logger
+}
+
+// GetRequestID extracts the request ID from context
+func GetRequestID(ctx context.Context) string {
+    if requestID, ok := ctx.Value(requestIDKey).(string); ok {
+        return requestID
+    }
+    return ""
+}
+
+// GetCurrentSpan gets the current span from context
+func GetCurrentSpan(ctx context.Context) trace.Span {
+    return trace.SpanFromContext(ctx)
+}
+
+// Handler uses context-aware logging
+func Handler(w http.ResponseWriter, r *http.Request) {
+    // Get logger and span from context
+    logger := GetLoggerFromContext(r.Context())
+    span := GetCurrentSpan(r.Context())
+
+    // Log with correlation ID and tracing info
+    logger.Info().
+        Str("operation", "process_request").
+        Str("trace_id", span.SpanContext().TraceID().String()).
+        Msg("Processing request")
+
+    // Process the request
+    // ...
+
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("Request processed successfully"))
+}
+
+func main() {
+    // Set up router with middleware chain
+    router := http.NewServeMux()
+
+    // Create middleware chain
+    chain := RequestIDMiddleware(
+        LogMiddleware(
+            http.HandlerFunc(Handler),
+        ),
+    )
+
+    router.Handle("/process", chain)
+
+    // Start server
+    log.Printf("Starting server on :8080")
+    if err := http.ListenAndServe(":8080", router); err != nil {
+        log.Fatal(err)
+    }
+}
+</code></pre>
+<p>This context-aware logging approach ensures that:</p>
+<ol>
+<li>Each request has a unique identifier that flows through the entire request lifecycle</li>
+<li>Logs from different components processing the same request can be correlated</li>
+<li>Request context (method, path, etc.) is automatically included in all logs</li>
+<li>Tracing information is linked to logs for comprehensive observability</li>
+</ol>
+<h3 id="3022-metrics-with-prometheus"><a class="header" href="#3022-metrics-with-prometheus"><strong>30.2.2 Metrics with Prometheus</strong></a></h3>
+<p>Metrics provide quantitative measurements of your application's behavior over time. They're essential for monitoring, alerting, and capacity planning. Prometheus has become the de facto standard for metrics collection in cloud-native applications.</p>
+<h4 id="basic-prometheus-integration"><a class="header" href="#basic-prometheus-integration"><strong>Basic Prometheus Integration</strong></a></h4>
+<p>Let's integrate Prometheus metrics into a Go web application:</p>
+<pre><code class="language-go">package main
+
+import (
+    "log"
+    "net/http"
+    "time"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+    "github.com/prometheus/client_golang/prometheus/promhttp"
+)
+
+var (
+    // Define metrics
+    httpRequestsTotal = promauto.NewCounterVec(
+        prometheus.CounterOpts{
+            Name: "http_requests_total",
+            Help: "Total number of HTTP requests",
+        },
+        []string{"method", "endpoint", "status"},
+    )
+
+    httpRequestDuration = promauto.NewHistogramVec(
+        prometheus.HistogramOpts{
+            Name:    "http_request_duration_seconds",
+            Help:    "Duration of HTTP requests in seconds",
+            Buckets: prometheus.DefBuckets,
+        },
+        []string{"method", "endpoint"},
+    )
+
+    activeSessions = promauto.NewGauge(
+        prometheus.GaugeOpts{
+            Name: "active_sessions",
+            Help: "Number of active user sessions",
+        },
+    )
+
+    queueSize = promauto.NewGauge(
+        prometheus.GaugeOpts{
+            Name: "task_queue_size",
+            Help: "Current number of tasks in the processing queue",
+        },
+    )
+)
+
+// PrometheusMiddleware instruments HTTP handlers with metrics
+func PrometheusMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        start := time.Now()
+
+        // Create a custom response writer to capture the status code
+        rww := NewResponseWriterWrapper(w)
+
+        // Call the next handler
+        next.ServeHTTP(rww, r)
+
+        // Record metrics after the handler returns
+        duration := time.Since(start).Seconds()
+        httpRequestDuration.WithLabelValues(r.Method, r.URL.Path).Observe(duration)
+        httpRequestsTotal.WithLabelValues(r.Method, r.URL.Path, rww.StatusString()).Inc()
+    })
+}
+
+// ResponseWriterWrapper captures the status code for metrics
+type ResponseWriterWrapper struct {
+    http.ResponseWriter
+    statusCode int
+}
+
+// NewResponseWriterWrapper creates a new wrapper
+func NewResponseWriterWrapper(w http.ResponseWriter) *ResponseWriterWrapper {
+    return &amp;ResponseWriterWrapper{w, http.StatusOK}
+}
+
+// WriteHeader captures the status code
+func (rww *ResponseWriterWrapper) WriteHeader(code int) {
+    rww.statusCode = code
+    rww.ResponseWriter.WriteHeader(code)
+}
+
+// StatusString returns the status code as a string
+func (rww *ResponseWriterWrapper) StatusString() string {
+    return http.StatusText(rww.statusCode)
+}
+
+// HomeHandler is a simple handler for demonstration
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+    // Simulate some work
+    time.Sleep(time.Duration(100+time.Now().UnixNano()%400) * time.Millisecond)
+
+    // Update a gauge metric (e.g., simulating current queue size)
+    queueSize.Set(float64(time.Now().Unix() % 10))
+
+    w.Write([]byte("Hello, World!"))
+}
+
+// LoginHandler simulates a user login
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+    // Increment active sessions gauge
+    activeSessions.Inc()
+
+    w.Write([]byte("Login successful"))
+}
+
+// LogoutHandler simulates a user logout
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+    // Decrement active sessions gauge
+    activeSessions.Dec()
+
+    w.Write([]byte("Logout successful"))
+}
+
+func main() {
+    // Create router
+    mux := http.NewServeMux()
+
+    // Apply Prometheus middleware to all routes
+    mux.Handle("/", PrometheusMiddleware(http.HandlerFunc(HomeHandler)))
+    mux.Handle("/login", PrometheusMiddleware(http.HandlerFunc(LoginHandler)))
+    mux.Handle("/logout", PrometheusMiddleware(http.HandlerFunc(LogoutHandler)))
+
+    // Expose Prometheus metrics endpoint
+    mux.Handle("/metrics", promhttp.Handler())
+
+    // Start server
+    log.Println("Starting server on :8080")
+    log.Fatal(http.ListenAndServe(":8080", mux))
+}
+</code></pre>
+<p>This example demonstrates several important Prometheus metric types:</p>
+<ol>
+<li><strong>Counter</strong>: A cumulative metric that only increases (e.g., total requests)</li>
+<li><strong>Gauge</strong>: A metric that can go up and down (e.g., active sessions)</li>
+<li><strong>Histogram</strong>: Samples observations and counts them in configurable buckets (e.g., request duration)</li>
+</ol>
+<h4 id="custom-metrics-for-business-logic"><a class="header" href="#custom-metrics-for-business-logic"><strong>Custom Metrics for Business Logic</strong></a></h4>
+<p>Beyond standard infrastructure metrics, you should also instrument your business logic:</p>
+<pre><code class="language-go">package main
+
+import (
+    "log"
+    "math/rand"
+    "time"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+)
+
+var (
+    // Business metrics
+    ordersProcessed = promauto.NewCounterVec(
+        prometheus.CounterOpts{
+            Name: "orders_processed_total",
+            Help: "Total number of processed orders",
+        },
+        []string{"status", "payment_method"},
+    )
+
+    orderValue = promauto.NewHistogramVec(
+        prometheus.HistogramOpts{
+            Name:    "order_value_dollars",
+            Help:    "Value of orders in dollars",
+            Buckets: []float64{10, 50, 100, 500, 1000, 5000},
+        },
+        []string{"product_category"},
+    )
+
+    inventoryLevel = promauto.NewGaugeVec(
+        prometheus.GaugeOpts{
+            Name: "inventory_level",
+            Help: "Current inventory level by product",
+        },
+        []string{"product_id", "warehouse"},
+    )
+
+    paymentProcessingTime = promauto.NewHistogramVec(
+        prometheus.HistogramOpts{
+            Name:    "payment_processing_seconds",
+            Help:    "Time spent processing payments",
+            Buckets: prometheus.LinearBuckets(0.1, 0.1, 10),
+        },
+        []string{"payment_provider"},
+    )
+)
+
+// ProcessOrder simulates order processing with metrics
+func ProcessOrder(orderID string, amount float64, paymentMethod string, productCategory string) (string, error) {
+    // Record start time for payment processing
+    start := time.Now()
+
+    // Simulate payment processing
+    time.Sleep(time.Duration(rand.Intn(500)) * time.Millisecond)
+
+    // Record payment processing time
+    paymentProcessingTime.WithLabelValues("stripe").Observe(time.Since(start).Seconds())
+
+    // Determine order status (simulate success/failure)
+    status := "completed"
+    if rand.Float64() &lt; 0.1 {
+        status = "failed"
+    }
+
+    // Record order metrics
+    ordersProcessed.WithLabelValues(status, paymentMethod).Inc()
+
+    if status == "completed" {
+        // Record order value in appropriate bucket
+        orderValue.WithLabelValues(productCategory).Observe(amount)
+
+        // Update inventory (simulate inventory change)
+        productID := "prod-" + productCategory + "-" + orderID[:8]
+        inventoryChange := -1.0 * float64(rand.Intn(5)+1)
+        inventoryLevel.WithLabelValues(productID, "warehouse-1").Add(inventoryChange)
+    }
+
+    return status, nil
+}
+
+func main() {
+    // Initialize some inventory
+    inventoryLevel.WithLabelValues("prod-electronics-12345678", "warehouse-1").Set(100)
+    inventoryLevel.WithLabelValues("prod-clothing-87654321", "warehouse-1").Set(250)
+
+    // Simulate order processing
+    for i := 0; i &lt; 100; i++ {
+        orderID := fmt.Sprintf("order-%d", i)
+        amount := 10.0 + rand.Float64()*990.0
+
+        paymentMethods := []string{"credit_card", "paypal", "bank_transfer"}
+        paymentMethod := paymentMethods[rand.Intn(len(paymentMethods))]
+
+        categories := []string{"electronics", "clothing", "books", "home"}
+        category := categories[rand.Intn(len(categories))]
+
+        status, _ := ProcessOrder(orderID, amount, paymentMethod, category)
+        log.Printf("Processed order %s: $%.2f via %s - %s", orderID, amount, paymentMethod, status)
+
+        time.Sleep(time.Duration(rand.Intn(200)) * time.Millisecond)
+    }
+}
+</code></pre>
+<h4 id="prometheus-best-practices"><a class="header" href="#prometheus-best-practices"><strong>Prometheus Best Practices</strong></a></h4>
+<p>When implementing Prometheus metrics in Go applications, follow these best practices:</p>
+<ol>
+<li><strong>Use Meaningful Names</strong>: Follow the <code>namespace_subsystem_name</code> pattern (e.g., <code>http_requests_total</code>)</li>
+<li><strong>Add Helpful Descriptions</strong>: Include clear descriptions for every metric</li>
+<li><strong>Choose Labels Carefully</strong>: Labels create separate time series, so use them judiciously</li>
+<li><strong>Use Standard Metrics</strong>: Follow conventions for common metrics like request counts and durations</li>
+<li><strong>Select Appropriate Buckets</strong>: Customize histogram buckets based on expected value distributions</li>
+<li><strong>Avoid High Cardinality</strong>: Limit the number of unique label value combinations</li>
+<li><strong>Instrument Critical Paths</strong>: Focus on business-critical operations</li>
+<li><strong>Aggregate at Collection Time</strong>: Use counter rates and histogram percentiles rather than raw counters</li>
+</ol>
+<h3 id="3023-distributed-tracing-with-opentelemetry"><a class="header" href="#3023-distributed-tracing-with-opentelemetry"><strong>30.2.3 Distributed Tracing with OpenTelemetry</strong></a></h3>
+<p>Distributed tracing tracks requests as they flow through distributed systems, providing visibility into how services interact and where performance bottlenecks occur. This is particularly valuable in microservice architectures.</p>
+<h4 id="opentelemetry-and-go"><a class="header" href="#opentelemetry-and-go"><strong>OpenTelemetry and Go</strong></a></h4>
+<p>OpenTelemetry is a collection of tools, APIs, and SDKs for generating, collecting, and exporting telemetry data. It's becoming the industry standard for distributed tracing:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "io"
+    "log"
+    "net/http"
+    "time"
+
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/attribute"
+    "go.opentelemetry.io/otel/exporters/jaeger"
+    "go.opentelemetry.io/otel/sdk/resource"
+    tracesdk "go.opentelemetry.io/otel/sdk/trace"
+    semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
+    "go.opentelemetry.io/otel/trace"
+)
+
+// initTracer initializes the OpenTelemetry tracer
+func initTracer() (func(), error) {
+    // Configure Jaeger exporter
+    exporter, err := jaeger.New(jaeger.WithCollectorEndpoint(
+        jaeger.WithEndpoint("http://localhost:14268/api/traces"),
+    ))
+    if err != nil {
+        return nil, err
+    }
+
+    // Configure trace provider with the exporter
+    tp := tracesdk.NewTracerProvider(
+        tracesdk.WithBatcher(exporter),
+        tracesdk.WithResource(resource.NewWithAttributes(
+            semconv.SchemaURL,
+            semconv.ServiceNameKey.String("order-service"),
+            attribute.String("environment", "production"),
+        )),
+    )
+
+    // Set the global trace provider
+    otel.SetTracerProvider(tp)
+
+    // Return a function to flush and close the exporter when the application exits
+    return func() {
+        if err := tp.Shutdown(context.Background()); err != nil {
+            log.Printf("Error shutting down tracer provider: %v", err)
+        }
+    }, nil
+}
+
+// Handler with tracing
+func orderHandler(w http.ResponseWriter, r *http.Request) {
+    ctx := r.Context()
+    tracer := otel.Tracer("order-service")
+
+    // Create a span for this handler
+    ctx, span := tracer.Start(ctx, "orderHandler")
+    defer span.End()
+
+    // Add attributes to the span
+    span.SetAttributes(
+        attribute.String("http.method", r.Method),
+        attribute.String("http.path", r.URL.Path),
+    )
+
+    // Call database function with the context containing the span
+    orderID, err := createOrder(ctx)
+    if err != nil {
+        span.RecordError(err)
+        http.Error(w, "Failed to create order", http.StatusInternalServerError)
+        return
+    }
+
+    // Call payment service
+    err = processPayment(ctx, orderID)
+    if err != nil {
+        span.RecordError(err)
+        http.Error(w, "Failed to process payment", http.StatusInternalServerError)
+        return
+    }
+
+    w.WriteHeader(http.StatusCreated)
+    w.Write([]byte(orderID))
+}
+
+// createOrder simulates database operations with tracing
+func createOrder(ctx context.Context) (string, error) {
+    tracer := otel.Tracer("order-service")
+
+    // Create a child span for database operation
+    ctx, span := tracer.Start(ctx, "database.createOrder")
+    defer span.End()
+
+    // Simulate database work
+    time.Sleep(100 * time.Millisecond)
+
+    // Simulate order ID
+    orderID := "ord-123456"
+
+    // Add attributes with order details
+    span.SetAttributes(
+        attribute.String("order.id", orderID),
+        attribute.Float64("order.amount", 99.99),
+    )
+
+    return orderID, nil
+}
+
+// processPayment simulates calling a payment service with tracing
+func processPayment(ctx context.Context, orderID string) error {
+    tracer := otel.Tracer("order-service")
+
+    // Create a child span for payment service call
+    ctx, span := tracer.Start(ctx, "payment.processPayment")
+    defer span.End()
+
+    // Add context propagation headers for the HTTP request
+    req, _ := http.NewRequestWithContext(ctx, "POST", "http://payment-service/api/payments", nil)
+
+    // Simulate calling payment service
+    span.AddEvent("Calling payment service")
+    time.Sleep(200 * time.Millisecond)
+
+    // Add payment result to span
+    span.SetAttributes(
+        attribute.String("payment.id", "pay-789012"),
+        attribute.String("payment.status", "approved"),
+    )
+
+    return nil
+}
+
+func main() {
+    // Initialize tracer
+    cleanup, err := initTracer()
+    if err != nil {
+        log.Fatalf("Failed to initialize tracer: %v", err)
+    }
+    defer cleanup()
+
+    // Set up HTTP server
+    http.HandleFunc("/api/orders", orderHandler)
+    log.Println("Starting server on :8080")
+    log.Fatal(http.ListenAndServe(":8080", nil))
+}
+</code></pre>
+<p>This example demonstrates:</p>
+<ol>
+<li><strong>Span creation</strong>: Creating parent and child spans to track operations</li>
+<li><strong>Context propagation</strong>: Passing trace context through the application</li>
+<li><strong>Attribute addition</strong>: Adding metadata to spans for analysis</li>
+<li><strong>Error recording</strong>: Capturing errors in spans</li>
+<li><strong>Event recording</strong>: Adding events to spans for important actions</li>
+</ol>
+<h4 id="http-middleware-for-tracing"><a class="header" href="#http-middleware-for-tracing"><strong>HTTP Middleware for Tracing</strong></a></h4>
+<p>To automatically trace HTTP requests, you can create middleware:</p>
+<pre><code class="language-go">package main
+
+import (
+    "log"
+    "net/http"
+
+    "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/propagation"
+)
+
+func main() {
+    // Initialize tracer (implementation omitted for brevity)
+
+    // Set up global propagator
+    otel.SetTextMapPropagator(propagation.TraceContext{})
+
+    // Create handler with automatic instrumentation
+    handler := http.HandlerFunc(orderHandler)
+    instrumentedHandler := otelhttp.NewHandler(handler, "orderHandler")
+
+    // Register HTTP handler
+    http.Handle("/api/orders", instrumentedHandler)
+
+    // Start server
+    log.Fatal(http.ListenAndServe(":8080", nil))
+}
+</code></pre>
+<p>This middleware automatically:</p>
+<ul>
+<li>Creates spans for each HTTP request</li>
+<li>Extracts trace context from incoming requests</li>
+<li>Injects trace context into outgoing requests</li>
+<li>Records HTTP method, status code, and URL as span attributes</li>
+</ul>
+<h4 id="database-tracing"><a class="header" href="#database-tracing"><strong>Database Tracing</strong></a></h4>
+<p>To trace database operations, you can use instrumented database drivers:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "database/sql"
+    "log"
+
+    "github.com/luna-duclos/instrumentedsql"
+    "github.com/luna-duclos/instrumentedsql/opentelemetry"
+    _ "github.com/luna-duclos/instrumentedsql/mysql"
+)
+
+func initDatabase() (*sql.DB, error) {
+    // Create a tracer for SQL operations
+    sqlTracer := opentelemetry.NewTracer()
+
+    // Create a driver with tracing
+    driverName := instrumentedsql.WrapDriver(
+        &amp;mysql.MySQLDriver{},
+        instrumentedsql.WithTracer(sqlTracer),
+        instrumentedsql.WithOmitArgs(), // Don't log query arguments for security
+    )
+
+    // Register the instrumented driver
+    sql.Register("instrumented-mysql", driverName)
+
+    // Connect to database using the instrumented driver
+    db, err := sql.Open("instrumented-mysql", "user:password@tcp(localhost:3306)/db")
+    if err != nil {
+        return nil, err
+    }
+
+    return db, nil
+}
+
+func queryOrders(ctx context.Context, db *sql.DB, customerID string) ([]Order, error) {
+    // The query will be automatically traced
+    rows, err := db.QueryContext(ctx, "SELECT id, amount, created_at FROM orders WHERE customer_id = ?", customerID)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    // Process query results
+    // ...
+
+    return orders, nil
+}
+</code></pre>
+<h4 id="best-practices-for-distributed-tracing"><a class="header" href="#best-practices-for-distributed-tracing"><strong>Best Practices for Distributed Tracing</strong></a></h4>
+<p>When implementing tracing in Go applications, follow these best practices:</p>
+<ol>
+<li><strong>Propagate context</strong>: Always pass context through function calls</li>
+<li><strong>Use meaningful span names</strong>: Choose descriptive names for spans</li>
+<li><strong>Add relevant attributes</strong>: Include information that helps with debugging</li>
+<li><strong>Record errors</strong>: Add error details to spans when errors occur</li>
+<li><strong>Create child spans for sub-operations</strong>: Break down complex operations</li>
+<li><strong>Set appropriate sampling</strong>: Use head-based sampling for high-volume services</li>
+<li><strong>Secure sensitive data</strong>: Don't include passwords or personal data in spans</li>
+<li><strong>Standardize span naming</strong>: Use consistent naming conventions across services</li>
+</ol>
+<p>With tracing implemented, you've established all three pillars of observability: logs, metrics, and traces.</p>
+<h2 id="303-integrating-the-three-pillars-of-observability"><a class="header" href="#303-integrating-the-three-pillars-of-observability"><strong>30.3 Integrating the Three Pillars of Observability</strong></a></h2>
+<p>While each pillar of observability—logs, metrics, and traces—provides valuable insights on its own, their true power emerges when they're integrated. This integration allows engineers to move seamlessly between different types of telemetry data, providing a comprehensive view of system behavior.</p>
+<h3 id="3031-correlating-logs-metrics-and-traces"><a class="header" href="#3031-correlating-logs-metrics-and-traces"><strong>30.3.1 Correlating Logs, Metrics, and Traces</strong></a></h3>
+<p>The key to effective observability is correlation. By connecting data across pillars, you can quickly navigate from a high-level metric to detailed logs and traces that explain what's happening.</p>
+<h4 id="using-common-identifiers"><a class="header" href="#using-common-identifiers"><strong>Using Common Identifiers</strong></a></h4>
+<p>The simplest way to correlate data is to use common identifiers across all telemetry data:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "net/http"
+    "time"
+
+    "github.com/google/uuid"
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/rs/zerolog/log"
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/attribute"
+    "go.opentelemetry.io/otel/trace"
+)
+
+var (
+    httpRequestDuration = prometheus.NewHistogramVec(
+        prometheus.HistogramOpts{
+            Name:    "http_request_duration_seconds",
+            Help:    "HTTP request duration in seconds",
+            Buckets: prometheus.DefBuckets,
+        },
+        []string{"method", "path", "request_id"},
+    )
+)
+
+func CorrelatedMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Generate request ID
+        requestID := uuid.New().String()
+
+        // Add request ID to response headers
+        w.Header().Set("X-Request-ID", requestID)
+
+        // Start timing
+        startTime := time.Now()
+
+        // Get tracer and start span
+        tracer := otel.Tracer("web-service")
+        ctx, span := tracer.Start(r.Context(), "http_request")
+        defer span.End()
+
+        // Add request ID to span
+        span.SetAttributes(attribute.String("request_id", requestID))
+
+        // Add trace ID to logs
+        traceID := span.SpanContext().TraceID().String()
+        spanID := span.SpanContext().SpanID().String()
+
+        // Create logger with correlation IDs
+        logger := log.With().
+            Str("request_id", requestID).
+            Str("trace_id", traceID).
+            Str("span_id", spanID).
+            Str("method", r.Method).
+            Str("path", r.URL.Path).
+            Logger()
+
+        // Log request start
+        logger.Info().Msg("Request started")
+
+        // Store logger and request ID in context
+        ctx = context.WithValue(ctx, "logger", logger)
+        ctx = context.WithValue(ctx, "request_id", requestID)
+
+        // Call next handler with updated context
+        next.ServeHTTP(w, r.WithContext(ctx))
+
+        // Record duration
+        duration := time.Since(startTime).Seconds()
+
+        // Record metrics with request ID
+        httpRequestDuration.WithLabelValues(
+            r.Method,
+            r.URL.Path,
+            requestID,
+        ).Observe(duration)
+
+        // Log request completion
+        logger.Info().
+            Float64("duration_seconds", duration).
+            Msg("Request completed")
+    })
+}
+
+// GetLogger extracts the logger from context
+func GetLogger(ctx context.Context) zerolog.Logger {
+    if logger, ok := ctx.Value("logger").(zerolog.Logger); ok {
+        return logger
+    }
+    return log.Logger
+}
+
+// GetRequestID extracts the request ID from context
+func GetRequestID(ctx context.Context) string {
+    if requestID, ok := ctx.Value("request_id").(string); ok {
+        return requestID
+    }
+    return ""
+}
+
+// GetCurrentSpan gets the current span from context
+func GetCurrentSpan(ctx context.Context) trace.Span {
+    return trace.SpanFromContext(ctx)
+}
+
+// Handler uses correlated logging, metrics, and tracing
+func Handler(w http.ResponseWriter, r *http.Request) {
+    ctx := r.Context()
+
+    // Get logger and span from context
+    logger := GetLogger(ctx)
+    span := GetCurrentSpan(ctx)
+
+    // Log and trace the operation
+    logger.Info().Msg("Processing order")
+    span.AddEvent("Processing order")
+
+    // Perform business logic...
+
+    w.Write([]byte("Order processed"))
+}
+</code></pre>
+<p>This example demonstrates:</p>
+<ol>
+<li><strong>Common identifier</strong>: A request ID is generated and used across all telemetry</li>
+<li><strong>Context propagation</strong>: The context carries correlation IDs through the request</li>
+<li><strong>Enriched logs</strong>: Logs include trace and span IDs for correlation</li>
+<li><strong>Labeled metrics</strong>: Metrics include the request ID for correlation</li>
+<li><strong>Annotated spans</strong>: Spans include the request ID as an attribute</li>
+</ol>
+<h4 id="exemplars-in-prometheus"><a class="header" href="#exemplars-in-prometheus"><strong>Exemplars in Prometheus</strong></a></h4>
+<p>Prometheus supports exemplars, which allow you to link metrics to traces:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "net/http"
+    "time"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/trace"
+)
+
+var (
+    httpRequestDuration = promauto.NewHistogramVec(
+        prometheus.HistogramOpts{
+            Name:    "http_request_duration_seconds",
+            Help:    "HTTP request duration in seconds",
+            Buckets: prometheus.DefBuckets,
+        },
+        []string{"method", "path"},
+    )
+)
+
+// recordWithExemplar records a duration with trace information
+func recordWithExemplar(ctx context.Context, duration float64, labels prometheus.Labels) {
+    // Get trace and span IDs from context
+    spanCtx := trace.SpanContextFromContext(ctx)
+    if !spanCtx.IsValid() {
+        // No valid span context, record without exemplar
+        httpRequestDuration.With(labels).Observe(duration)
+        return
+    }
+
+    // Create exemplar with trace ID
+    exemplar := prometheus.Labels{
+        "trace_id": spanCtx.TraceID().String(),
+    }
+
+    // Record observation with exemplar
+    httpRequestDuration.With(labels).ObserveWithExemplar(duration, exemplar)
+}
+
+func TracedHandler(w http.ResponseWriter, r *http.Request) {
+    // Start timing
+    startTime := time.Now()
+
+    // Get tracer and start span
+    tracer := otel.Tracer("web-service")
+    ctx, span := tracer.Start(r.Context(), "http_request")
+    defer span.End()
+
+    // Process the request...
+    time.Sleep(100 * time.Millisecond)
+
+    // Record duration with exemplar
+    duration := time.Since(startTime).Seconds()
+    recordWithExemplar(ctx, duration, prometheus.Labels{
+        "method": r.Method,
+        "path":   r.URL.Path,
+    })
+
+    w.Write([]byte("Hello, World!"))
+}
+</code></pre>
+<p>Exemplars create direct links between metrics and traces, allowing you to quickly navigate from a metric to the traces that contributed to it.</p>
+<h3 id="3032-context-propagation"><a class="header" href="#3032-context-propagation"><strong>30.3.2 Context Propagation</strong></a></h3>
+<p>Proper context propagation is essential for correlating telemetry data, especially in distributed systems. OpenTelemetry provides tools for propagating context across service boundaries:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "net/http"
+
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/propagation"
+)
+
+// TracePropagationMiddleware extracts and injects trace context
+func TracePropagationMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Get the global propagator
+        propagator := otel.GetTextMapPropagator()
+
+        // Extract trace context from incoming request
+        ctx := propagator.Extract(r.Context(), propagation.HeaderCarrier(r.Header))
+
+        // Create a new span using the extracted context
+        tracer := otel.Tracer("web-service")
+        ctx, span := tracer.Start(ctx, "http_request")
+        defer span.End()
+
+        // Add response headers for trace propagation
+        propagator.Inject(ctx, propagation.HeaderCarrier(w.Header()))
+
+        // Call next handler with the traced context
+        next.ServeHTTP(w, r.WithContext(ctx))
+    })
+}
+
+// MakeExternalRequest demonstrates context propagation in outgoing requests
+func MakeExternalRequest(ctx context.Context, url string) (*http.Response, error) {
+    // Create HTTP request
+    req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+    if err != nil {
+        return nil, err
+    }
+
+    // Get the global propagator
+    propagator := otel.GetTextMapPropagator()
+
+    // Inject trace context into outgoing request headers
+    propagator.Inject(ctx, propagation.HeaderCarrier(req.Header))
+
+    // Make the request
+    client := http.DefaultClient
+    return client.Do(req)
+}
+</code></pre>
+<p>This middleware extracts trace context from incoming requests and injects it into outgoing requests, ensuring that traces can be correlated across service boundaries.</p>
+<h3 id="3033-observability-platforms"><a class="header" href="#3033-observability-platforms"><strong>30.3.3 Observability Platforms</strong></a></h3>
+<p>To make the most of your observability data, you'll need platforms that can collect, store, and visualize all three pillars. Several popular options include:</p>
+<ol>
+<li><strong>Grafana + Loki + Tempo</strong>: An open-source stack for metrics, logs, and traces</li>
+<li><strong>Datadog</strong>: A commercial platform with comprehensive observability features</li>
+<li><strong>New Relic</strong>: A commercial platform with APM and observability capabilities</li>
+<li><strong>Honeycomb</strong>: A commercial platform focused on high-cardinality observability</li>
+<li><strong>Elastic Stack</strong>: An open-source stack with capabilities for all three pillars</li>
+</ol>
+<p>When choosing an observability platform, consider:</p>
+<ul>
+<li>Integration capabilities with your telemetry sources</li>
+<li>Query language power and flexibility</li>
+<li>Correlation features across pillars</li>
+<li>Retention policies and data storage costs</li>
+<li>Alerting and notification capabilities</li>
+<li>Ease of use and user interface</li>
+</ul>
+<h3 id="3034-opentelemetry-collector"><a class="header" href="#3034-opentelemetry-collector"><strong>30.3.4 OpenTelemetry Collector</strong></a></h3>
+<p>The OpenTelemetry Collector provides a vendor-agnostic way to collect, process, and export telemetry data:</p>
+<pre><code class="language-yaml"># otel-collector-config.yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 1000
+    spike_limit_mib: 200
+
+exporters:
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    namespace: otel
+
+  logging:
+    loglevel: debug
+
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+
+  loki:
+    endpoint: http://loki:3100/loki/api/v1/push
+    tenant_id: "otel"
+    labels:
+      resource:
+        service.name: "service"
+        service.namespace: "namespace"
+      attributes:
+        level: "severity"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [jaeger, logging]
+
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [prometheus, logging]
+
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [loki, logging]
+</code></pre>
+<p>The collector simplifies your observability architecture by:</p>
+<ul>
+<li>Providing a single agent for all telemetry data</li>
+<li>Supporting multiple receivers, processors, and exporters</li>
+<li>Enabling vendor-neutral data collection</li>
+<li>Reducing the number of outbound connections from your services</li>
+<li>Offering preprocessing capabilities like filtering and sampling</li>
+</ul>
+<p>With the OpenTelemetry Collector, you can send all telemetry data to a single endpoint and let the collector route it to your observability platforms.</p>
+<h2 id="304-advanced-observability-patterns"><a class="header" href="#304-advanced-observability-patterns"><strong>30.4 Advanced Observability Patterns</strong></a></h2>
+<p>As your applications grow in complexity, basic observability implementations may not be sufficient. This section explores advanced patterns that enhance the depth and usefulness of your observability data in Go applications.</p>
+<h3 id="3041-semantic-conventions"><a class="header" href="#3041-semantic-conventions"><strong>30.4.1 Semantic Conventions</strong></a></h3>
+<p>Semantic conventions standardize how you name and structure your telemetry data, making it more consistent and easier to understand:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "net/http"
+
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/attribute"
+    "go.opentelemetry.io/otel/codes"
+    semconv "go.opentelemetry.io/otel/semconv/v1.12.0"
+    "go.opentelemetry.io/otel/trace"
+)
+
+// instrumentHTTP adds semantic conventions to HTTP operations
+func instrumentHTTP(ctx context.Context, req *http.Request) (context.Context, trace.Span) {
+    tracer := otel.Tracer("http-client")
+
+    // Use semantic conventions for span name
+    spanName := "HTTP " + req.Method
+
+    // Start span with standard HTTP attributes
+    ctx, span := tracer.Start(ctx, spanName)
+
+    // Add HTTP attributes following OpenTelemetry semantic conventions
+    span.SetAttributes(
+        semconv.HTTPMethodKey.String(req.Method),
+        semconv.HTTPURLKey.String(req.URL.String()),
+        semconv.HTTPTargetKey.String(req.URL.Path),
+        semconv.HTTPHostKey.String(req.Host),
+        semconv.HTTPSchemeKey.String(req.URL.Scheme),
+        semconv.HTTPUserAgentKey.String(req.UserAgent()),
+    )
+
+    return ctx, span
+}
+
+// instrumentDB adds semantic conventions to database operations
+func instrumentDB(ctx context.Context, operation, query, dbName, dbSystem string) (context.Context, trace.Span) {
+    tracer := otel.Tracer("db-client")
+
+    // Use semantic conventions for span name
+    spanName := dbSystem + " " + operation
+
+    // Start span with standard DB attributes
+    ctx, span := tracer.Start(ctx, spanName)
+
+    // Add DB attributes following OpenTelemetry semantic conventions
+    span.SetAttributes(
+        semconv.DBSystemKey.String(dbSystem),
+        semconv.DBNameKey.String(dbName),
+        semconv.DBOperationKey.String(operation),
+        semconv.DBStatementKey.String(query),
+    )
+
+    return ctx, span
+}
+
+// handleSuccess records a successful span completion
+func handleSuccess(span trace.Span, result string) {
+    // Set status and add result attribute
+    span.SetStatus(codes.Ok, "")
+    span.SetAttributes(attribute.String("result", result))
+}
+
+// handleError records error information on a span
+func handleError(span trace.Span, err error) {
+    // Set error status and record error
+    span.SetStatus(codes.Error, err.Error())
+    span.RecordError(err, trace.WithAttributes(
+        attribute.String("error.type", "application_error"),
+    ))
+}
+</code></pre>
+<p>Following semantic conventions makes your telemetry data more consistent and interoperable across different services and observability platforms.</p>
+<h3 id="3042-feature-flags-with-observability"><a class="header" href="#3042-feature-flags-with-observability"><strong>30.4.2 Feature Flags with Observability</strong></a></h3>
+<p>Combining feature flags with observability provides insights into feature usage and performance:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "net/http"
+    "time"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/attribute"
+    "go.opentelemetry.io/otel/trace"
+)
+
+// FeatureFlag represents a feature flag configuration
+type FeatureFlag struct {
+    Name        string
+    Description string
+    Enabled     bool
+    Percentage  int // Percentage of users who get the feature (0-100)
+}
+
+// FeatureFlagService manages feature flags
+type FeatureFlagService struct {
+    flags map[string]*FeatureFlag
+    metrics *FeatureFlagMetrics
+}
+
+// FeatureFlagMetrics tracks feature flag usage
+type FeatureFlagMetrics struct {
+    flagEnabled *prometheus.CounterVec
+    flagUsage   *prometheus.CounterVec
+    flagLatency *prometheus.HistogramVec
+}
+
+// NewFeatureFlagMetrics creates metrics for tracking feature flags
+func NewFeatureFlagMetrics() *FeatureFlagMetrics {
+    return &amp;FeatureFlagMetrics{
+        flagEnabled: promauto.NewCounterVec(
+            prometheus.CounterOpts{
+                Name: "feature_flag_enabled_total",
+                Help: "Total number of times a feature flag was enabled for a request",
+            },
+            []string{"flag_name", "user_id"},
+        ),
+        flagUsage: promauto.NewCounterVec(
+            prometheus.CounterOpts{
+                Name: "feature_flag_usage_total",
+                Help: "Total number of times a feature flag was used",
+            },
+            []string{"flag_name", "user_id", "result"},
+        ),
+        flagLatency: promauto.NewHistogramVec(
+            prometheus.HistogramOpts{
+                Name:    "feature_flag_latency_seconds",
+                Help:    "Latency of feature flag usage",
+                Buckets: prometheus.DefBuckets,
+            },
+            []string{"flag_name"},
+        ),
+    }
+}
+
+// NewFeatureFlagService creates a new feature flag service
+func NewFeatureFlagService() *FeatureFlagService {
+    return &amp;FeatureFlagService{
+        flags:   make(map[string]*FeatureFlag),
+        metrics: NewFeatureFlagMetrics(),
+    }
+}
+
+// RegisterFlag adds a new feature flag
+func (s *FeatureFlagService) RegisterFlag(flag *FeatureFlag) {
+    s.flags[flag.Name] = flag
+}
+
+// IsEnabled checks if a feature flag is enabled for a user
+func (s *FeatureFlagService) IsEnabled(ctx context.Context, flagName, userID string) bool {
+    flag, exists := s.flags[flagName]
+    if !exists {
+        return false
+    }
+
+    // For simplicity, we're just using the global enabled state
+    // In a real system, you'd apply user targeting rules
+
+    // Record metrics
+    if flag.Enabled {
+        s.metrics.flagEnabled.WithLabelValues(flagName, userID).Inc()
+
+        // Add feature flag to span if tracing is enabled
+        if span := trace.SpanFromContext(ctx); span.IsRecording() {
+            span.SetAttributes(
+                attribute.Bool("feature."+flagName, true),
+            )
+        }
+    }
+
+    return flag.Enabled
+}
+
+// TrackFeatureUsage records feature usage with metrics and tracing
+func (s *FeatureFlagService) TrackFeatureUsage(ctx context.Context, flagName, userID, result string) func() {
+    startTime := time.Now()
+
+    // Start feature span if tracing is enabled
+    var span trace.Span
+    if tracerProvider := otel.GetTracerProvider(); tracerProvider != nil {
+        tracer := tracerProvider.Tracer("feature-flags")
+        ctx, span = tracer.Start(ctx, "feature."+flagName)
+        span.SetAttributes(
+            attribute.String("feature.name", flagName),
+            attribute.String("user.id", userID),
+        )
+        defer span.End()
+    }
+
+    // Return function to call when feature usage is complete
+    return func() {
+        // Calculate duration
+        duration := time.Since(startTime).Seconds()
+
+        // Record metrics
+        s.metrics.flagUsage.WithLabelValues(flagName, userID, result).Inc()
+        s.metrics.flagLatency.WithLabelValues(flagName).Observe(duration)
+
+        // Add result to span if tracing is enabled
+        if span != nil &amp;&amp; span.IsRecording() {
+            span.SetAttributes(
+                attribute.String("feature.result", result),
+                attribute.Float64("feature.duration_seconds", duration),
+            )
+        }
+    }
+}
+
+// Example usage in HTTP handler
+func featureHandler(w http.ResponseWriter, r *http.Request) {
+    ctx := r.Context()
+    userID := r.Header.Get("X-User-ID")
+
+    // Get feature flag service (would normally be injected)
+    featureService := NewFeatureFlagService()
+    featureService.RegisterFlag(&amp;FeatureFlag{
+        Name:        "new_checkout",
+        Description: "New checkout flow",
+        Enabled:     true,
+    })
+
+    // Check if feature is enabled
+    if featureService.IsEnabled(ctx, "new_checkout", userID) {
+        // Track feature usage
+        done := featureService.TrackFeatureUsage(ctx, "new_checkout", userID, "started")
+
+        // Use the new feature
+        // ...
+
+        // Complete tracking with result
+        done()
+
+        w.Write([]byte("New checkout used"))
+    } else {
+        // Use old checkout
+        w.Write([]byte("Old checkout used"))
+    }
+}
+</code></pre>
+<p>This pattern allows you to:</p>
+<ol>
+<li><strong>Track feature usage</strong>: See how often features are used</li>
+<li><strong>Measure performance impact</strong>: Compare latency between feature variants</li>
+<li><strong>Debug issues</strong>: Connect feature flag decisions to traces</li>
+<li><strong>Monitor rollouts</strong>: Watch for problems as features are enabled</li>
+</ol>
+<h3 id="3043-slo-monitoring"><a class="header" href="#3043-slo-monitoring"><strong>30.4.3 SLO Monitoring</strong></a></h3>
+<p>Service Level Objectives (SLOs) define reliability targets for your services. Implementing SLO monitoring helps ensure you're meeting user expectations:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "net/http"
+    "time"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+    "github.com/prometheus/client_golang/prometheus/promhttp"
+)
+
+// SLOConfig defines an SLO
+type SLOConfig struct {
+    Name        string
+    Description string
+    Target      float64   // e.g., 0.999 for 99.9% availability
+    Window      time.Duration // e.g., 30 * 24 * time.Hour for 30 days
+}
+
+// SLOTracker tracks SLO metrics
+type SLOTracker struct {
+    config  SLOConfig
+    total   *prometheus.CounterVec
+    success *prometheus.CounterVec
+    latency *prometheus.HistogramVec
+    budget  *prometheus.GaugeVec
+}
+
+// NewSLOTracker creates a new SLO tracker
+func NewSLOTracker(config SLOConfig) *SLOTracker {
+    errorBudget := 1 - config.Target
+
+    total := promauto.NewCounterVec(
+        prometheus.CounterOpts{
+            Name: fmt.Sprintf("slo_%s_total", config.Name),
+            Help: fmt.Sprintf("Total requests for %s SLO", config.Name),
+        },
+        []string{"service", "endpoint"},
+    )
+
+    success := promauto.NewCounterVec(
+        prometheus.CounterOpts{
+            Name: fmt.Sprintf("slo_%s_success", config.Name),
+            Help: fmt.Sprintf("Successful requests for %s SLO", config.Name),
+        },
+        []string{"service", "endpoint"},
+    )
+
+    latency := promauto.NewHistogramVec(
+        prometheus.HistogramOpts{
+            Name: fmt.Sprintf("slo_%s_latency", config.Name),
+            Help: fmt.Sprintf("Request latency for %s SLO", config.Name),
+            // Set buckets based on SLO latency targets
+            Buckets: []float64{0.01, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10},
+        },
+        []string{"service", "endpoint"},
+    )
+
+    budget := promauto.NewGaugeVec(
+        prometheus.GaugeOpts{
+            Name: fmt.Sprintf("slo_%s_error_budget_remaining", config.Name),
+            Help: fmt.Sprintf("Remaining error budget for %s SLO", config.Name),
+        },
+        []string{"service", "window"},
+    )
+
+    // Initialize budget
+    budget.WithLabelValues("api", config.Window.String()).Set(errorBudget)
+
+    return &amp;SLOTracker{
+        config:  config,
+        total:   total,
+        success: success,
+        latency: latency,
+        budget:  budget,
+    }
+}
+
+// TrackRequest records a request for SLO tracking
+func (t *SLOTracker) TrackRequest(service, endpoint string, statusCode int, duration time.Duration) {
+    // Increment total counter
+    t.total.WithLabelValues(service, endpoint).Inc()
+
+    // Check if request was successful (based on status code)
+    isSuccess := statusCode &gt;= 200 &amp;&amp; statusCode &lt; 500
+    if isSuccess {
+        t.success.WithLabelValues(service, endpoint).Inc()
+    }
+
+    // Record latency
+    t.latency.WithLabelValues(service, endpoint).Observe(duration.Seconds())
+
+    // Update error budget (normally done in a separate process based on the success rate)
+    // This is simplified; in production, you'd calculate this over the full window
+    if !isSuccess {
+        t.budget.WithLabelValues(service, t.config.Window.String()).Dec()
+    }
+}
+
+// SLOMiddleware creates middleware that tracks requests for SLO monitoring
+func SLOMiddleware(tracker *SLOTracker, service string) func(http.Handler) http.Handler {
+    return func(next http.Handler) http.Handler {
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+            startTime := time.Now()
+
+            // Create response writer wrapper to capture status code
+            rww := NewResponseWriterWrapper(w)
+
+            // Call next handler
+            next.ServeHTTP(rww, r)
+
+            // Calculate duration
+            duration := time.Since(startTime)
+
+            // Record for SLO tracking
+            tracker.TrackRequest(service, r.URL.Path, rww.statusCode, duration)
+        })
+    }
+}
+
+// ResponseWriterWrapper captures status code (reused from earlier example)
+type ResponseWriterWrapper struct {
+    http.ResponseWriter
+    statusCode int
+}
+
+// NewResponseWriterWrapper creates a new wrapper
+func NewResponseWriterWrapper(w http.ResponseWriter) *ResponseWriterWrapper {
+    return &amp;ResponseWriterWrapper{w, http.StatusOK}
+}
+
+// WriteHeader captures the status code
+func (rww *ResponseWriterWrapper) WriteHeader(code int) {
+    rww.statusCode = code
+    rww.ResponseWriter.WriteHeader(code)
+}
+
+func main() {
+    // Create SLO tracker for availability
+    availabilitySLO := NewSLOTracker(SLOConfig{
+        Name:        "availability",
+        Description: "API availability",
+        Target:      0.999, // 99.9% availability
+        Window:      30 * 24 * time.Hour, // 30 days
+    })
+
+    // Create SLO tracker for latency
+    latencySLO := NewSLOTracker(SLOConfig{
+        Name:        "latency",
+        Description: "API latency under 100ms",
+        Target:      0.95, // 95% of requests under 100ms
+        Window:      30 * 24 * time.Hour, // 30 days
+    })
+
+    // Set up HTTP server with SLO middleware
+    http.Handle("/api/", SLOMiddleware(availabilitySLO, "api")(
+        SLOMiddleware(latencySLO, "api")(
+            http.HandlerFunc(apiHandler),
+        ),
+    ))
+
+    // Expose Prometheus metrics endpoint
+    http.Handle("/metrics", promhttp.Handler())
+
+    // Start server
+    http.ListenAndServe(":8080", nil)
+}
+
+func apiHandler(w http.ResponseWriter, r *http.Request) {
+    // Simulate API logic
+    time.Sleep(50 * time.Millisecond)
+    w.Write([]byte("API response"))
+}
+</code></pre>
+<p>With this SLO monitoring, you can:</p>
+<ol>
+<li><strong>Track reliability metrics</strong>: Monitor availability and latency against targets</li>
+<li><strong>Calculate error budgets</strong>: See how much room you have for taking risks</li>
+<li><strong>Create SLO-based alerts</strong>: Alert when you're at risk of missing SLOs</li>
+<li><strong>Prioritize reliability work</strong>: Focus on components that are affecting SLOs</li>
+</ol>
+<h3 id="3044-health-checks-and-readiness-probes"><a class="header" href="#3044-health-checks-and-readiness-probes"><strong>30.4.4 Health Checks and Readiness Probes</strong></a></h3>
+<p>Exposing health and readiness endpoints helps monitoring systems and orchestrators understand your application's status:</p>
+<pre><code class="language-go">package main
+
+import (
+    "encoding/json"
+    "net/http"
+    "sync"
+    "time"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+)
+
+// HealthStatus represents the status of a component
+type HealthStatus string
+
+const (
+    StatusUp      HealthStatus = "UP"
+    StatusDown    HealthStatus = "DOWN"
+    StatusDegraded HealthStatus = "DEGRADED"
+)
+
+// ComponentHealth represents the health of a component
+type ComponentHealth struct {
+    Status      HealthStatus `json:"status"`
+    Description string       `json:"description,omitempty"`
+    Error       string       `json:"error,omitempty"`
+    LastChecked time.Time    `json:"lastChecked"`
+}
+
+// HealthResponse represents the overall health check response
+type HealthResponse struct {
+    Status     HealthStatus                `json:"status"`
+    Components map[string]ComponentHealth  `json:"components"`
+    Timestamp  time.Time                   `json:"timestamp"`
+    Version    string                      `json:"version"`
+}
+
+// HealthChecker manages health checks
+type HealthChecker struct {
+    components map[string]ComponentHealth
+    checks     map[string]func() ComponentHealth
+    mutex      sync.RWMutex
+    version    string
+
+    // Metrics
+    healthStatus *prometheus.GaugeVec
+    checkDuration *prometheus.HistogramVec
+}
+
+// NewHealthChecker creates a new health checker
+func NewHealthChecker(version string) *HealthChecker {
+    healthStatus := promauto.NewGaugeVec(
+        prometheus.GaugeOpts{
+            Name: "component_health_status",
+            Help: "Health status of components (0=DOWN, 1=DEGRADED, 2=UP)",
+        },
+        []string{"component"},
+    )
+
+    checkDuration := promauto.NewHistogramVec(
+        prometheus.HistogramOpts{
+            Name:    "health_check_duration_seconds",
+            Help:    "Duration of health checks",
+            Buckets: []float64{0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1},
+        },
+        []string{"component"},
+    )
+
+    return &amp;HealthChecker{
+        components:    make(map[string]ComponentHealth),
+        checks:        make(map[string]func() ComponentHealth),
+        version:       version,
+        healthStatus:  healthStatus,
+        checkDuration: checkDuration,
+    }
+}
+
+// RegisterCheck adds a health check
+func (h *HealthChecker) RegisterCheck(name string, check func() ComponentHealth) {
+    h.mutex.Lock()
+    defer h.mutex.Unlock()
+
+    h.checks[name] = check
+    h.components[name] = ComponentHealth{
+        Status:      StatusDown,
+        Description: "Not checked yet",
+        LastChecked: time.Time{},
+    }
+
+    // Initialize metric
+    h.healthStatus.WithLabelValues(name).Set(0)
+}
+
+// RunChecks executes all health checks
+func (h *HealthChecker) RunChecks() {
+    h.mutex.Lock()
+    defer h.mutex.Unlock()
+
+    for name, check := range h.checks {
+        startTime := time.Now()
+
+        // Run the check
+        result := check()
+        result.LastChecked = time.Now()
+
+        // Calculate duration
+        duration := time.Since(startTime).Seconds()
+
+        // Update component status
+        h.components[name] = result
+
+        // Update metrics
+        var statusValue float64
+        switch result.Status {
+        case StatusUp:
+            statusValue = 2
+        case StatusDegraded:
+            statusValue = 1
+        case StatusDown:
+            statusValue = 0
+        }
+
+        h.healthStatus.WithLabelValues(name).Set(statusValue)
+        h.checkDuration.WithLabelValues(name).Observe(duration)
+    }
+}
+
+// GetHealth returns the current health status
+func (h *HealthChecker) GetHealth() HealthResponse {
+    h.mutex.RLock()
+    defer h.mutex.RUnlock()
+
+    // Calculate overall status
+    overallStatus := StatusUp
+
+    for _, comp := range h.components {
+        if comp.Status == StatusDown {
+            overallStatus = StatusDown
+            break
+        } else if comp.Status == StatusDegraded {
+            overallStatus = StatusDegraded
+        }
+    }
+
+    // Create copy of components to avoid race conditions
+    componentsCopy := make(map[string]ComponentHealth)
+    for k, v := range h.components {
+        componentsCopy[k] = v
+    }
+
+    return HealthResponse{
+        Status:     overallStatus,
+        Components: componentsCopy,
+        Timestamp:  time.Now(),
+        Version:    h.version,
+    }
+}
+
+// StartHealthCheckLoop runs health checks periodically
+func (h *HealthChecker) StartHealthCheckLoop(interval time.Duration) {
+    ticker := time.NewTicker(interval)
+
+    go func() {
+        // Run once immediately
+        h.RunChecks()
+
+        for range ticker.C {
+            h.RunChecks()
+        }
+    }()
+}
+
+// HealthHandler creates an HTTP handler for health checks
+func (h *HealthChecker) HealthHandler() http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        health := h.GetHealth()
+
+        w.Header().Set("Content-Type", "application/json")
+
+        // Set appropriate status code based on health
+        if health.Status == StatusDown {
+            w.WriteHeader(http.StatusServiceUnavailable)
+        } else if health.Status == StatusDegraded {
+            w.WriteHeader(http.StatusOK) // Still 200, but indicates degraded in body
+        } else {
+            w.WriteHeader(http.StatusOK)
+        }
+
+        // Write response
+        json.NewEncoder(w).Encode(health)
+    }
+}
+
+// LivenessHandler creates an HTTP handler for liveness checks
+func (h *HealthChecker) LivenessHandler() http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        // Liveness checks only verify that the application is running
+        // and can respond to HTTP requests
+        w.WriteHeader(http.StatusOK)
+        w.Write([]byte("OK"))
+    }
+}
+
+// ReadinessHandler creates an HTTP handler for readiness checks
+func (h *HealthChecker) ReadinessHandler() http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        health := h.GetHealth()
+
+        // Readiness checks verify that the application is ready to serve requests
+        if health.Status == StatusDown {
+            w.WriteHeader(http.StatusServiceUnavailable)
+            w.Write([]byte("NOT READY"))
+        } else {
+            w.WriteHeader(http.StatusOK)
+            w.Write([]byte("READY"))
+        }
+    }
+}
+
+func main() {
+    // Create health checker
+    health := NewHealthChecker("1.0.0")
+
+    // Register database health check
+    health.RegisterCheck("database", func() ComponentHealth {
+        // Simulate database check
+        // In a real application, you'd check the actual database connection
+        if time.Now().Second()%10 == 0 {
+            return ComponentHealth{
+                Status:      StatusDegraded,
+                Description: "Database connection pool nearing capacity",
+            }
+        }
+
+        return ComponentHealth{
+            Status:      StatusUp,
+            Description: "Database connection successful",
+        }
+    })
+
+    // Register Redis health check
+    health.RegisterCheck("redis", func() ComponentHealth {
+        // Simulate Redis check
+        return ComponentHealth{
+            Status:      StatusUp,
+            Description: "Redis connection successful",
+        }
+    })
+
+    // Start health check loop
+    health.StartHealthCheckLoop(15 * time.Second)
+
+    // Set up HTTP server
+    http.HandleFunc("/health", health.HealthHandler())
+    http.HandleFunc("/livez", health.LivenessHandler())
+    http.HandleFunc("/readyz", health.ReadinessHandler())
+
+    // Start server
+    http.ListenAndServe(":8080", nil)
+}
+</code></pre>
+<p>This health check system provides:</p>
+<ol>
+<li><strong>Component-level health</strong>: Track the health of individual components</li>
+<li><strong>Liveness and readiness</strong>: Differentiate between "alive" and "ready to serve"</li>
+<li><strong>Health metrics</strong>: Monitor health status as metrics</li>
+<li><strong>Detailed health reports</strong>: Provide rich health information for debugging</li>
+</ol>
+<h3 id="3045-continuous-profiling"><a class="header" href="#3045-continuous-profiling"><strong>30.4.5 Continuous Profiling</strong></a></h3>
+<p>Continuous profiling helps identify performance bottlenecks in production:</p>
+<pre><code class="language-go">package main
+
+import (
+    "net/http"
+    _ "net/http/pprof" // Import for side effects
+    "os"
+    "runtime"
+    "runtime/pprof"
+    "time"
+
+    "github.com/google/pprof/profile"
+)
+
+// ProfileScheduler periodically captures profiles
+type ProfileScheduler struct {
+    interval time.Duration
+    duration time.Duration
+    dir      string
+}
+
+// NewProfileScheduler creates a new profile scheduler
+func NewProfileScheduler(interval, duration time.Duration, dir string) *ProfileScheduler {
+    // Create directory if it doesn't exist
+    if err := os.MkdirAll(dir, 0755); err != nil {
+        panic(err)
+    }
+
+    return &amp;ProfileScheduler{
+        interval: interval,
+        duration: duration,
+        dir:      dir,
+    }
+}
+
+// Start begins the profiling schedule
+func (p *ProfileScheduler) Start() {
+    // Start CPU profiling ticker
+    go p.scheduleCPUProfile()
+
+    // Start heap profiling ticker
+    go p.scheduleHeapProfile()
+
+    // Start goroutine profiling ticker
+    go p.scheduleGoroutineProfile()
+}
+
+// scheduleCPUProfile captures CPU profiles on a schedule
+func (p *ProfileScheduler) scheduleCPUProfile() {
+    ticker := time.NewTicker(p.interval)
+    defer ticker.Stop()
+
+    for range ticker.C {
+        fileName := p.dir + "/cpu-" + time.Now().Format("20060102-150405") + ".pprof"
+        f, err := os.Create(fileName)
+        if err != nil {
+            continue
+        }
+
+        // Start CPU profiling
+        if err := pprof.StartCPUProfile(f); err != nil {
+            f.Close()
+            continue
+        }
+
+        // Profile for the specified duration
+        time.Sleep(p.duration)
+
+        // Stop profiling
+        pprof.StopCPUProfile()
+        f.Close()
+    }
+}
+
+// scheduleHeapProfile captures heap profiles on a schedule
+func (p *ProfileScheduler) scheduleHeapProfile() {
+    ticker := time.NewTicker(p.interval)
+    defer ticker.Stop()
+
+    for range ticker.C {
+        fileName := p.dir + "/heap-" + time.Now().Format("20060102-150405") + ".pprof"
+        f, err := os.Create(fileName)
+        if err != nil {
+            continue
+        }
+
+        // Force garbage collection to get accurate memory usage
+        runtime.GC()
+
+        // Write heap profile
+        if err := pprof.WriteHeapProfile(f); err != nil {
+            f.Close()
+            continue
+        }
+
+        f.Close()
+    }
+}
+
+// scheduleGoroutineProfile captures goroutine profiles on a schedule
+func (p *ProfileScheduler) scheduleGoroutineProfile() {
+    ticker := time.NewTicker(p.interval)
+    defer ticker.Stop()
+
+    for range ticker.C {
+        fileName := p.dir + "/goroutine-" + time.Now().Format("20060102-150405") + ".pprof"
+        f, err := os.Create(fileName)
+        if err != nil {
+            continue
+        }
+
+        // Get goroutine profile
+        if err := pprof.Lookup("goroutine").WriteTo(f, 0); err != nil {
+            f.Close()
+            continue
+        }
+
+        f.Close()
+    }
+}
+
+func main() {
+    // Create profile scheduler
+    scheduler := NewProfileScheduler(
+        30*time.Minute,  // Capture profiles every 30 minutes
+        30*time.Second,  // Profile for 30 seconds
+        "./profiles",    // Store profiles in this directory
+    )
+
+    // Start profile scheduler
+    scheduler.Start()
+
+    // Enable pprof HTTP endpoint for on-demand profiling
+    go func() {
+        http.ListenAndServe("localhost:6060", nil)
+    }()
+
+    // Your application code here
+    // ...
+
+    // Keep the application running
+    select {}
+}
+</code></pre>
+<p>Continuous profiling provides:</p>
+<ol>
+<li><strong>Baseline performance data</strong>: Track normal behavior over time</li>
+<li><strong>Performance regression detection</strong>: Identify when performance changes</li>
+<li><strong>Production insights</strong>: See real-world performance patterns</li>
+<li><strong>Resource optimization</strong>: Find opportunities to reduce resource usage</li>
+</ol>
+<p>These advanced patterns build on the basic observability techniques, providing deeper insights and more proactive monitoring capabilities for your Go applications.</p>
+<h2 id="305-conclusion"><a class="header" href="#305-conclusion"><strong>30.5 Conclusion</strong></a></h2>
+<p>Observability-Driven Development represents a fundamental shift in how we approach software engineering. By designing systems with observability in mind from the start, we create applications that are easier to understand, debug, and maintain. In Go, this approach is particularly powerful, thanks to the language's strong standard library, excellent performance characteristics, and growing ecosystem of observability tools.</p>
+<p>Throughout this chapter, we've explored how to implement the three pillars of observability—logs, metrics, and traces—in Go applications. We've seen how to integrate these pillars to create a comprehensive observability solution, and we've examined advanced patterns that enhance the depth and usefulness of observability data.</p>
+<p>As your Go applications grow in complexity, especially in distributed environments, the investment in observability will pay increasing dividends. The ability to quickly identify and diagnose issues, understand performance bottlenecks, and make data-driven decisions about your system's evolution becomes invaluable.</p>
+<p>Key takeaways from this chapter include:</p>
+<ol>
+<li>
+<p><strong>Start with observability in mind</strong>: Instrument your code from the beginning, rather than adding observability as an afterthought.</p>
+</li>
+<li>
+<p><strong>Use all three pillars</strong>: Logs, metrics, and traces each provide unique insights; the most powerful observability solutions use all three.</p>
+</li>
+<li>
+<p><strong>Correlate data across pillars</strong>: Connecting logs, metrics, and traces allows for faster, more effective debugging and analysis.</p>
+</li>
+<li>
+<p><strong>Standardize your approach</strong>: Use consistent naming, labeling, and conventions across your observability data.</p>
+</li>
+<li>
+<p><strong>Focus on business outcomes</strong>: Track not just technical metrics, but also business-relevant indicators that tie back to user experience.</p>
+</li>
+<li>
+<p><strong>Use context propagation</strong>: Properly propagate context through your system to maintain correlation between services.</p>
+</li>
+<li>
+<p><strong>Continuously improve</strong>: Use observability data to drive ongoing improvements to your system.</p>
+</li>
+</ol>
+<p>By applying these principles and implementing the patterns discussed in this chapter, you'll be well on your way to creating observable Go applications that are reliable, performant, and easier to evolve over time.</p>
+<p>Remember that observability is not a destination but a journey. As your system evolves, so too should your observability practices. Continuously evaluate and improve your approach based on the challenges you face and the insights you gain.</p>
+<p>The future of software engineering lies in systems that are not just built to run, but built to be understood. With Go's simplicity, performance, and growing observability ecosystem, you're well-positioned to create observable systems that stand the test of time.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-29-Domain-Driven-Design.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-31-Go-for-Production.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-29-Domain-Driven-Design.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-31-Go-for-Production.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

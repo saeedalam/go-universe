@@ -1,0 +1,947 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Testing - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-16-Testing.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-16-testing-in-go"><a class="header" href="#chapter-16-testing-in-go"><strong>Chapter 16: Testing in Go</strong></a></h1>
+<p>Testing is a fundamental aspect of professional software development, and Go provides a robust built-in testing framework that encourages good testing practices. In this chapter, we'll explore Go's testing capabilities, from basic unit tests to advanced techniques like benchmarking, mocking, and test coverage analysis.</p>
+<h2 id="161-introduction-to-testing-in-go"><a class="header" href="#161-introduction-to-testing-in-go"><strong>16.1 Introduction to Testing in Go</strong></a></h2>
+<p>Go's philosophy of simplicity extends to its testing framework. The standard library's <code>testing</code> package provides all the essential tools for writing effective tests without requiring third-party libraries. This built-in approach ensures that testing is an integral part of Go development.</p>
+<h3 id="1611-why-testing-matters"><a class="header" href="#1611-why-testing-matters"><strong>16.1.1 Why Testing Matters</strong></a></h3>
+<p>Testing your Go code offers numerous benefits:</p>
+<ul>
+<li><strong>Verifies correctness</strong>: Tests confirm that your code works as expected across various scenarios.</li>
+<li><strong>Prevents regressions</strong>: Tests catch when new changes break existing functionality.</li>
+<li><strong>Documents behavior</strong>: Tests serve as executable documentation of how your code should function.</li>
+<li><strong>Enables refactoring</strong>: With good test coverage, you can confidently restructure your code.</li>
+<li><strong>Improves design</strong>: Writing testable code often leads to better architectural decisions.</li>
+</ul>
+<h3 id="1612-gos-testing-philosophy"><a class="header" href="#1612-gos-testing-philosophy"><strong>16.1.2 Go's Testing Philosophy</strong></a></h3>
+<p>Go's approach to testing emphasizes:</p>
+<ul>
+<li><strong>Simplicity</strong>: Tests are just Go code, with minimal special syntax.</li>
+<li><strong>Integration</strong>: Testing tools are built into the standard toolchain.</li>
+<li><strong>Automation</strong>: Tests run as part of the build process.</li>
+<li><strong>Readability</strong>: Tests should be clear about what they're testing and what results are expected.</li>
+</ul>
+<h2 id="162-writing-basic-unit-tests"><a class="header" href="#162-writing-basic-unit-tests"><strong>16.2 Writing Basic Unit Tests</strong></a></h2>
+<p>A unit test verifies that a specific piece of code works as expected in isolation. In Go, unit tests are organized alongside the code they test.</p>
+<h3 id="1621-test-file-organization"><a class="header" href="#1621-test-file-organization"><strong>16.2.1 Test File Organization</strong></a></h3>
+<p>Go test files follow these conventions:</p>
+<ul>
+<li>Test files end with <code>_test.go</code></li>
+<li>Test files are in the same package as the code they test</li>
+<li>Test functions start with <code>Test</code> followed by a name that describes what's being tested</li>
+<li>Test functions take a parameter of type <code>*testing.T</code></li>
+</ul>
+<p>Here's a simple example:</p>
+<pre><code class="language-go">// math.go
+package math
+
+func Add(a, b int) int {
+    return a + b
+}
+</code></pre>
+<pre><code class="language-go">// math_test.go
+package math
+
+import "testing"
+
+func TestAdd(t *testing.T) {
+    got := Add(2, 3)
+    want := 5
+    if got != want {
+        t.Errorf("Add(2, 3) = %d; want %d", got, want)
+    }
+}
+</code></pre>
+<h3 id="1622-running-tests"><a class="header" href="#1622-running-tests"><strong>16.2.2 Running Tests</strong></a></h3>
+<p>To run tests in a package:</p>
+<pre><code class="language-bash">go test
+</code></pre>
+<p>This command automatically finds and runs all test functions in the current package. You can see more detailed output with the <code>-v</code> flag:</p>
+<pre><code class="language-bash">go test -v
+</code></pre>
+<p>Sample output:</p>
+<pre><code>=== RUN   TestAdd
+--- PASS: TestAdd (0.00s)
+PASS
+ok      example/math    0.002s
+</code></pre>
+<h3 id="1623-test-failure-reporting"><a class="header" href="#1623-test-failure-reporting"><strong>16.2.3 Test Failure Reporting</strong></a></h3>
+<p>The <code>testing.T</code> type provides several methods for reporting test failures:</p>
+<ul>
+<li><code>t.Error(args...)</code> / <code>t.Errorf(format, args...)</code>: Report test failure but continue execution</li>
+<li><code>t.Fatal(args...)</code> / <code>t.Fatalf(format, args...)</code>: Report test failure and stop test execution immediately</li>
+</ul>
+<pre><code class="language-go">func TestDivide(t *testing.T) {
+    result, err := Divide(10, 0)
+    if err == nil {
+        t.Fatal("Expected error when dividing by zero, got nil")
+    }
+
+    result, err = Divide(10, 2)
+    if err != nil {
+        t.Errorf("Unexpected error: %v", err)
+    }
+    if result != 5 {
+        t.Errorf("Divide(10, 2) = %f; want 5", result)
+    }
+}
+</code></pre>
+<h2 id="163-table-driven-tests"><a class="header" href="#163-table-driven-tests"><strong>16.3 Table-Driven Tests</strong></a></h2>
+<p>Table-driven tests are a powerful pattern in Go that allows you to test multiple scenarios efficiently. Instead of writing separate test functions for each case, you define a table of inputs and expected outputs.</p>
+<h3 id="1631-creating-a-test-table"><a class="header" href="#1631-creating-a-test-table"><strong>16.3.1 Creating a Test Table</strong></a></h3>
+<pre><code class="language-go">func TestMultiply(t *testing.T) {
+    tests := []struct {
+        name     string
+        a, b     int
+        expected int
+    }{
+        {"positive numbers", 2, 3, 6},
+        {"zero multiplier", 5, 0, 0},
+        {"negative numbers", -2, -3, 6},
+        {"mixed signs", -5, 3, -15},
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            got := Multiply(tt.a, tt.b)
+            if got != tt.expected {
+                t.Errorf("Multiply(%d, %d) = %d; want %d",
+                         tt.a, tt.b, got, tt.expected)
+            }
+        })
+    }
+}
+</code></pre>
+<p>This approach has several advantages:</p>
+<ul>
+<li>Easy to add new test cases</li>
+<li>Consistent testing pattern</li>
+<li>Clear documentation of test scenarios</li>
+<li>Subtest names appear in verbose output</li>
+</ul>
+<h3 id="1632-using-subtests"><a class="header" href="#1632-using-subtests"><strong>16.3.2 Using Subtests</strong></a></h3>
+<p>Notice the <code>t.Run(name, func(t *testing.T) {...})</code> syntax above. This creates a subtest, which:</p>
+<ul>
+<li>Groups related assertions</li>
+<li>Provides better isolation between test cases</li>
+<li>Allows running specific subtests with <code>go test -run=TestName/SubtestName</code></li>
+<li>Improves test output readability</li>
+</ul>
+<h2 id="164-testing-package-apis"><a class="header" href="#164-testing-package-apis"><strong>16.4 Testing Package APIs</strong></a></h2>
+<p>When testing a package's public API, it's useful to test from an external perspective.</p>
+<h3 id="1641-black-box-testing"><a class="header" href="#1641-black-box-testing"><strong>16.4.1 Black-Box Testing</strong></a></h3>
+<p>For black-box testing, where you test only the public API, place tests in a package named <code>packagename_test</code>:</p>
+<pre><code class="language-go">// calculator/calculator.go
+package calculator
+
+func Add(a, b int) int {
+    return a + b
+}
+</code></pre>
+<pre><code class="language-go">// calculator/calculator_test.go
+package calculator_test
+
+import (
+    "testing"
+
+    "example/calculator"
+)
+
+func TestAdd(t *testing.T) {
+    got := calculator.Add(2, 3)
+    want := 5
+    if got != want {
+        t.Errorf("calculator.Add(2, 3) = %d; want %d", got, want)
+    }
+}
+</code></pre>
+<p>This approach ensures that your tests only use the public API of your package, just like any other package would.</p>
+<h3 id="1642-white-box-testing"><a class="header" href="#1642-white-box-testing"><strong>16.4.2 White-Box Testing</strong></a></h3>
+<p>For white-box testing, where you need access to package internals, use the same package name:</p>
+<pre><code class="language-go">// calculator/internal_test.go
+package calculator
+
+import "testing"
+
+func TestInternalFunction(t *testing.T) {
+    // Test unexported functions or implementation details
+}
+</code></pre>
+<h2 id="165-test-fixtures-and-helpers"><a class="header" href="#165-test-fixtures-and-helpers"><strong>16.5 Test Fixtures and Helpers</strong></a></h2>
+<p>Tests often require setup and teardown code to create the right environment for testing.</p>
+<h3 id="1651-setup-and-teardown"><a class="header" href="#1651-setup-and-teardown"><strong>16.5.1 Setup and Teardown</strong></a></h3>
+<p>Go doesn't have built-in setup/teardown annotations, but you can achieve the same effect with simple Go code:</p>
+<pre><code class="language-go">func TestDatabase(t *testing.T) {
+    // Setup
+    db, err := setupTestDatabase()
+    if err != nil {
+        t.Fatalf("Failed to set up test database: %v", err)
+    }
+    defer db.Close() // Teardown
+
+    // Test body
+    err = db.Insert("key", "value")
+    if err != nil {
+        t.Errorf("Failed to insert: %v", err)
+    }
+
+    value, err := db.Get("key")
+    if err != nil {
+        t.Errorf("Failed to get: %v", err)
+    }
+    if value != "value" {
+        t.Errorf("Got %q, want %q", value, "value")
+    }
+}
+</code></pre>
+<h3 id="1652-helper-functions"><a class="header" href="#1652-helper-functions"><strong>16.5.2 Helper Functions</strong></a></h3>
+<p>For common test operations, you can create helper functions:</p>
+<pre><code class="language-go">func setupTestDatabase() (*Database, error) {
+    return OpenDatabase(":memory:")
+}
+
+func assertNoError(t *testing.T, err error) {
+    t.Helper() // Marks this function as a helper
+    if err != nil {
+        t.Fatalf("Unexpected error: %v", err)
+    }
+}
+
+func assertEqual(t *testing.T, got, want interface{}) {
+    t.Helper()
+    if got != want {
+        t.Errorf("Got %v, want %v", got, want)
+    }
+}
+
+func TestWithHelpers(t *testing.T) {
+    db, err := setupTestDatabase()
+    assertNoError(t, err)
+    defer db.Close()
+
+    err = db.Insert("key", "value")
+    assertNoError(t, err)
+
+    value, err := db.Get("key")
+    assertNoError(t, err)
+    assertEqual(t, value, "value")
+}
+</code></pre>
+<p>The <code>t.Helper()</code> call is important as it tells the testing package that this function is a helper function, not a test. This ensures that error reports point to the calling test line, not to the helper function.</p>
+<h2 id="166-testing-http-handlers"><a class="header" href="#166-testing-http-handlers"><strong>16.6 Testing HTTP Handlers</strong></a></h2>
+<p>Go's standard library makes it easy to test HTTP handlers.</p>
+<h3 id="1661-using-httptest-package"><a class="header" href="#1661-using-httptest-package"><strong>16.6.1 Using httptest Package</strong></a></h3>
+<pre><code class="language-go">import (
+    "io"
+    "net/http"
+    "net/http/httptest"
+    "testing"
+)
+
+func HelloHandler(w http.ResponseWriter, r *http.Request) {
+    io.WriteString(w, "Hello, world!")
+}
+
+func TestHelloHandler(t *testing.T) {
+    // Create a request
+    req, err := http.NewRequest("GET", "/hello", nil)
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    // Create a response recorder
+    rr := httptest.NewRecorder()
+
+    // Create the handler
+    handler := http.HandlerFunc(HelloHandler)
+
+    // Serve the request
+    handler.ServeHTTP(rr, req)
+
+    // Check status code
+    if status := rr.Code; status != http.StatusOK {
+        t.Errorf("Handler returned wrong status code: got %v want %v",
+                 status, http.StatusOK)
+    }
+
+    // Check response body
+    expected := "Hello, world!"
+    if rr.Body.String() != expected {
+        t.Errorf("Handler returned unexpected body: got %v want %v",
+                 rr.Body.String(), expected)
+    }
+}
+</code></pre>
+<h3 id="1662-testing-a-complete-server"><a class="header" href="#1662-testing-a-complete-server"><strong>16.6.2 Testing a Complete Server</strong></a></h3>
+<p>For more complex scenarios, you can start a test server:</p>
+<pre><code class="language-go">func TestServer(t *testing.T) {
+    // Start a test server
+    ts := httptest.NewServer(http.HandlerFunc(HelloHandler))
+    defer ts.Close()
+
+    // Make a request to the test server
+    res, err := http.Get(ts.URL)
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    // Check status code
+    if res.StatusCode != http.StatusOK {
+        t.Errorf("Expected status OK; got %v", res.Status)
+    }
+
+    // Read and check body
+    body, err := io.ReadAll(res.Body)
+    res.Body.Close()
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    expected := "Hello, world!"
+    if string(body) != expected {
+        t.Errorf("Expected %q; got %q", expected, string(body))
+    }
+}
+</code></pre>
+<h2 id="167-mocking-in-tests"><a class="header" href="#167-mocking-in-tests"><strong>16.7 Mocking in Tests</strong></a></h2>
+<p>Mocking allows you to isolate the code you're testing by replacing dependencies with controlled implementations.</p>
+<h3 id="1671-interface-based-mocking"><a class="header" href="#1671-interface-based-mocking"><strong>16.7.1 Interface-Based Mocking</strong></a></h3>
+<p>Go's interfaces make dependency injection and mocking straightforward:</p>
+<pre><code class="language-go">// Real implementation
+type Database interface {
+    Get(key string) (string, error)
+    Set(key, value string) error
+}
+
+type RealDatabase struct {
+    // Implementation details
+}
+
+func (db *RealDatabase) Get(key string) (string, error) {
+    // Real implementation
+    return "value", nil
+}
+
+func (db *RealDatabase) Set(key, value string) error {
+    // Real implementation
+    return nil
+}
+
+// Code that uses the database
+type UserService struct {
+    db Database
+}
+
+func (s *UserService) GetUser(id string) (string, error) {
+    return s.db.Get(id)
+}
+
+// Mock implementation for testing
+type MockDatabase struct {
+    GetFunc func(key string) (string, error)
+    SetFunc func(key, value string) error
+}
+
+func (m *MockDatabase) Get(key string) (string, error) {
+    return m.GetFunc(key)
+}
+
+func (m *MockDatabase) Set(key, value string) error {
+    return m.SetFunc(key, value)
+}
+
+// Test using the mock
+func TestUserService(t *testing.T) {
+    // Create a mock with controlled behavior
+    mockDB := &amp;MockDatabase{
+        GetFunc: func(key string) (string, error) {
+            if key == "user1" {
+                return "Alice", nil
+            }
+            return "", fmt.Errorf("not found")
+        },
+    }
+
+    // Inject the mock
+    service := &amp;UserService{db: mockDB}
+
+    // Test with expected success
+    user, err := service.GetUser("user1")
+    if err != nil {
+        t.Errorf("Unexpected error: %v", err)
+    }
+    if user != "Alice" {
+        t.Errorf("Expected 'Alice', got '%s'", user)
+    }
+
+    // Test with expected failure
+    _, err = service.GetUser("unknown")
+    if err == nil {
+        t.Error("Expected error, got nil")
+    }
+}
+</code></pre>
+<h3 id="1672-function-variable-mocking"><a class="header" href="#1672-function-variable-mocking"><strong>16.7.2 Function Variable Mocking</strong></a></h3>
+<p>For simpler cases, you can use function variables:</p>
+<pre><code class="language-go">// In production code
+var timeNow = time.Now
+
+func IsBusinessHours() bool {
+    hour := timeNow().Hour()
+    return hour &gt;= 9 &amp;&amp; hour &lt; 17
+}
+
+// In test code
+func TestIsBusinessHours(t *testing.T) {
+    // Save original and restore after test
+    original := timeNow
+    defer func() { timeNow = original }()
+
+    // Test during business hours
+    timeNow = func() time.Time {
+        return time.Date(2023, 5, 15, 14, 0, 0, 0, time.UTC) // 2 PM
+    }
+    if !IsBusinessHours() {
+        t.Error("Expected business hours at 2 PM")
+    }
+
+    // Test outside business hours
+    timeNow = func() time.Time {
+        return time.Date(2023, 5, 15, 20, 0, 0, 0, time.UTC) // 8 PM
+    }
+    if IsBusinessHours() {
+        t.Error("Expected non-business hours at 8 PM")
+    }
+}
+</code></pre>
+<h2 id="168-benchmarking"><a class="header" href="#168-benchmarking"><strong>16.8 Benchmarking</strong></a></h2>
+<p>Go's testing package also supports benchmarking, which measures the performance of your code.</p>
+<h3 id="1681-writing-benchmarks"><a class="header" href="#1681-writing-benchmarks"><strong>16.8.1 Writing Benchmarks</strong></a></h3>
+<p>Benchmark functions:</p>
+<ul>
+<li>Start with <code>Benchmark</code> instead of <code>Test</code></li>
+<li>Take a <code>*testing.B</code> parameter instead of <code>*testing.T</code></li>
+<li>Execute the code being benchmarked in a loop that runs <code>b.N</code> times</li>
+</ul>
+<pre><code class="language-go">func BenchmarkFibonacci(b *testing.B) {
+    for i := 0; i &lt; b.N; i++ {
+        Fibonacci(10)
+    }
+}
+</code></pre>
+<h3 id="1682-running-benchmarks"><a class="header" href="#1682-running-benchmarks"><strong>16.8.2 Running Benchmarks</strong></a></h3>
+<p>To run benchmarks:</p>
+<pre><code class="language-bash">go test -bench=.
+</code></pre>
+<p>This produces output like:</p>
+<pre><code>BenchmarkFibonacci-8    5000000    300 ns/op
+</code></pre>
+<p>This means the benchmark ran 5,000,000 times, and each run took approximately 300 nanoseconds.</p>
+<h3 id="1683-benchmarking-with-different-inputs"><a class="header" href="#1683-benchmarking-with-different-inputs"><strong>16.8.3 Benchmarking with Different Inputs</strong></a></h3>
+<p>To benchmark with different inputs:</p>
+<pre><code class="language-go">func BenchmarkFibonacci10(b *testing.B) {
+    for i := 0; i &lt; b.N; i++ {
+        Fibonacci(10)
+    }
+}
+
+func BenchmarkFibonacci20(b *testing.B) {
+    for i := 0; i &lt; b.N; i++ {
+        Fibonacci(20)
+    }
+}
+</code></pre>
+<p>Or parameterize a single benchmark:</p>
+<pre><code class="language-go">func BenchmarkFibonacci(b *testing.B) {
+    benchmarks := []struct {
+        name string
+        n    int
+    }{
+        {"Fib10", 10},
+        {"Fib20", 20},
+        {"Fib30", 30},
+    }
+
+    for _, bm := range benchmarks {
+        b.Run(bm.name, func(b *testing.B) {
+            for i := 0; i &lt; b.N; i++ {
+                Fibonacci(bm.n)
+            }
+        })
+    }
+}
+</code></pre>
+<h3 id="1684-advanced-benchmarking-techniques"><a class="header" href="#1684-advanced-benchmarking-techniques"><strong>16.8.4 Advanced Benchmarking Techniques</strong></a></h3>
+<p>To reset the timer for setup code:</p>
+<pre><code class="language-go">func BenchmarkComplexOperation(b *testing.B) {
+    // Setup code (not timed)
+    data := createLargeTestData()
+
+    b.ResetTimer() // Start timing from here
+
+    for i := 0; i &lt; b.N; i++ {
+        ProcessData(data)
+    }
+}
+</code></pre>
+<p>To measure memory allocations:</p>
+<pre><code class="language-bash">go test -bench=. -benchmem
+</code></pre>
+<p>This adds allocation statistics to the output:</p>
+<pre><code>BenchmarkFibonacci-8    5000000    300 ns/op    64 B/op    2 allocs/op
+</code></pre>
+<p>This indicates that each operation allocates 64 bytes across 2 allocations.</p>
+<h2 id="169-test-coverage"><a class="header" href="#169-test-coverage"><strong>16.9 Test Coverage</strong></a></h2>
+<p>Test coverage measures how much of your code is executed by your tests.</p>
+<h3 id="1691-measuring-coverage"><a class="header" href="#1691-measuring-coverage"><strong>16.9.1 Measuring Coverage</strong></a></h3>
+<p>To see coverage statistics:</p>
+<pre><code class="language-bash">go test -cover
+</code></pre>
+<p>For detailed coverage information:</p>
+<pre><code class="language-bash">go test -coverprofile=coverage.out
+go tool cover -html=coverage.out
+</code></pre>
+<p>This generates an HTML report showing which lines are covered by tests.</p>
+<h3 id="1692-coverage-goals"><a class="header" href="#1692-coverage-goals"><strong>16.9.2 Coverage Goals</strong></a></h3>
+<p>While 100% coverage is not always necessary or practical, aim for high coverage of:</p>
+<ul>
+<li>Critical business logic</li>
+<li>Error handling paths</li>
+<li>Edge cases</li>
+<li>Public API functions</li>
+</ul>
+<p>Remember that coverage quantity doesn't ensure test quality. Focus on meaningful tests that verify correctness, not just execution.</p>
+<h2 id="1610-testing-best-practices"><a class="header" href="#1610-testing-best-practices"><strong>16.10 Testing Best Practices</strong></a></h2>
+<h3 id="16101-test-structure"><a class="header" href="#16101-test-structure"><strong>16.10.1 Test Structure</strong></a></h3>
+<p>Follow the Arrange-Act-Assert pattern:</p>
+<ol>
+<li><strong>Arrange</strong>: Set up the test data and conditions</li>
+<li><strong>Act</strong>: Call the function being tested</li>
+<li><strong>Assert</strong>: Verify the results</li>
+</ol>
+<pre><code class="language-go">func TestCalculator(t *testing.T) {
+    // Arrange
+    calc := NewCalculator()
+
+    // Act
+    result := calc.Add(2, 3)
+
+    // Assert
+    if result != 5 {
+        t.Errorf("Expected 5, got %d", result)
+    }
+}
+</code></pre>
+<h3 id="16102-naming-conventions"><a class="header" href="#16102-naming-conventions"><strong>16.10.2 Naming Conventions</strong></a></h3>
+<ul>
+<li>Name test functions clearly: <code>TestFunctionName_Scenario</code></li>
+<li>For table-driven tests, give each case a descriptive name</li>
+<li>Use helper functions to clarify intent</li>
+</ul>
+<h3 id="16103-test-independence"><a class="header" href="#16103-test-independence"><strong>16.10.3 Test Independence</strong></a></h3>
+<ul>
+<li>Each test should be independent and not rely on the state from other tests</li>
+<li>Avoid global state or properly reset it between tests</li>
+<li>Use subtests to group related tests while maintaining isolation</li>
+</ul>
+<h3 id="16104-test-maintainability"><a class="header" href="#16104-test-maintainability"><strong>16.10.4 Test Maintainability</strong></a></h3>
+<ul>
+<li>Keep tests simple and readable</li>
+<li>Refactor test code just like production code</li>
+<li>Use helper functions for common operations</li>
+<li>Don't test implementation details; test behavior</li>
+</ul>
+<h2 id="1611-advanced-testing-topics"><a class="header" href="#1611-advanced-testing-topics"><strong>16.11 Advanced Testing Topics</strong></a></h2>
+<h3 id="16111-parallel-testing"><a class="header" href="#16111-parallel-testing"><strong>16.11.1 Parallel Testing</strong></a></h3>
+<p>To run tests in parallel:</p>
+<pre><code class="language-go">func TestParallel(t *testing.T) {
+    t.Parallel() // Mark this test as capable of running in parallel
+
+    // Test logic here
+}
+</code></pre>
+<p>This can significantly speed up test execution for I/O-bound tests.</p>
+<h3 id="16112-testing-race-conditions"><a class="header" href="#16112-testing-race-conditions"><strong>16.11.2 Testing Race Conditions</strong></a></h3>
+<p>To check for race conditions:</p>
+<pre><code class="language-bash">go test -race
+</code></pre>
+<p>This instruments your code to detect when multiple goroutines access the same memory location concurrently.</p>
+<h3 id="16113-fuzzing"><a class="header" href="#16113-fuzzing"><strong>16.11.3 Fuzzing</strong></a></h3>
+<p>Go 1.18+ supports fuzzing, which automatically generates test inputs:</p>
+<pre><code class="language-go">//go:build go1.18
+// +build go1.18
+
+func FuzzReverse(f *testing.F) {
+    testcases := []string{"hello", "world", ""}
+    for _, tc := range testcases {
+        f.Add(tc) // Provide seed inputs
+    }
+
+    f.Fuzz(func(t *testing.T, orig string) {
+        rev := Reverse(orig)
+        doubleRev := Reverse(rev)
+        if orig != doubleRev {
+            t.Errorf("Before: %q, after: %q", orig, doubleRev)
+        }
+    })
+}
+</code></pre>
+<p>Run fuzzing with:</p>
+<pre><code class="language-bash">go test -fuzz=FuzzReverse
+</code></pre>
+<h2 id="1612-exercises"><a class="header" href="#1612-exercises"><strong>16.12 Exercises</strong></a></h2>
+<h3 id="exercise-1-basic-testing"><a class="header" href="#exercise-1-basic-testing"><strong>Exercise 1: Basic Testing</strong></a></h3>
+<p>Write a function that checks if a number is prime and create tests for it.</p>
+<pre><code class="language-go">// IsPrime returns true if n is a prime number.
+func IsPrime(n int) bool {
+    if n &lt;= 1 {
+        return false
+    }
+    if n &lt;= 3 {
+        return true
+    }
+    if n%2 == 0 || n%3 == 0 {
+        return false
+    }
+
+    i := 5
+    for i*i &lt;= n {
+        if n%i == 0 || n%(i+2) == 0 {
+            return false
+        }
+        i += 6
+    }
+    return true
+}
+</code></pre>
+<pre><code class="language-go">func TestIsPrime(t *testing.T) {
+    tests := []struct {
+        name     string
+        input    int
+        expected bool
+    }{
+        {"negative", -1, false},
+        {"zero", 0, false},
+        {"one", 1, false},
+        {"two", 2, true},
+        {"three", 3, true},
+        {"four", 4, false},
+        {"seventeen", 17, true},
+        {"twenty", 20, false},
+        {"ninety-seven", 97, true},
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            got := IsPrime(tt.input)
+            if got != tt.expected {
+                t.Errorf("IsPrime(%d) = %v; want %v",
+                         tt.input, got, tt.expected)
+            }
+        })
+    }
+}
+</code></pre>
+<h3 id="exercise-2-http-testing"><a class="header" href="#exercise-2-http-testing"><strong>Exercise 2: HTTP Testing</strong></a></h3>
+<p>Write tests for an HTTP handler that returns the current time.</p>
+<pre><code class="language-go">func TimeHandler(w http.ResponseWriter, r *http.Request) {
+    currentTime := time.Now().Format(time.RFC3339)
+    fmt.Fprintf(w, "The current time is: %s", currentTime)
+}
+
+func TestTimeHandler(t *testing.T) {
+    req, err := http.NewRequest("GET", "/time", nil)
+    if err != nil {
+        t.Fatal(err)
+    }
+
+    rr := httptest.NewRecorder()
+    handler := http.HandlerFunc(TimeHandler)
+
+    handler.ServeHTTP(rr, req)
+
+    if status := rr.Code; status != http.StatusOK {
+        t.Errorf("Handler returned wrong status code: got %v want %v",
+                status, http.StatusOK)
+    }
+
+    // Check that the response contains "The current time is:"
+    if !strings.Contains(rr.Body.String(), "The current time is:") {
+        t.Errorf("Handler response missing time prefix: %s", rr.Body.String())
+    }
+}
+</code></pre>
+<h3 id="exercise-3-benchmarking-string-operations"><a class="header" href="#exercise-3-benchmarking-string-operations"><strong>Exercise 3: Benchmarking String Operations</strong></a></h3>
+<p>Compare the performance of string concatenation methods.</p>
+<pre><code class="language-go">func ConcatWithPlus(items []string) string {
+    result := ""
+    for _, item := range items {
+        result += item
+    }
+    return result
+}
+
+func ConcatWithBuilder(items []string) string {
+    var sb strings.Builder
+    for _, item := range items {
+        sb.WriteString(item)
+    }
+    return sb.String()
+}
+
+func BenchmarkStringConcat(b *testing.B) {
+    items := []string{"a", "b", "c", "d", "e"}
+
+    b.Run("WithPlus", func(b *testing.B) {
+        for i := 0; i &lt; b.N; i++ {
+            ConcatWithPlus(items)
+        }
+    })
+
+    b.Run("WithBuilder", func(b *testing.B) {
+        for i := 0; i &lt; b.N; i++ {
+            ConcatWithBuilder(items)
+        }
+    })
+}
+</code></pre>
+<h2 id="1613-summary"><a class="header" href="#1613-summary"><strong>16.13 Summary</strong></a></h2>
+<p>In this chapter, we've explored Go's comprehensive testing capabilities:</p>
+<ul>
+<li>Writing basic unit tests</li>
+<li>Creating table-driven tests</li>
+<li>Testing HTTP handlers</li>
+<li>Mocking dependencies</li>
+<li>Benchmarking performance</li>
+<li>Measuring test coverage</li>
+<li>Following testing best practices</li>
+</ul>
+<p>Go's built-in testing tools make it easy to ensure your code is reliable, performant, and maintainable. By incorporating testing into your development workflow, you'll write better code and catch issues before they affect your users.</p>
+<p><strong>Next Up</strong>: In Chapter 17, we'll explore interfaces, one of Go's most powerful features for creating flexible, decoupled code.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-15-File-IO.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-17-Interfaces.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-15-File-IO.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-17-Interfaces.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

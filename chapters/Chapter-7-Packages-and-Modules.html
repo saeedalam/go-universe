@@ -1,0 +1,889 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Packages and Modules - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-7-Packages-and-Modules.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-7-packages-and-modules---organizing-go-code"><a class="header" href="#chapter-7-packages-and-modules---organizing-go-code"><strong>Chapter 7: Packages and Modules - Organizing Go Code</strong></a></h1>
+<p>Go's approach to code organization is both powerful and straightforward. The package system provides a clean way to structure your code, while the module system (introduced in Go 1.11) manages dependencies with elegance and precision. Understanding these systems is essential for writing maintainable Go code and effectively collaborating with other developers.</p>
+<p>In this chapter, you'll learn how to organize your code into packages, import and use code from other packages, create your own modules, and manage dependencies effectively.</p>
+<h2 id="71-understanding-go-packages"><a class="header" href="#71-understanding-go-packages"><strong>7.1 Understanding Go Packages</strong></a></h2>
+<h3 id="711-what-is-a-package"><a class="header" href="#711-what-is-a-package"><strong>7.1.1 What is a Package?</strong></a></h3>
+<p>A package is Go's unit of code organization and reuse. Every Go file belongs to a package, declared at the top of the file:</p>
+<pre><code class="language-go">package mypackage
+</code></pre>
+<p>Packages serve several important purposes:</p>
+<ol>
+<li><strong>Code organization</strong>: Group related code together</li>
+<li><strong>Encapsulation</strong>: Control visibility of functions, types, and variables</li>
+<li><strong>Reusability</strong>: Use code across multiple projects</li>
+<li><strong>Compilation</strong>: Compiled as a unit</li>
+</ol>
+<h3 id="712-package-naming-conventions"><a class="header" href="#712-package-naming-conventions"><strong>7.1.2 Package Naming Conventions</strong></a></h3>
+<p>In Go, package names should be:</p>
+<ul>
+<li><strong>Short and concise</strong>: Prefer single-word names</li>
+<li><strong>Lowercase</strong>: Never use camelCase or snake_case</li>
+<li><strong>Descriptive</strong>: Reflect the package's purpose</li>
+<li><strong>Not pluralized</strong>: Use <code>store</code> not <code>stores</code></li>
+<li><strong>Not generic</strong>: Avoid names like <code>util</code>, <code>common</code>, or <code>misc</code></li>
+</ul>
+<p>Good package names include:</p>
+<pre><code>http     // for HTTP client and server implementations
+json     // for JSON encoding and decoding
+io       // for I/O operations
+fmt      // for formatting and printing
+strings  // for string manipulation
+math     // for mathematical operations
+</code></pre>
+<h3 id="713-package-visibility-rules"><a class="header" href="#713-package-visibility-rules"><strong>7.1.3 Package Visibility Rules</strong></a></h3>
+<p>Go controls visibility (public vs. private) through identifier naming:</p>
+<ul>
+<li><strong>Exported (public)</strong>: Identifiers starting with an uppercase letter are accessible from other packages</li>
+<li><strong>Unexported (private)</strong>: Identifiers starting with a lowercase letter are only accessible within the same package</li>
+</ul>
+<pre><code class="language-go">package geometry
+
+// Circle is exported (public) - accessible from other packages
+type Circle struct {
+    Radius float64 // Exported field
+    color  string  // Unexported field
+}
+
+// CalculateArea is exported (public) - accessible from other packages
+func (c Circle) CalculateArea() float64 {
+    return 3.14 * c.Radius * c.Radius
+}
+
+// setColor is unexported (private) - only accessible within this package
+func (c *Circle) setColor(color string) {
+    c.color = color
+}
+</code></pre>
+<h3 id="714-package-documentation"><a class="header" href="#714-package-documentation"><strong>7.1.4 Package Documentation</strong></a></h3>
+<p>Go emphasizes documentation as part of the development process. Package documentation follows a simple format:</p>
+<ul>
+<li>Package-level documentation appears before the package declaration</li>
+<li>Exported identifier documentation appears directly above the identifier</li>
+</ul>
+<pre><code class="language-go">// Package geometry provides utilities for geometric calculations.
+// It supports various shapes like circles, rectangles, and triangles.
+package geometry
+
+// Circle represents a circle shape with a radius.
+type Circle struct {
+    Radius float64
+}
+
+// CalculateArea returns the area of the circle.
+func (c Circle) CalculateArea() float64 {
+    return 3.14 * c.Radius * c.Radius
+}
+</code></pre>
+<p>Access documentation with <code>go doc</code>:</p>
+<pre><code class="language-bash">go doc geometry           # View package documentation
+go doc geometry.Circle    # View Circle type documentation
+</code></pre>
+<h2 id="72-working-with-multiple-files-and-packages"><a class="header" href="#72-working-with-multiple-files-and-packages"><strong>7.2 Working with Multiple Files and Packages</strong></a></h2>
+<h3 id="721-multi-file-packages"><a class="header" href="#721-multi-file-packages"><strong>7.2.1 Multi-file Packages</strong></a></h3>
+<p>A package can span multiple files. When you do this:</p>
+<ol>
+<li>Each file must declare the same package name</li>
+<li>All files in the same directory must belong to the same package</li>
+<li>Functions, types, and variables can reference each other directly without import</li>
+</ol>
+<p>Example:</p>
+<p><strong>shapes.go</strong>:</p>
+<pre><code class="language-go">package geometry
+
+// Shape is an interface that all shapes implement
+type Shape interface {
+    CalculateArea() float64
+    CalculatePerimeter() float64
+}
+
+// defaultColor returns the default color for shapes
+func defaultColor() string {
+    return "black"
+}
+</code></pre>
+<p><strong>circle.go</strong>:</p>
+<pre><code class="language-go">package geometry
+
+// Circle implements the Shape interface
+type Circle struct {
+    Radius float64
+    color  string
+}
+
+// NewCircle creates a new Circle with the default color
+func NewCircle(radius float64) Circle {
+    return Circle{
+        Radius: radius,
+        color:  defaultColor(), // Using function from shapes.go
+    }
+}
+
+// CalculateArea returns the area of the circle
+func (c Circle) CalculateArea() float64 {
+    return 3.14 * c.Radius * c.Radius
+}
+
+// CalculatePerimeter returns the perimeter of the circle
+func (c Circle) CalculatePerimeter() float64 {
+    return 2 * 3.14 * c.Radius
+}
+</code></pre>
+<h3 id="722-package-directory-structure"><a class="header" href="#722-package-directory-structure"><strong>7.2.2 Package Directory Structure</strong></a></h3>
+<p>A typical Go project with multiple packages might have a structure like this:</p>
+<pre><code>myproject/
+├── main.go                   # main package
+├── geometry/
+│   ├── shapes.go             # geometry package
+│   ├── circle.go
+│   └── rectangle.go
+└── drawing/
+    ├── canvas.go             # drawing package
+    └── color.go
+</code></pre>
+<p>Each subdirectory represents a separate package, and all files within that directory must belong to the same package.</p>
+<h3 id="723-importing-packages"><a class="header" href="#723-importing-packages"><strong>7.2.3 Importing Packages</strong></a></h3>
+<p>To use code from another package, you must import it:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "myproject/geometry"
+)
+
+func main() {
+    circle := geometry.NewCircle(5.0)
+    area := circle.CalculateArea()
+    fmt.Printf("Circle area: %.2f\n", area)
+}
+</code></pre>
+<p><strong>Import Aliases</strong>:</p>
+<p>You can create aliases for package names to avoid conflicts or for convenience:</p>
+<pre><code class="language-go">import (
+    "fmt"
+    geo "myproject/geometry"  // Alias for the geometry package
+)
+
+func main() {
+    circle := geo.NewCircle(5.0)
+    // ...
+}
+</code></pre>
+<p><strong>Dot Imports</strong>:</p>
+<p>The dot import makes exported identifiers directly accessible (without the package prefix), but it's generally discouraged as it reduces clarity:</p>
+<pre><code class="language-go">import (
+    "fmt"
+    . "myproject/geometry"  // Dot import, use with caution
+)
+
+func main() {
+    circle := NewCircle(5.0)  // No package prefix needed
+    // ...
+}
+</code></pre>
+<p><strong>Blank Imports</strong>:</p>
+<p>Sometimes you need to import a package for its side effects only (init functions):</p>
+<pre><code class="language-go">import (
+    "fmt"
+    _ "github.com/lib/pq"  // Registers PostgreSQL driver, but doesn't use the package directly
+)
+</code></pre>
+<h2 id="73-standard-library-packages"><a class="header" href="#73-standard-library-packages"><strong>7.3 Standard Library Packages</strong></a></h2>
+<p>The Go standard library is comprehensive and well-designed, providing core functionality without needing external dependencies.</p>
+<h3 id="731-core-packages"><a class="header" href="#731-core-packages"><strong>7.3.1 Core Packages</strong></a></h3>
+<p>Here are some of the most commonly used standard library packages:</p>
+<div class="table-wrapper"><table><thead><tr><th>Package</th><th>Description</th><th>Example Usage</th></tr></thead><tbody>
+<tr><td><code>fmt</code></td><td>Formatted I/O</td><td><code>fmt.Println("Hello, world!")</code></td></tr>
+<tr><td><code>os</code></td><td>Operating system functionality</td><td><code>os.Open("file.txt")</code></td></tr>
+<tr><td><code>io</code></td><td>Basic I/O interfaces</td><td><code>io.Copy(dst, src)</code></td></tr>
+<tr><td><code>strconv</code></td><td>String conversions</td><td><code>strconv.Atoi("42")</code></td></tr>
+<tr><td><code>strings</code></td><td>String manipulation</td><td><code>strings.Split("a,b,c", ",")</code></td></tr>
+<tr><td><code>time</code></td><td>Time functionality</td><td><code>time.Now()</code></td></tr>
+<tr><td><code>net/http</code></td><td>HTTP client and server</td><td><code>http.Get("https://example.com")</code></td></tr>
+<tr><td><code>encoding/json</code></td><td>JSON encoding/decoding</td><td><code>json.Marshal(data)</code></td></tr>
+<tr><td><code>math</code></td><td>Mathematical functions</td><td><code>math.Sqrt(4)</code></td></tr>
+<tr><td><code>crypto</code></td><td>Cryptographic algorithms</td><td><code>crypto/sha256</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="732-finding-packages-in-standard-library"><a class="header" href="#732-finding-packages-in-standard-library"><strong>7.3.2 Finding Packages in Standard Library</strong></a></h3>
+<p>The complete standard library is documented at <a href="https://pkg.go.dev/std">pkg.go.dev</a>.</p>
+<p>You can also view documentation locally:</p>
+<pre><code class="language-bash">go doc fmt          # View documentation for the fmt package
+go doc time.Now     # View documentation for the Now function in the time package
+</code></pre>
+<h3 id="733-example-using-standard-library-packages"><a class="header" href="#733-example-using-standard-library-packages"><strong>7.3.3 Example: Using Standard Library Packages</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+    "time"
+)
+
+type User struct {
+    Name      string    `json:"name"`
+    Email     string    `json:"email"`
+    CreatedAt time.Time `json:"created_at"`
+}
+
+func main() {
+    // Create a user
+    user := User{
+        Name:      "Alice",
+        Email:     "alice@example.com",
+        CreatedAt: time.Now(),
+    }
+
+    // Convert to JSON
+    jsonData, err := json.MarshalIndent(user, "", "  ")
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
+
+    fmt.Println(string(jsonData))
+
+    // Make HTTP request
+    resp, err := http.Get("https://api.github.com")
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
+    defer resp.Body.Close()
+
+    fmt.Println("GitHub API Status:", resp.Status)
+}
+</code></pre>
+<h2 id="74-creating-and-using-your-own-packages"><a class="header" href="#74-creating-and-using-your-own-packages"><strong>7.4 Creating and Using Your Own Packages</strong></a></h2>
+<h3 id="741-creating-a-package"><a class="header" href="#741-creating-a-package"><strong>7.4.1 Creating a Package</strong></a></h3>
+<p>Let's create a simple calculator package:</p>
+<p>Directory structure:</p>
+<pre><code>calculator/
+├── calculator.go
+└── operations.go
+</code></pre>
+<p><strong>calculator.go</strong>:</p>
+<pre><code class="language-go">// Package calculator provides basic mathematical operations.
+package calculator
+
+// Configuration variables
+var (
+    Precision   = 2
+    MaxOperands = 10
+)
+
+// init is called when the package is imported
+func init() {
+    // Package initialization code goes here
+    fmt.Println("Calculator package initialized")
+}
+</code></pre>
+<p><strong>operations.go</strong>:</p>
+<pre><code class="language-go">package calculator
+
+import "math"
+
+// Add returns the sum of two numbers
+func Add(a, b float64) float64 {
+    return a + b
+}
+
+// Subtract returns the difference between two numbers
+func Subtract(a, b float64) float64 {
+    return a - b
+}
+
+// Multiply returns the product of two numbers
+func Multiply(a, b float64) float64 {
+    return a * b
+}
+
+// Divide returns the quotient of two numbers
+// Returns NaN if divisor is zero
+func Divide(a, b float64) float64 {
+    if b == 0 {
+        return math.NaN()
+    }
+    return a / b
+}
+
+// Internal helper function (not exported)
+func round(num float64) float64 {
+    factor := math.Pow(10, float64(Precision))
+    return math.Round(num*factor) / factor
+}
+</code></pre>
+<h3 id="742-using-your-package"><a class="header" href="#742-using-your-package"><strong>7.4.2 Using Your Package</strong></a></h3>
+<p>Now let's use our calculator package in a main program:</p>
+<p><strong>main.go</strong>:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "myapp/calculator"
+)
+
+func main() {
+    // Use exported functions from the calculator package
+    sum := calculator.Add(5.7, 3.2)
+    difference := calculator.Subtract(10.5, 2.5)
+
+    // Use exported variables
+    calculator.Precision = 4
+
+    fmt.Printf("Sum: %.2f\n", sum)
+    fmt.Printf("Difference: %.2f\n", difference)
+    fmt.Printf("Max Operands: %d\n", calculator.MaxOperands)
+
+    // This would cause a compilation error - cannot use unexported function
+    // result := calculator.round(5.7567)
+}
+</code></pre>
+<h3 id="743-package-initialization"><a class="header" href="#743-package-initialization"><strong>7.4.3 Package Initialization</strong></a></h3>
+<p>When a package is imported, these steps happen in order:</p>
+<ol>
+<li>Package-level variables are initialized</li>
+<li><code>init()</code> functions are executed in the order they appear in the source file</li>
+<li>If multiple <code>init()</code> functions exist (across multiple files), they're executed in lexical file name order</li>
+</ol>
+<pre><code class="language-go">package mypackage
+
+import "fmt"
+
+var PackageVar = initVar()
+
+func initVar() int {
+    fmt.Println("Variable initialization")
+    return 42
+}
+
+func init() {
+    fmt.Println("First init function")
+}
+
+func init() {
+    fmt.Println("Second init function")
+}
+</code></pre>
+<p>When this package is imported, the output would be:</p>
+<pre><code>Variable initialization
+First init function
+Second init function
+</code></pre>
+<h2 id="75-introduction-to-go-modules"><a class="header" href="#75-introduction-to-go-modules"><strong>7.5 Introduction to Go Modules</strong></a></h2>
+<h3 id="751-what-are-go-modules"><a class="header" href="#751-what-are-go-modules"><strong>7.5.1 What are Go Modules?</strong></a></h3>
+<p>Go modules, introduced in Go 1.11, are the official dependency management system for Go. They allow you to:</p>
+<ol>
+<li><strong>Track dependencies</strong>: Explicitly define and track dependencies</li>
+<li><strong>Version control</strong>: Specify exact versions of dependencies</li>
+<li><strong>Reproducible builds</strong>: Ensure consistent builds across different environments</li>
+<li><strong>Dependency pruning</strong>: Only include what you need</li>
+</ol>
+<h3 id="752-creating-a-new-module"><a class="header" href="#752-creating-a-new-module"><strong>7.5.2 Creating a New Module</strong></a></h3>
+<p>To create a new module:</p>
+<pre><code class="language-bash">mkdir myproject
+cd myproject
+go mod init github.com/username/myproject
+</code></pre>
+<p>This creates a <code>go.mod</code> file:</p>
+<pre><code>module github.com/username/myproject
+
+go 1.16
+</code></pre>
+<p>The module path (<code>github.com/username/myproject</code>) becomes the import path prefix for all packages in the module.</p>
+<h3 id="753-adding-dependencies"><a class="header" href="#753-adding-dependencies"><strong>7.5.3 Adding Dependencies</strong></a></h3>
+<p>When you import a package that's not in the standard library, Go automatically adds it to your module:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "github.com/fatih/color"
+)
+
+func main() {
+    color.Red("This is red text")
+    color.Green("This is green text")
+    fmt.Println("This is normal text")
+}
+</code></pre>
+<p>Run the code with:</p>
+<pre><code class="language-bash">go run main.go
+</code></pre>
+<p>Go will:</p>
+<ol>
+<li>Download the required dependency</li>
+<li>Add it to your <code>go.mod</code> file</li>
+<li>Create a <code>go.sum</code> file with checksums to verify the dependency</li>
+</ol>
+<p>After running, your <code>go.mod</code> might look like:</p>
+<pre><code>module github.com/username/myproject
+
+go 1.16
+
+require github.com/fatih/color v1.13.0
+</code></pre>
+<h3 id="754-managing-dependencies"><a class="header" href="#754-managing-dependencies"><strong>7.5.4 Managing Dependencies</strong></a></h3>
+<p><strong>Viewing Dependencies</strong>:</p>
+<pre><code class="language-bash">go list -m all  # List all dependencies
+</code></pre>
+<p><strong>Updating Dependencies</strong>:</p>
+<pre><code class="language-bash">go get github.com/fatih/color        # Update to latest version
+go get github.com/fatih/color@v1.12.0 # Update to specific version
+go get -u                             # Update all dependencies
+</code></pre>
+<p><strong>Removing Unused Dependencies</strong>:</p>
+<pre><code class="language-bash">go mod tidy  # Remove unused dependencies and add missing ones
+</code></pre>
+<h3 id="755-understanding-semantic-versioning"><a class="header" href="#755-understanding-semantic-versioning"><strong>7.5.5 Understanding Semantic Versioning</strong></a></h3>
+<p>Go modules rely on Semantic Versioning (SemVer) for dependency management:</p>
+<pre><code>v1.2.3
+ │ │ │
+ │ │ └── Patch: Bug fixes that don't break compatibility
+ │ └──── Minor: New features that don't break compatibility
+ └────── Major: Changes that break backward compatibility
+</code></pre>
+<p>In <code>go.mod</code>, dependencies can be specified with different version constraints:</p>
+<pre><code>require (
+    github.com/example/package1 v1.2.3         // Exact version
+    github.com/example/package2 v1.2           // Any patch version of v1.2
+    github.com/example/package3 v1             // Any minor and patch version of v1
+    github.com/example/package4 v1.2.3-alpha.1 // Specific pre-release version
+)
+</code></pre>
+<h2 id="76-working-with-internal-packages"><a class="header" href="#76-working-with-internal-packages"><strong>7.6 Working with Internal Packages</strong></a></h2>
+<h3 id="761-the-internal-package-pattern"><a class="header" href="#761-the-internal-package-pattern"><strong>7.6.1 The Internal Package Pattern</strong></a></h3>
+<p>Go has a special directory name <code>internal</code> that restricts package visibility. Packages inside an <code>internal</code> directory can only be imported by packages that are in the same directory or its subdirectories.</p>
+<pre><code>mymodule/
+├── cmd/
+│   └── myapp/
+│       └── main.go
+├── internal/      # Only importable within mymodule
+│   ├── config/
+│   └── database/
+└── pkg/          # Publicly available packages
+    ├── api/
+    └── logger/
+</code></pre>
+<p>In this example:</p>
+<ul>
+<li>Packages in <code>internal</code> can only be imported by code in the <code>mymodule</code> module</li>
+<li>Packages in <code>pkg</code> can be imported by any module</li>
+</ul>
+<h3 id="762-example-of-internal-package-usage"><a class="header" href="#762-example-of-internal-package-usage"><strong>7.6.2 Example of Internal Package Usage</strong></a></h3>
+<p><strong>mymodule/internal/config/config.go</strong>:</p>
+<pre><code class="language-go">package config
+
+type Configuration struct {
+    APIKey      string
+    Environment string
+    Debug       bool
+}
+
+func Load() *Configuration {
+    // Load configuration from file or environment
+    return &amp;Configuration{
+        APIKey:      "secret-key",
+        Environment: "development",
+        Debug:       true,
+    }
+}
+</code></pre>
+<p><strong>mymodule/cmd/myapp/main.go</strong>:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "mymodule/internal/config"
+    "mymodule/pkg/api"
+)
+
+func main() {
+    // We can import the internal package because we're in the same module
+    cfg := config.Load()
+
+    // Initialize API with configuration
+    client := api.NewClient(cfg.APIKey, cfg.Debug)
+
+    fmt.Printf("API client initialized in %s mode\n", cfg.Environment)
+}
+</code></pre>
+<p>If another module tries to import <code>mymodule/internal/config</code>, the Go compiler will produce an error.</p>
+<h2 id="77-organizing-large-go-applications"><a class="header" href="#77-organizing-large-go-applications"><strong>7.7 Organizing Large Go Applications</strong></a></h2>
+<h3 id="771-common-project-layouts"><a class="header" href="#771-common-project-layouts"><strong>7.7.1 Common Project Layouts</strong></a></h3>
+<p>For larger applications, you'll want a consistent structure. One popular layout is:</p>
+<pre><code>myapp/
+├── cmd/                    # Command-line applications
+│   ├── server/             # The API server
+│   │   └── main.go
+│   └── cli/                # The CLI tool
+│       └── main.go
+├── internal/               # Private packages
+│   ├── auth/               # Authentication logic
+│   ├── middleware/         # HTTP middleware
+│   └── database/           # Database access
+├── pkg/                    # Public packages
+│   ├── models/             # Data models
+│   └── utils/              # Utility functions
+├── api/                    # API documentation, OpenAPI/Swagger specs
+├── web/                    # Web assets
+├── configs/                # Configuration files
+├── deployments/            # Deployment configurations (Docker, K8s)
+├── docs/                   # Documentation
+├── examples/               # Example code
+├── scripts/                # Build and deployment scripts
+├── test/                   # Additional test applications and test data
+├── go.mod
+└── go.sum
+</code></pre>
+<h3 id="772-domain-driven-design-approach"><a class="header" href="#772-domain-driven-design-approach"><strong>7.7.2 Domain-Driven Design Approach</strong></a></h3>
+<p>For complex business applications, you might prefer organizing by domain:</p>
+<pre><code>myapp/
+├── cmd/
+│   └── server/
+│       └── main.go
+├── internal/
+│   ├── user/               # User domain
+│   │   ├── repository.go   # Data access
+│   │   ├── service.go      # Business logic
+│   │   ├── handler.go      # HTTP handlers
+│   │   └── model.go        # Domain models
+│   ├── product/            # Product domain
+│   │   ├── repository.go
+│   │   ├── service.go
+│   │   ├── handler.go
+│   │   └── model.go
+│   └── common/             # Shared code
+├── pkg/
+└── ...
+</code></pre>
+<h3 id="773-guidelines-for-package-organization"><a class="header" href="#773-guidelines-for-package-organization"><strong>7.7.3 Guidelines for Package Organization</strong></a></h3>
+<ol>
+<li><strong>Group by function</strong>: Keep related functionality together</li>
+<li><strong>Avoid circular dependencies</strong>: Structure packages hierarchically</li>
+<li><strong>Minimize public APIs</strong>: Only export what's necessary</li>
+<li><strong>Design for testability</strong>: Make packages easy to test in isolation</li>
+<li><strong>Balance package size</strong>: Neither too large nor too small</li>
+<li><strong>Use interface-based design</strong>: Define interfaces at package boundaries</li>
+</ol>
+<h2 id="78-vendor-directory-and-vendoring"><a class="header" href="#78-vendor-directory-and-vendoring"><strong>7.8 Vendor Directory and Vendoring</strong></a></h2>
+<h3 id="781-what-is-vendoring"><a class="header" href="#781-what-is-vendoring"><strong>7.8.1 What is Vendoring?</strong></a></h3>
+<p>Vendoring is the practice of copying all dependencies into your project's repository, typically in a <code>vendor</code> directory. Before Go modules, vendoring was the primary way to manage dependencies.</p>
+<p>With modules, vendoring is optional but still useful for:</p>
+<ul>
+<li>Ensuring build reproducibility</li>
+<li>Working in environments without internet access</li>
+<li>Auditing all dependency code</li>
+</ul>
+<h3 id="782-using-the-vendor-directory"><a class="header" href="#782-using-the-vendor-directory"><strong>7.8.2 Using the Vendor Directory</strong></a></h3>
+<p>To create a vendor directory:</p>
+<pre><code class="language-bash">go mod vendor
+</code></pre>
+<p>This creates a <code>vendor</code> directory with all dependencies.</p>
+<p>To build using the vendor directory:</p>
+<pre><code class="language-bash">go build -mod=vendor
+</code></pre>
+<h2 id="79-best-practices-for-packages-and-modules"><a class="header" href="#79-best-practices-for-packages-and-modules"><strong>7.9 Best Practices for Packages and Modules</strong></a></h2>
+<h3 id="791-package-design-principles"><a class="header" href="#791-package-design-principles"><strong>7.9.1 Package Design Principles</strong></a></h3>
+<ol>
+<li><strong>Cohesion</strong>: A package should have a single, well-defined purpose</li>
+<li><strong>Minimal interfaces</strong>: Export only what's necessary</li>
+<li><strong>No circular dependencies</strong>: Design for unidirectional dependencies</li>
+<li><strong>Stable dependencies</strong>: Depend on packages that change less frequently than yours</li>
+<li><strong>Package by layer or by feature</strong>: Choose a consistent organizational approach</li>
+</ol>
+<h3 id="792-module-versioning-best-practices"><a class="header" href="#792-module-versioning-best-practices"><strong>7.9.2 Module Versioning Best Practices</strong></a></h3>
+<ol>
+<li><strong>Semantic versioning</strong>: Follow v1.2.3 format strictly</li>
+<li><strong>API compatibility</strong>: Don't break backward compatibility within the same major version</li>
+<li><strong>Use major version directories</strong> for v2 and above:
+<pre><code>github.com/user/module/v2/package
+</code></pre>
+</li>
+<li><strong>Keep go.mod clean</strong>: Use <code>go mod tidy</code> regularly</li>
+<li><strong>Tag releases</strong> in your version control system</li>
+</ol>
+<h3 id="793-documentation-guidelines"><a class="header" href="#793-documentation-guidelines"><strong>7.9.3 Documentation Guidelines</strong></a></h3>
+<ol>
+<li><strong>Document all exported identifiers</strong>: Functions, types, variables, constants</li>
+<li><strong>Start with the name</strong>: <code>// Package log provides...</code>, <code>// NewWriter returns...</code></li>
+<li><strong>Include examples</strong> for complex functionality</li>
+<li><strong>Link related functions</strong> in documentation</li>
+<li><strong>Generate documentation</strong> locally with <code>godoc</code> server</li>
+</ol>
+<h2 id="710-creating-and-publishing-your-own-modules"><a class="header" href="#710-creating-and-publishing-your-own-modules"><strong>7.10 Creating and Publishing Your Own Modules</strong></a></h2>
+<h3 id="7101-preparing-your-module-for-publication"><a class="header" href="#7101-preparing-your-module-for-publication"><strong>7.10.1 Preparing Your Module for Publication</strong></a></h3>
+<ol>
+<li>Choose a good module path (typically your repo URL)</li>
+<li>Add a <code>README.md</code> with:
+<ul>
+<li>Overview and purpose</li>
+<li>Installation instructions</li>
+<li>Usage examples</li>
+<li>API documentation link</li>
+</ul>
+</li>
+<li>Add proper license file</li>
+<li>Add good tests with reasonable coverage</li>
+<li>Include examples in a separate directory</li>
+</ol>
+<h3 id="7102-versioning-your-module"><a class="header" href="#7102-versioning-your-module"><strong>7.10.2 Versioning Your Module</strong></a></h3>
+<p>Use Git tags to mark versions:</p>
+<pre><code class="language-bash">git tag v1.0.0
+git push origin v1.0.0
+</code></pre>
+<h3 id="7103-publishing-to-pkggodev"><a class="header" href="#7103-publishing-to-pkggodev"><strong>7.10.3 Publishing to pkg.go.dev</strong></a></h3>
+<p>Your module is automatically published to pkg.go.dev when:</p>
+<ol>
+<li>Someone runs <code>go get</code> for your module, or</li>
+<li>You request it explicitly via pkg.go.dev</li>
+</ol>
+<p>No additional registration is required.</p>
+<h2 id="711-practice-exercises"><a class="header" href="#711-practice-exercises"><strong>7.11 Practice Exercises</strong></a></h2>
+<h3 id="exercise-1-create-a-basic-package"><a class="header" href="#exercise-1-create-a-basic-package"><strong>Exercise 1: Create a Basic Package</strong></a></h3>
+<p>Create a <code>calculator</code> package with basic math operations and use it in a main program.</p>
+<h3 id="exercise-2-multi-file-package"><a class="header" href="#exercise-2-multi-file-package"><strong>Exercise 2: Multi-file Package</strong></a></h3>
+<p>Create a <code>geometry</code> package with multiple shape implementations across different files.</p>
+<h3 id="exercise-3-module-dependencies"><a class="header" href="#exercise-3-module-dependencies"><strong>Exercise 3: Module Dependencies</strong></a></h3>
+<p>Create a module that uses at least two third-party dependencies.</p>
+<h3 id="exercise-4-organizing-a-small-project"><a class="header" href="#exercise-4-organizing-a-small-project"><strong>Exercise 4: Organizing a Small Project</strong></a></h3>
+<p>Organize a simple web server project using a proper project layout.</p>
+<h2 id="712-summary"><a class="header" href="#712-summary"><strong>7.12 Summary</strong></a></h2>
+<p>In this chapter, we've explored Go's approach to code organization:</p>
+<ul>
+<li><strong>Packages</strong> provide a clean way to structure code and control visibility</li>
+<li><strong>Imports</strong> allow you to use code from other packages</li>
+<li><strong>Standard library</strong> offers a rich set of packages for common tasks</li>
+<li><strong>Go modules</strong> give you powerful dependency management</li>
+<li><strong>Project organization</strong> helps maintain large codebases</li>
+</ul>
+<p>Understanding packages and modules is essential for writing maintainable Go code and collaborating effectively with other developers. By following Go's conventions and best practices, you can create well-structured, easy-to-understand code that stands the test of time.</p>
+<p><strong>Next Up</strong>: In Chapter 8, we'll dive into arrays, slices, and strings, exploring how Go handles these fundamental data structures.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-7-Error-Handling.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-8-Arrays-Slices-Strings.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-7-Error-Handling.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-8-Arrays-Slices-Strings.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

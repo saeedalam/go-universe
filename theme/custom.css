@@ -1,0 +1,144 @@
+/* Custom styles for Go Universe book */
+
+:root {
+  --sidebar-width: 300px;
+  --content-max-width: 850px;
+  --font-size: 16px;
+  --go-blue: #00add8;
+  --go-blue-dark: #0097c0;
+  --code-bg: #f5f5f5;
+}
+
+/* Main content styling */
+body {
+  font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+}
+
+.content main {
+  padding: 0 15px 50px 15px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--go-blue-dark);
+}
+
+h1 {
+  font-size: 2.2em;
+  border-bottom: 2px solid var(--go-blue);
+  padding-bottom: 0.2em;
+}
+
+h2 {
+  font-size: 1.8em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+/* Links */
+a {
+  color: var(--go-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Code blocks */
+pre {
+  background-color: var(--code-bg);
+  border-radius: 4px;
+  padding: 1em;
+  overflow-x: auto;
+  border-left: 3px solid var(--go-blue);
+}
+
+code {
+  font-family: "Source Code Pro", "Fira Mono", monospace;
+  font-size: 0.9em;
+}
+
+/* Navigation styling */
+.sidebar {
+  font-size: 0.95em;
+}
+
+.chapter li {
+  margin-top: 0.5em;
+}
+
+.chapter .active {
+  color: var(--go-blue);
+  font-weight: bold;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+table th {
+  background-color: var(--go-blue);
+  color: white;
+  padding: 0.5em;
+  text-align: left;
+}
+
+table td {
+  padding: 0.5em;
+  border-bottom: 1px solid #ddd;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Notes and warnings */
+blockquote {
+  margin: 1em 0;
+  padding: 0.5em 1em;
+  border-left: 4px solid var(--go-blue);
+  background-color: rgba(0, 173, 216, 0.1);
+}
+
+blockquote.warning {
+  border-left-color: #ff9800;
+  background-color: rgba(255, 152, 0, 0.1);
+}
+
+/* Print styles */
+@media print {
+  .sidebar,
+  .mobile-navbar,
+  #search-wrapper {
+    display: none;
+  }
+
+  .page {
+    margin: 0;
+    padding: 0;
+  }
+
+  .content {
+    margin: 0;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  pre,
+  code {
+    white-space: pre-wrap;
+  }
+}

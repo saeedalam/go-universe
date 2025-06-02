@@ -1,0 +1,1201 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Concurrency Patterns - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-13-Concurrency-Patterns.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-13-concurrency-patterns-in-go"><a class="header" href="#chapter-13-concurrency-patterns-in-go"><strong>Chapter 13: Concurrency Patterns in Go</strong></a></h1>
+<p>In Chapter 11, we explored goroutines as the foundation of Go's concurrency model, and in Chapter 12, we delved deeper into channels for communication between goroutines. Now, we'll build upon this foundation to explore common concurrency patterns in Go.</p>
+<p>Concurrency patterns are reusable solutions to common problems encountered when writing concurrent programs. These patterns help you structure your code to efficiently handle parallelism, manage resources, and avoid common pitfalls like deadlocks, race conditions, and excessive resource consumption.</p>
+<p>In this chapter, we'll explore several essential concurrency patterns, including worker pools, fan-out/fan-in, pipelines, and others that will help you write robust concurrent applications in Go.</p>
+<h2 id="131-worker-pools"><a class="header" href="#131-worker-pools"><strong>13.1 Worker Pools</strong></a></h2>
+<p>A worker pool is a pattern where a fixed number of worker goroutines process tasks from a shared queue. This pattern is useful for limiting resource usage and processing multiple tasks concurrently.</p>
+<h3 id="1311-basic-worker-pool-implementation"><a class="header" href="#1311-basic-worker-pool-implementation"><strong>13.1.1 Basic Worker Pool Implementation</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+)
+
+// Worker processes jobs from the jobs channel and sends results to the results channel
+func worker(id int, jobs &lt;-chan int, results chan&lt;- int) {
+	for job := range jobs {
+		fmt.Printf("Worker %d processing job %d\n", id, job)
+		time.Sleep(time.Second) // Simulate processing time
+		results &lt;- job * 2      // Send result
+	}
+}
+
+func main() {
+	const numJobs = 10
+	const numWorkers = 3
+
+	// Create job and result channels
+	jobs := make(chan int, numJobs)
+	results := make(chan int, numJobs)
+
+	// Start workers
+	for w := 1; w &lt;= numWorkers; w++ {
+		go worker(w, jobs, results)
+	}
+
+	// Send jobs
+	for j := 1; j &lt;= numJobs; j++ {
+		jobs &lt;- j
+	}
+	close(jobs) // No more jobs will be sent
+
+	// Collect results
+	for a := 1; a &lt;= numJobs; a++ {
+		result := &lt;-results
+		fmt.Println("Result:", result)
+	}
+}
+</code></pre>
+<p>In this example:</p>
+<ol>
+<li>We create a fixed number of worker goroutines</li>
+<li>Each worker processes jobs from the shared <code>jobs</code> channel</li>
+<li>Workers send results to the <code>results</code> channel</li>
+<li>The main goroutine collects all results</li>
+</ol>
+<h3 id="1312-worker-pool-with-error-handling"><a class="header" href="#1312-worker-pool-with-error-handling"><strong>13.1.2 Worker Pool with Error Handling</strong></a></h3>
+<p>Real-world tasks can fail, so adding error handling is essential:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+// Job represents a task to be processed
+type Job struct {
+	ID      int
+	Data    int
+}
+
+// Result includes both the result data and possible error
+type Result struct {
+	Job     Job
+	Value   int
+	Err     error
+}
+
+// Worker processes jobs and handles potential errors
+func worker(id int, jobs &lt;-chan Job, results chan&lt;- Result) {
+	for job := range jobs {
+		fmt.Printf("Worker %d processing job %d\n", id, job.ID)
+
+		// Simulate work with possible errors
+		time.Sleep(time.Second)
+
+		// Randomly simulate errors (30% chance)
+		if rand.Float32() &lt; 0.3 {
+			results &lt;- Result{
+				Job: job,
+				Err: fmt.Errorf("error processing job %d", job.ID),
+			}
+			continue
+		}
+
+		// Success case
+		results &lt;- Result{
+			Job:   job,
+			Value: job.Data * 2,
+			Err:   nil,
+		}
+	}
+}
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+
+	const numJobs = 10
+	const numWorkers = 3
+
+	jobs := make(chan Job, numJobs)
+	results := make(chan Result, numJobs)
+
+	// Start workers
+	for w := 1; w &lt;= numWorkers; w++ {
+		go worker(w, jobs, results)
+	}
+
+	// Send jobs
+	for j := 1; j &lt;= numJobs; j++ {
+		jobs &lt;- Job{ID: j, Data: j * 10}
+	}
+	close(jobs)
+
+	// Collect results, handling errors
+	for a := 1; a &lt;= numJobs; a++ {
+		result := &lt;-results
+		if result.Err != nil {
+			fmt.Printf("Error: %v\n", result.Err)
+		} else {
+			fmt.Printf("Success: Job %d, Result: %d\n",
+				result.Job.ID, result.Value)
+		}
+	}
+}
+</code></pre>
+<p>This implementation:</p>
+<ul>
+<li>Uses custom types for jobs and results</li>
+<li>Includes error information in the result</li>
+<li>Properly handles both successful and failed jobs</li>
+</ul>
+<h3 id="1313-worker-pool-with-done-channel"><a class="header" href="#1313-worker-pool-with-done-channel"><strong>13.1.3 Worker Pool with Done Channel</strong></a></h3>
+<p>For proper cleanup and termination, we can add a done channel:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func worker(id int, jobs &lt;-chan int, results chan&lt;- int, done &lt;-chan struct{}, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	for {
+		select {
+		case job, ok := &lt;-jobs:
+			if !ok {
+				// Channel closed, no more jobs
+				return
+			}
+			fmt.Printf("Worker %d processing job %d\n", id, job)
+			time.Sleep(time.Second)
+			results &lt;- job * 2
+
+		case &lt;-done:
+			// Received termination signal
+			fmt.Printf("Worker %d terminating\n", id)
+			return
+		}
+	}
+}
+
+func main() {
+	const numWorkers = 3
+
+	jobs := make(chan int, 10)
+	results := make(chan int, 10)
+	done := make(chan struct{})
+
+	var wg sync.WaitGroup
+
+	// Start workers
+	for w := 1; w &lt;= numWorkers; w++ {
+		wg.Add(1)
+		go worker(w, jobs, results, done, &amp;wg)
+	}
+
+	// Send some jobs
+	for j := 1; j &lt;= 5; j++ {
+		jobs &lt;- j
+	}
+
+	// Process results in a separate goroutine
+	go func() {
+		for result := range results {
+			fmt.Println("Result:", result)
+		}
+	}()
+
+	// Allow some work to happen
+	time.Sleep(3 * time.Second)
+
+	// Signal all workers to terminate
+	close(done)
+
+	// Wait for all workers to exit
+	wg.Wait()
+	fmt.Println("All workers have terminated")
+}
+</code></pre>
+<p>This implementation adds:</p>
+<ul>
+<li>A done channel for signaling termination</li>
+<li>A WaitGroup to wait for all workers to exit</li>
+<li>Proper cleanup when workers are terminated</li>
+</ul>
+<h2 id="132-fan-out-fan-in-pattern"><a class="header" href="#132-fan-out-fan-in-pattern"><strong>13.2 Fan-Out, Fan-In Pattern</strong></a></h2>
+<p>The Fan-Out, Fan-In pattern involves:</p>
+<ul>
+<li><strong>Fan-Out</strong>: Distributing work across multiple goroutines</li>
+<li><strong>Fan-In</strong>: Collecting results from multiple goroutines into a single channel</li>
+</ul>
+<p>This pattern is ideal for CPU-bound tasks that can be broken down into independent units of work.</p>
+<h3 id="1321-basic-fan-out-fan-in-implementation"><a class="header" href="#1321-basic-fan-out-fan-in-implementation"><strong>13.2.1 Basic Fan-Out, Fan-In Implementation</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+// Processor performs work on input
+func processor(id int, input int) int {
+	fmt.Printf("Processor %d processing input: %d\n", id, input)
+	time.Sleep(time.Second) // Simulate work
+	return input * input
+}
+
+// fanOut distributes work across multiple goroutines
+func fanOut(inputs []int, workers int) []&lt;-chan int {
+	// Create a channel for each worker
+	channels := make([]&lt;-chan int, workers)
+
+	// Distribute the work
+	for i := 0; i &lt; workers; i++ {
+		ch := make(chan int)
+		channels[i] = ch
+
+		go func(workerID int, ch chan&lt;- int) {
+			defer close(ch)
+
+			// Each worker processes inputs with an index % workers == workerID
+			for j, input := range inputs {
+				if j % workers == workerID {
+					ch &lt;- processor(workerID, input)
+				}
+			}
+		}(i, ch)
+	}
+
+	return channels
+}
+
+// fanIn consolidates results from multiple channels into one
+func fanIn(channels []&lt;-chan int) &lt;-chan int {
+	var wg sync.WaitGroup
+	merged := make(chan int)
+
+	// Start an output goroutine for each input channel
+	output := func(ch &lt;-chan int) {
+		defer wg.Done()
+		for val := range ch {
+			merged &lt;- val
+		}
+	}
+
+	wg.Add(len(channels))
+	for _, ch := range channels {
+		go output(ch)
+	}
+
+	// Start a goroutine to close the merged channel after all inputs are done
+	go func() {
+		wg.Wait()
+		close(merged)
+	}()
+
+	return merged
+}
+
+func main() {
+	// Input data
+	inputs := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	// Fan-out: distribute work across 3 processors
+	channels := fanOut(inputs, 3)
+
+	// Fan-in: collect results
+	results := fanIn(channels)
+
+	// Consume results
+	for result := range results {
+		fmt.Println("Result:", result)
+	}
+}
+</code></pre>
+<p>This pattern is particularly useful when:</p>
+<ul>
+<li>You have a large number of independent tasks to process</li>
+<li>Tasks can be processed in parallel</li>
+<li>You want to limit concurrency to a specific number of workers</li>
+</ul>
+<h3 id="1322-advanced-fan-out-fan-in-with-cancelation"><a class="header" href="#1322-advanced-fan-out-fan-in-with-cancelation"><strong>13.2.2 Advanced Fan-Out, Fan-In with Cancelation</strong></a></h3>
+<p>Adding cancellation support makes the pattern more robust:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"fmt"
+	"sync"
+	"time"
+)
+
+// processor performs work with cancellation support
+func processor(ctx context.Context, id int, input int) (int, error) {
+	select {
+	case &lt;-time.After(time.Second): // Simulate work
+		return input * input, nil
+	case &lt;-ctx.Done():
+		return 0, ctx.Err()
+	}
+}
+
+// fanOut with context for cancellation
+func fanOut(ctx context.Context, inputs []int, workers int) []&lt;-chan result {
+	channels := make([]&lt;-chan result, workers)
+
+	for i := 0; i &lt; workers; i++ {
+		ch := make(chan result)
+		channels[i] = ch
+
+		go func(workerID int, ch chan&lt;- result) {
+			defer close(ch)
+
+			for j, input := range inputs {
+				if j % workers == workerID {
+					value, err := processor(ctx, workerID, input)
+					ch &lt;- result{Value: value, Err: err}
+				}
+			}
+		}(i, ch)
+	}
+
+	return channels
+}
+
+// result includes both value and error
+type result struct {
+	Value int
+	Err   error
+}
+
+// fanIn with error propagation
+func fanIn(ctx context.Context, channels []&lt;-chan result) &lt;-chan result {
+	var wg sync.WaitGroup
+	merged := make(chan result)
+
+	output := func(ch &lt;-chan result) {
+		defer wg.Done()
+		for res := range ch {
+		select {
+			case merged &lt;- res:
+			case &lt;-ctx.Done():
+				return
+			}
+		}
+	}
+
+	wg.Add(len(channels))
+	for _, ch := range channels {
+		go output(ch)
+	}
+
+	go func() {
+		wg.Wait()
+	close(merged)
+	}()
+
+	return merged
+}
+
+func main() {
+	// Create a context with cancellation
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	// Input data
+	inputs := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	// Fan-out
+	channels := fanOut(ctx, inputs, 3)
+
+	// Fan-in
+	results := fanIn(ctx, channels)
+
+	// Consume results, handling errors
+	for res := range results {
+		if res.Err != nil {
+			fmt.Printf("Error: %v\n", res.Err)
+		} else {
+			fmt.Println("Result:", res.Value)
+		}
+	}
+}
+</code></pre>
+<p>This enhanced implementation:</p>
+<ul>
+<li>Uses context for cancellation</li>
+<li>Properly propagates errors</li>
+<li>Can be canceled by timeout or explicit cancellation</li>
+</ul>
+<h2 id="133-pipeline-pattern"><a class="header" href="#133-pipeline-pattern"><strong>13.3 Pipeline Pattern</strong></a></h2>
+<p>A pipeline is a series of stages connected by channels, where each stage:</p>
+<ol>
+<li>Receives data from upstream</li>
+<li>Performs some processing</li>
+<li>Sends the result downstream</li>
+</ol>
+<p>Pipelines are effective for breaking complex processing into discrete, reusable stages.</p>
+<h3 id="1331-basic-pipeline-implementation"><a class="header" href="#1331-basic-pipeline-implementation"><strong>13.3.1 Basic Pipeline Implementation</strong></a></h3>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+)
+
+// generator - the first stage that produces data
+func generator(nums ...int) &lt;-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for _, n := range nums {
+			out &lt;- n
+		}
+	}()
+	return out
+}
+
+// square - the second stage that squares numbers
+func square(in &lt;-chan int) &lt;-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for n := range in {
+			out &lt;- n * n
+		}
+	}()
+	return out
+}
+
+// filter - the third stage that filters out odd numbers
+func filter(in &lt;-chan int) &lt;-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for n := range in {
+			if n%2 == 0 { // Only keep even numbers
+				out &lt;- n
+			}
+		}
+	}()
+	return out
+}
+
+func main() {
+	// Set up the pipeline
+	// Stage 1: Generate integers
+	numbers := generator(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+	// Stage 2: Square the numbers
+	squares := square(numbers)
+
+	// Stage 3: Filter out odd squares
+	filtered := filter(squares)
+
+	// Consume the output
+	for n := range filtered {
+		fmt.Println(n)
+	}
+}
+</code></pre>
+<p>This pipeline:</p>
+<ul>
+<li>Generates a sequence of numbers</li>
+<li>Squares each number</li>
+<li>Filters out odd results</li>
+<li>Each stage runs in its own goroutine, enabling concurrent processing</li>
+</ul>
+<h3 id="1332-pipeline-with-cancelation"><a class="header" href="#1332-pipeline-with-cancelation"><strong>13.3.2 Pipeline with Cancelation</strong></a></h3>
+<p>Adding cancellation makes pipelines more robust:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"fmt"
+)
+
+// generator with context
+func generator(ctx context.Context, nums ...int) &lt;-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for _, n := range nums {
+			select {
+			case out &lt;- n:
+			case &lt;-ctx.Done():
+				return
+			}
+		}
+	}()
+	return out
+}
+
+// square with context
+func square(ctx context.Context, in &lt;-chan int) &lt;-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for n := range in {
+			select {
+			case out &lt;- n * n:
+			case &lt;-ctx.Done():
+				return
+			}
+		}
+	}()
+	return out
+}
+
+// filter with context
+func filter(ctx context.Context, in &lt;-chan int) &lt;-chan int {
+	out := make(chan int)
+	go func() {
+		defer close(out)
+		for n := range in {
+			if n%2 == 0 {
+				select {
+				case out &lt;- n:
+				case &lt;-ctx.Done():
+					return
+				}
+			}
+		}
+	}()
+	return out
+}
+
+func main() {
+	// Create a context that can be canceled
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel() // Ensure all resources are released
+
+	// Set up the pipeline with cancellation
+	numbers := generator(ctx, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+	squares := square(ctx, numbers)
+	filtered := filter(ctx, squares)
+
+	// Consume just a few values, then cancel
+	for i := 0; i &lt; 3; i++ {
+		value, ok := &lt;-filtered
+		if !ok {
+			break
+		}
+		fmt.Println(value)
+	}
+
+	// Cancel the pipeline early
+	cancel()
+	fmt.Println("Pipeline canceled")
+}
+</code></pre>
+<p>This implementation:</p>
+<ul>
+<li>Adds context to each stage for cancellation</li>
+<li>Properly handles early termination</li>
+<li>Releases resources when the pipeline is canceled</li>
+</ul>
+<h2 id="134-timeout-and-cancelation-patterns"><a class="header" href="#134-timeout-and-cancelation-patterns"><strong>13.4 Timeout and Cancelation Patterns</strong></a></h2>
+<p>Managing timeouts and cancellation is crucial for robust concurrent programs.</p>
+<h3 id="1341-timeout-pattern"><a class="header" href="#1341-timeout-pattern"><strong>13.4.1 Timeout Pattern</strong></a></h3>
+<p>The timeout pattern prevents operations from blocking indefinitely:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func operation(timeout time.Duration) (string, error) {
+	ch := make(chan string)
+
+	// Start the operation
+	go func() {
+		// Simulate a long-running operation
+		time.Sleep(2 * time.Second)
+		ch &lt;- "Operation completed"
+	}()
+
+	// Wait for the result or timeout
+	select {
+	case result := &lt;-ch:
+		return result, nil
+	case &lt;-time.After(timeout):
+		return "", fmt.Errorf("operation timed out after %v", timeout)
+	}
+}
+
+func main() {
+	// Try with 1 second timeout (should fail)
+	result, err := operation(1 * time.Second)
+	if err != nil {
+		fmt.Println("First attempt:", err)
+	} else {
+		fmt.Println("First attempt:", result)
+	}
+
+	// Try with 3 second timeout (should succeed)
+	result, err = operation(3 * time.Second)
+	if err != nil {
+		fmt.Println("Second attempt:", err)
+	} else {
+		fmt.Println("Second attempt:", result)
+	}
+}
+</code></pre>
+<p>This pattern is useful for:</p>
+<ul>
+<li>External API calls</li>
+<li>Network operations</li>
+<li>Any long-running operation that should be bounded in time</li>
+</ul>
+<h3 id="1342-cancellation-with-context"><a class="header" href="#1342-cancellation-with-context"><strong>13.4.2 Cancellation with Context</strong></a></h3>
+<p>The context package provides a standardized way to handle cancellation:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+)
+
+// longRunningOperation simulates work that can be canceled
+func longRunningOperation(ctx context.Context) (string, error) {
+	// Create a channel for the result
+	resultCh := make(chan string)
+
+	go func() {
+		// Simulate steps in the operation
+		for i := 1; i &lt;= 5; i++ {
+			// Check if context was canceled
+			select {
+			case &lt;-ctx.Done():
+				return // Exit the goroutine
+			case &lt;-time.After(500 * time.Millisecond):
+				// Continue with the next step
+				fmt.Printf("Step %d completed\n", i)
+			}
+		}
+
+func worker(id int, jobs &lt;-chan int, results chan&lt;- int) {
+	for job := range jobs {
+		fmt.Printf("Worker %d processing job %d
+", id, job)
+		time.Sleep(time.Second) // Simulate processing time
+		results &lt;- job * job * job
+	}
+}
+
+func main() {
+	const numJobs = 5
+	const numWorkers = 3
+
+	jobs := make(chan int, numJobs)
+	results := make(chan int, numJobs)
+
+	// Start workers
+	for w := 1; w &lt;= numWorkers; w++ {
+		go worker(w, jobs, results)
+	}
+
+	// Send jobs
+	for j := 1; j &lt;= numJobs; j++ {
+		jobs &lt;- j
+	}
+	close(jobs)
+
+	// Collect results
+	for a := 1; a &lt;= numJobs; a++ {
+		fmt.Printf("Result: %d
+", &lt;-results)
+	}
+}
+</code></pre>
+<p><strong>Expected Output:</strong></p>
+<pre><code class="language-plaintext">Worker 1 processing job 1
+Worker 2 processing job 2
+Worker 3 processing job 3
+Worker 1 processing job 4
+Worker 2 processing job 5
+Result: 1
+Result: 8
+Result: 27
+Result: 64
+Result: 125
+</code></pre>
+<hr />
+<h2 id="exercise-2-worker-pool-with-error-handling"><a class="header" href="#exercise-2-worker-pool-with-error-handling"><strong>Exercise 2: Worker Pool with Error Handling</strong></a></h2>
+<p><strong>Problem</strong>: Modify the worker pool to include error handling for failed tasks.</p>
+<pre><code class="language-go">package main
+
+import (
+	"errors"
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+func workerWithErrors(id int, jobs &lt;-chan int, results chan&lt;- int, errors chan&lt;- error) {
+	for job := range jobs {
+		fmt.Printf("Worker %d processing job %d
+", id, job)
+		time.Sleep(time.Second) // Simulate processing time
+		if rand.Float32() &lt; 0.3 { // Randomly simulate errors
+			errors &lt;- fmt.Errorf("worker %d failed on job %d", id, job)
+		} else {
+			results &lt;- job * job
+		}
+	}
+}
+
+func main() {
+	const numJobs = 5
+	const numWorkers = 3
+
+	jobs := make(chan int, numJobs)
+	results := make(chan int, numJobs)
+	errors := make(chan error, numJobs)
+
+	// Start workers
+	for w := 1; w &lt;= numWorkers; w++ {
+		go workerWithErrors(w, jobs, results, errors)
+	}
+
+	// Send jobs
+	for j := 1; j &lt;= numJobs; j++ {
+		jobs &lt;- j
+	}
+	close(jobs)
+
+	// Collect results or errors
+	for a := 1; a &lt;= numJobs; a++ {
+		select {
+		case res := &lt;-results:
+			fmt.Printf("Result: %d
+", res)
+		case err := &lt;-errors:
+			fmt.Printf("Error: %s
+", err)
+		}
+	}
+}
+</code></pre>
+<p><strong>Expected Output</strong>:
+Results vary due to randomness. Example:</p>
+<pre><code class="language-plaintext">Worker 1 processing job 1
+Worker 2 processing job 2
+Worker 3 processing job 3
+Error: worker 2 failed on job 2
+Result: 9
+Result: 1
+...
+</code></pre>
+<hr />
+<h2 id="exercise-3-fan-out"><a class="header" href="#exercise-3-fan-out"><strong>Exercise 3: Fan-Out</strong></a></h2>
+<p><strong>Problem</strong>: Write a program to distribute tasks across multiple workers to calculate squares.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func squareWorker(id int, nums &lt;-chan int, results chan&lt;- int) {
+	for num := range nums {
+		fmt.Printf("Worker %d squaring %d
+", id, num)
+		time.Sleep(time.Second) // Simulate processing time
+		results &lt;- num * num
+	}
+}
+
+func main() {
+	numbers := []int{1, 2, 3, 4, 5}
+	numWorkers := 3
+
+	nums := make(chan int, len(numbers))
+	results := make(chan int, len(numbers))
+
+	// Start workers
+	for i := 1; i &lt;= numWorkers; i++ {
+		go squareWorker(i, nums, results)
+	}
+
+	// Send numbers to workers
+	for _, num := range numbers {
+		nums &lt;- num
+	}
+	close(nums)
+
+	// Collect results
+	for range numbers {
+		fmt.Printf("Result: %d
+", &lt;-results)
+	}
+}
+</code></pre>
+<p><strong>Expected Output</strong>:</p>
+<pre><code class="language-plaintext">Worker 1 squaring 1
+Worker 2 squaring 2
+Worker 3 squaring 3
+Worker 1 squaring 4
+Worker 2 squaring 5
+Result: 1
+Result: 4
+Result: 9
+Result: 16
+Result: 25
+</code></pre>
+<hr />
+<h2 id="exercise-4-fan-in"><a class="header" href="#exercise-4-fan-in"><strong>Exercise 4: Fan-In</strong></a></h2>
+<p><strong>Problem</strong>: Aggregate results from two separate channels into one.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func generator(start, end int, ch chan&lt;- int) {
+	for i := start; i &lt;= end; i++ {
+		ch &lt;- i
+		time.Sleep(500 * time.Millisecond)
+	}
+	close(ch)
+}
+
+func fanIn(ch1, ch2 &lt;-chan int, merged chan&lt;- int) {
+	for ch1 != nil || ch2 != nil {
+		select {
+		case val, ok := &lt;-ch1:
+			if ok {
+				merged &lt;- val
+			} else {
+				ch1 = nil
+			}
+		case val, ok := &lt;-ch2:
+			if ok {
+				merged &lt;- val
+			} else {
+				ch2 = nil
+			}
+		}
+	}
+	close(merged)
+}
+
+func main() {
+	ch1 := make(chan int)
+	ch2 := make(chan int)
+	merged := make(chan int)
+
+	go generator(1, 5, ch1)
+	go generator(6, 10, ch2)
+	go fanIn(ch1, ch2, merged)
+
+	for val := range merged {
+		fmt.Printf("Merged Value: %d
+", val)
+	}
+}
+</code></pre>
+<p><strong>Expected Output</strong>:</p>
+<pre><code class="language-plaintext">Merged Value: 1
+Merged Value: 6
+Merged Value: 2
+Merged Value: 7
+...
+</code></pre>
+<hr />
+<h2 id="exercise-5-timeout-handling-with-channels"><a class="header" href="#exercise-5-timeout-handling-with-channels"><strong>Exercise 5: Timeout Handling with Channels</strong></a></h2>
+<p><strong>Problem</strong>: Implement a timeout mechanism for waiting for data on a channel.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	ch := make(chan string)
+
+	go func() {
+		time.Sleep(2 * time.Second)
+		ch &lt;- "Message received"
+	}()
+
+	select {
+	case msg := &lt;-ch:
+		fmt.Println(msg)
+	case &lt;-time.After(1 * time.Second):
+		fmt.Println("Timeout")
+	}
+}
+</code></pre>
+<p><strong>Expected Output</strong>:</p>
+<pre><code class="language-plaintext">Timeout
+</code></pre>
+<hr />
+<h2 id="exercise-6-pipeline-pattern"><a class="header" href="#exercise-6-pipeline-pattern"><strong>Exercise 6: Pipeline Pattern</strong></a></h2>
+<p><strong>Problem</strong>: Create a pipeline where data is processed by multiple stages in sequence.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+)
+
+func stage1(ch chan&lt;- int) {
+	ch &lt;- 1
+	ch &lt;- 2
+	close(ch)
+}
+
+func stage2(ch1 &lt;-chan int, ch2 chan&lt;- int) {
+	for val := range ch1 {
+		ch2 &lt;- val * 2
+	}
+	close(ch2)
+}
+
+func main() {
+	ch1 := make(chan int)
+	ch2 := make(chan int)
+
+	go stage1(ch1)
+	go stage2(ch1, ch2)
+
+	for result := range ch2 {
+		fmt.Println("Processed:", result)
+	}
+}
+</code></pre>
+<p><strong>Expected Output</strong>:</p>
+<pre><code class="language-plaintext">Processed: 2
+Processed: 4
+</code></pre>
+<hr />
+<p><strong>Stay Tuned!</strong><br />
+These exercises explore real-world concurrency patterns and techniques. Completing them will give you the skills needed to handle complex concurrency problems in Go!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-12-Channels.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-14-Common-Packages.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-12-Channels.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-14-Common-Packages.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
