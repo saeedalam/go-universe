@@ -1,8 +1,11 @@
 # Welcome to Go Universe
 
-![Go Gopher](./images/gopher.png)
+<div style="text-align: center; margin-bottom: 40px;">
+  <img src="./images/go-universe.png" alt="Go Universe Logo" style="height: 100px; margin-bottom: 20px;" />
+  <img src="./images/gopher.png" alt="Go Gopher" style="max-height: 200px;" />
+</div>
 
-> **Go Universe**: Your comprehensive guide to mastering the Go programming language from fundamentals to advanced concepts.
+> **Go Universe** is a comprehensive guide to mastering the Go programming language from fundamentals to advanced topics and real-world applications.
 
 ## What is Go Universe?
 
@@ -18,6 +21,30 @@ This book is designed to be read sequentially, especially for beginners. However
 - Practical code examples
 - Best practices and common pitfalls
 - Exercises to reinforce learning
+
+## Book Structure
+
+The book is organized into several sections:
+
+### Fundamentals (Chapters 1-11)
+
+Master the core language features, syntax, and programming model of Go.
+
+### Concurrency (Chapters 12-14)
+
+Learn Go's powerful concurrency primitives and patterns.
+
+### Standard Library and Testing (Chapters 15-19)
+
+Explore Go's rich standard library and testing capabilities.
+
+### Backend Development (Chapters 20-23)
+
+Build robust backend applications with databases, APIs, and microservices.
+
+### Professional Go (Chapters 24-37)
+
+Master advanced topics, best practices, and cutting-edge applications of Go.
 
 ## Why Go?
 
@@ -44,4 +71,7 @@ This book assumes basic programming knowledge but does not require experience wi
 - Enthusiasm for learning
 - Willingness to practice by writing code
 
-Let's begin your Go programming journey!
+<div style="text-align: center; margin-top: 40px; padding: 20px; background-color: #f5f5f5; border-radius: 8px;">
+  <h2 style="color: #00ADD8;">Ready to Start Your Go Journey?</h2>
+  <p style="margin-bottom: 20px;">Click on <strong>Chapter 1</strong> in the sidebar to begin your adventure with Go!</p>
+</div>

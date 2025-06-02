@@ -3,35 +3,301 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Go Universe - Redirecting</title>
-    <meta http-equiv="refresh" content="0;url=./book/index.html" />
+    <title>Go Universe - The Complete Go Programming Guide</title>
     <style>
+      :root {
+        --go-blue: #00add8;
+        --go-blue-dark: #0097c0;
+        --light-gray: #f5f5f5;
+        --dark-gray: #333;
+        --white: #fff;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Helvetica, Arial, sans-serif;
+          Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
+          sans-serif;
         line-height: 1.6;
-        color: #333;
-        max-width: 650px;
+        color: var(--dark-gray);
+        background-color: var(--white);
+      }
+
+      .container {
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 0 20px;
       }
-      h1 {
-        color: #00add8;
+
+      header {
+        background-color: var(--white);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px 0;
+        position: fixed;
+        width: 100%;
+        z-index: 100;
       }
-      a {
-        color: #00add8;
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+      }
+
+      .logo img {
+        height: 50px;
+        margin-right: 15px;
+      }
+
+      .logo h1 {
+        font-size: 24px;
+        color: var(--go-blue);
+        font-weight: 600;
+      }
+
+      .cta-button {
+        background-color: var(--go-blue);
+        color: var(--white);
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.3s;
+      }
+
+      .cta-button:hover {
+        background-color: var(--go-blue-dark);
+      }
+
+      .hero {
+        padding: 150px 0 80px;
+        background: linear-gradient(to bottom right, #f9f9f9, #e9f7fb);
+        text-align: center;
+      }
+
+      .hero h2 {
+        font-size: 48px;
+        margin-bottom: 20px;
+        color: var(--dark-gray);
+      }
+
+      .hero p {
+        font-size: 20px;
+        max-width: 700px;
+        margin: 0 auto 30px;
+        color: #555;
+      }
+
+      .hero img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 40px;
+        max-height: 250px;
+      }
+
+      .features {
+        padding: 80px 0;
+        background-color: var(--white);
+      }
+
+      .features h2 {
+        text-align: center;
+        margin-bottom: 60px;
+        color: var(--go-blue);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+      }
+
+      .feature-card {
+        background-color: var(--light-gray);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .feature-card h3 {
+        color: var(--go-blue);
+        margin-bottom: 15px;
+      }
+
+      .cta-section {
+        padding: 80px 0;
+        text-align: center;
+        background-color: #e9f7fb;
+      }
+
+      .cta-section h2 {
+        margin-bottom: 20px;
+        color: var(--dark-gray);
+      }
+
+      .cta-section p {
+        margin-bottom: 30px;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      footer {
+        background-color: var(--dark-gray);
+        color: var(--white);
+        padding: 40px 0;
+        text-align: center;
+      }
+
+      .footer-links {
+        margin-bottom: 20px;
+      }
+
+      .footer-links a {
+        color: var(--white);
+        margin: 0 15px;
         text-decoration: none;
       }
-      a:hover {
+
+      .footer-links a:hover {
         text-decoration: underline;
+      }
+
+      .copyright {
+        font-size: 14px;
+        color: #aaa;
+      }
+
+      @media (max-width: 768px) {
+        .hero h2 {
+          font-size: 36px;
+        }
+
+        .hero p {
+          font-size: 18px;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>Go Universe</h1>
-    <p>
-      Redirecting to the book... If you are not redirected automatically, please
-      <a href="./book/index.html">click here</a>.
-    </p>
+    <header>
+      <div class="container header-content">
+        <div class="logo">
+          <img src="./src/images/go-universe.png" alt="Go Universe Logo" />
+          <h1>Go Universe</h1>
+        </div>
+        <a href="./book/index.html" class="cta-button">Read the Book</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="container">
+        <h2>Master the Go Programming Language</h2>
+        <p>
+          A comprehensive guide taking you from the fundamentals to advanced Go
+          programming concepts and real-world applications.
+        </p>
+        <a href="./book/index.html" class="cta-button">Start Learning</a>
+        <img src="./src/images/gopher.png" alt="Go Gopher" />
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="container">
+        <h2>What You'll Learn</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <h3>Go Fundamentals</h3>
+            <p>
+              Build a solid foundation with variables, types, control
+              structures, functions, and Go's unique approach to error handling.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>Concurrency</h3>
+            <p>
+              Master Go's powerful concurrency model with goroutines, channels,
+              and advanced patterns for high-performance applications.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>Web Development</h3>
+            <p>
+              Create robust APIs, microservices, and web applications using Go's
+              standard library and popular frameworks.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>Production-Ready Go</h3>
+            <p>
+              Learn best practices for deploying, monitoring, and scaling Go
+              applications in production environments.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>Advanced Topics</h3>
+            <p>
+              Explore Go for cloud-native applications, AI, machine learning,
+              blockchain, and other cutting-edge domains.
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>Practical Examples</h3>
+            <p>
+              Apply your knowledge with hands-on examples and real-world case
+              studies throughout all 37 chapters.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <h2>Ready to Start Your Go Journey?</h2>
+        <p>
+          Go Universe provides a structured learning path for developers at all
+          levels. Whether you're new to programming or an experienced developer
+          looking to add Go to your toolkit, this book has everything you need.
+        </p>
+        <a href="./book/index.html" class="cta-button">Read the Book Now</a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-links">
+          <a href="https://github.com/saeedalam/go-universe"
+            >GitHub Repository</a
+          >
+          <a href="https://go.dev/">Official Go Website</a>
+          <a href="https://golang.org/doc/">Go Documentation</a>
+        </div>
+        <p class="copyright">
+          © 2023 Go Universe. The Go gopher was designed by Renee French.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Optional JavaScript redirect after 5 minutes of inactivity -->
+    <script>
+      setTimeout(function () {
+        window.location.href = "./book/index.html";
+      }, 300000); // 5 minutes
+    </script>
   </body>
 </html>
