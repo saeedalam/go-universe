@@ -1,3 +1,3 @@
 # Summary
 
-- [Chapter 1](./chapter_1.md)
+- [Introduction to Go](./chapters/Chapter-1-introduction-to-go.md)
