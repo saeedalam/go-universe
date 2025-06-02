@@ -8,7 +8,7 @@ description = "A comprehensive guide to Go programming language from basics to a
 [output.html]
 git-repository-url = "https://github.com/saeedalam/go-universe"
 edit-url-template = "https://github.com/saeedalam/go-universe/edit/main/{path}"
-site-url = "/go-universe/"
+site-url = "/"
 default-theme = "light"
 preferred-dark-theme = "navy"
 copy-fonts = true
