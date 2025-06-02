@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="src/images/go-universe.png" alt="Go Universe Logo" height="100">
+  <img src="https://raw.githubusercontent.com/saeedalam/go-universe/main/src/images/go-universe.png" alt="Go Universe Logo" height="100">
   <h1>Go Universe</h1>
   <p>A comprehensive guide to mastering the Go programming language from fundamentals to advanced applications</p>
   <p>
@@ -15,7 +15,7 @@
 Go Universe is a comprehensive guide designed to take readers from the fundamentals of Go programming to advanced concepts and real-world applications. With **37 carefully crafted chapters**, this book serves as both a learning resource for beginners and a reference for experienced developers.
 
 <div align="center">
-  <img src="src/images/gopher.png" alt="Go Gopher" height="200">
+  <img src="https://raw.githubusercontent.com/saeedalam/go-universe/main/src/images/gopher.png" alt="Go Gopher" height="200">
 </div>
 
 ## 🚀 Read the Book
