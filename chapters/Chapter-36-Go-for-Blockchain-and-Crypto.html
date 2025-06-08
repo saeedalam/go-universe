@@ -1,0 +1,3753 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Go for Blockchain and Crypto - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-36-Go-for-Blockchain-and-Crypto.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-36-go-for-blockchain-and-cryptocurrency"><a class="header" href="#chapter-36-go-for-blockchain-and-cryptocurrency"><strong>Chapter 36: Go for Blockchain and Cryptocurrency</strong></a></h1>
+<h2 id="361-introduction-to-blockchain-development-with-go"><a class="header" href="#361-introduction-to-blockchain-development-with-go"><strong>36.1 Introduction to Blockchain Development with Go</strong></a></h2>
+<p>Go has become one of the predominant languages in the blockchain space, powering some of the most popular blockchain platforms and tools. Its combination of performance, simplicity, and strong concurrency support makes it particularly well-suited for blockchain development.</p>
+<h3 id="gos-role-in-blockchain-technology"><a class="header" href="#gos-role-in-blockchain-technology">Go's Role in Blockchain Technology</a></h3>
+<p>Go's advantages for blockchain development include:</p>
+<ol>
+<li>
+<p><strong>Performance</strong>: Blockchain nodes need to process transactions efficiently, and Go's compilation to native code with minimal runtime overhead helps achieve this.</p>
+</li>
+<li>
+<p><strong>Concurrency</strong>: Go's goroutines and channels are ideal for handling multiple concurrent operations in a blockchain network, such as transaction processing, consensus, and network communication.</p>
+</li>
+<li>
+<p><strong>Simplicity</strong>: Go's straightforward syntax and strong typing help build reliable blockchain systems with fewer bugs.</p>
+</li>
+<li>
+<p><strong>Cross-platform Support</strong>: Go applications can be easily compiled for different platforms, enabling blockchain nodes to run across diverse environments.</p>
+</li>
+<li>
+<p><strong>Memory Safety</strong>: Go's garbage collection and memory safety features help prevent memory-related vulnerabilities that could be exploited in a blockchain context.</p>
+</li>
+</ol>
+<h3 id="history-of-go-in-cryptocurrency-projects"><a class="header" href="#history-of-go-in-cryptocurrency-projects">History of Go in Cryptocurrency Projects</a></h3>
+<p>Go's journey in the blockchain space began with smaller projects but quickly gained prominence:</p>
+<ul>
+<li><strong>2013-2014</strong>: Early adoption in cryptocurrency tools and smaller blockchain projects</li>
+<li><strong>2015</strong>: Ethereum introduced a Go implementation (go-ethereum or Geth)</li>
+<li><strong>2016-2017</strong>: The ICO boom led to numerous Go-based blockchain projects</li>
+<li><strong>2018-present</strong>: Mainstream adoption with multiple major blockchain platforms choosing Go</li>
+</ul>
+<h3 id="key-blockchain-projects-written-in-go"><a class="header" href="#key-blockchain-projects-written-in-go">Key Blockchain Projects Written in Go</a></h3>
+<p>Several prominent blockchain platforms and tools are written in Go:</p>
+<h4 id="ethereum-go-ethereumgeth"><a class="header" href="#ethereum-go-ethereumgeth">Ethereum (go-ethereum/Geth)</a></h4>
+<p>Geth is the official Go implementation of the Ethereum protocol, making it one of the most widely deployed blockchain clients:</p>
+<pre><code class="language-go">// Example of using the go-ethereum library to interact with the Ethereum blockchain
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"math/big"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
+)
+
+func main() {
+	// Connect to an Ethereum node
+	client, err := ethclient.Dial("https://mainnet.infura.io/v3/YOUR-PROJECT-ID")
+	if err != nil {
+		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
+	}
+
+	// Get the latest block number
+	header, err := client.HeaderByNumber(context.Background(), nil)
+	if err != nil {
+		log.Fatalf("Failed to get latest header: %v", err)
+	}
+	blockNumber := header.Number
+
+	// Get block information
+	block, err := client.BlockByNumber(context.Background(), blockNumber)
+	if err != nil {
+		log.Fatalf("Failed to get block: %v", err)
+	}
+
+	// Print block details
+	fmt.Printf("Block Number: %s\n", blockNumber.String())
+	fmt.Printf("Block Time: %v\n", block.Time())
+	fmt.Printf("Block Hash: %s\n", block.Hash().Hex())
+	fmt.Printf("Number of Transactions: %d\n", len(block.Transactions()))
+}
+</code></pre>
+<h4 id="hyperledger-fabric"><a class="header" href="#hyperledger-fabric">Hyperledger Fabric</a></h4>
+<p>Hyperledger Fabric is an enterprise-grade permissioned blockchain framework that uses Go for its core implementation:</p>
+<pre><code class="language-go">// Example of a simple Hyperledger Fabric chaincode (smart contract) in Go
+package main
+
+import (
+	"fmt"
+	"encoding/json"
+
+	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+)
+
+// AssetTransfer defines the smart contract for managing assets
+type AssetTransfer struct {
+	contractapi.Contract
+}
+
+// Asset represents a general asset that can be tracked
+type Asset struct {
+	ID             string `json:"ID"`
+	Owner          string `json:"Owner"`
+	Value          int    `json:"Value"`
+	LastModifiedBy string `json:"LastModifiedBy"`
+}
+
+// InitLedger adds a base set of assets to the ledger
+func (a *AssetTransfer) InitLedger(ctx contractapi.TransactionContextInterface) error {
+	assets := []Asset{
+		{ID: "asset1", Owner: "Alice", Value: 100, LastModifiedBy: "initLedger"},
+		{ID: "asset2", Owner: "Bob", Value: 200, LastModifiedBy: "initLedger"},
+	}
+
+	for _, asset := range assets {
+		assetJSON, err := json.Marshal(asset)
+		if err != nil {
+			return fmt.Errorf("failed to marshal asset: %v", err)
+		}
+
+		err = ctx.GetStub().PutState(asset.ID, assetJSON)
+		if err != nil {
+			return fmt.Errorf("failed to put asset on ledger: %v", err)
+		}
+	}
+
+	return nil
+}
+
+// CreateAsset creates a new asset on the ledger
+func (a *AssetTransfer) CreateAsset(ctx contractapi.TransactionContextInterface, id string, owner string, value int) error {
+	// Check if asset already exists
+	exists, err := a.AssetExists(ctx, id)
+	if err != nil {
+		return fmt.Errorf("failed to check if asset exists: %v", err)
+	}
+	if exists {
+		return fmt.Errorf("asset %s already exists", id)
+	}
+
+	// Get transaction submitter's identity
+	clientID, err := ctx.GetClientIdentity().GetID()
+	if err != nil {
+		return fmt.Errorf("failed to get client identity: %v", err)
+	}
+
+	// Create the asset
+	asset := Asset{
+		ID:             id,
+		Owner:          owner,
+		Value:          value,
+		LastModifiedBy: clientID,
+	}
+
+	// Store the asset on the ledger
+	assetJSON, err := json.Marshal(asset)
+	if err != nil {
+		return fmt.Errorf("failed to marshal asset: %v", err)
+	}
+
+	return ctx.GetStub().PutState(id, assetJSON)
+}
+
+// AssetExists returns true if the asset with the given ID exists
+func (a *AssetTransfer) AssetExists(ctx contractapi.TransactionContextInterface, id string) (bool, error) {
+	assetJSON, err := ctx.GetStub().GetState(id)
+	if err != nil {
+		return false, fmt.Errorf("failed to read from world state: %v", err)
+	}
+	return assetJSON != nil, nil
+}
+
+// TransferAsset transfers an asset to a new owner
+func (a *AssetTransfer) TransferAsset(ctx contractapi.TransactionContextInterface, id string, newOwner string) error {
+	// Get the asset
+	assetJSON, err := ctx.GetStub().GetState(id)
+	if err != nil {
+		return fmt.Errorf("failed to read from world state: %v", err)
+	}
+	if assetJSON == nil {
+		return fmt.Errorf("asset %s does not exist", id)
+	}
+
+	var asset Asset
+	err = json.Unmarshal(assetJSON, &amp;asset)
+	if err != nil {
+		return fmt.Errorf("failed to unmarshal asset: %v", err)
+	}
+
+	// Get transaction submitter's identity
+	clientID, err := ctx.GetClientIdentity().GetID()
+	if err != nil {
+		return fmt.Errorf("failed to get client identity: %v", err)
+	}
+
+	// Update the asset
+	asset.Owner = newOwner
+	asset.LastModifiedBy = clientID
+
+	// Store the updated asset
+	assetJSON, err = json.Marshal(asset)
+	if err != nil {
+		return fmt.Errorf("failed to marshal asset: %v", err)
+	}
+
+	return ctx.GetStub().PutState(id, assetJSON)
+}
+
+func main() {
+	assetChaincode, err := contractapi.NewChaincode(&amp;AssetTransfer{})
+	if err != nil {
+		fmt.Printf("Error creating asset chaincode: %v\n", err)
+		return
+	}
+
+	if err := assetChaincode.Start(); err != nil {
+		fmt.Printf("Error starting asset chaincode: %v\n", err)
+	}
+}
+</code></pre>
+<h4 id="tendermintcosmos"><a class="header" href="#tendermintcosmos">Tendermint/Cosmos</a></h4>
+<p>Tendermint, a core component of the Cosmos ecosystem, is a consensus engine and blockchain application platform written in Go:</p>
+<pre><code class="language-go">// Example of a simple Cosmos SDK application module in Go
+package bank
+
+import (
+	"encoding/json"
+	"fmt"
+
+	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
+)
+
+// Module implements the cosmos-sdk Module interface
+type Module struct {
+	keeper Keeper
+}
+
+// NewModule creates a new bank Module
+func NewModule(keeper Keeper) Module {
+	return Module{
+		keeper: keeper,
+	}
+}
+
+// Name returns the module's name
+func (m Module) Name() string {
+	return "bank"
+}
+
+// RegisterInvariants registers the module's invariants
+func (m Module) RegisterInvariants(ir sdk.InvariantRegistry) {
+	ir.RegisterRoute(m.Name(), "total-supply", TotalSupply(m.keeper))
+}
+
+// TotalSupply checks that the total supply matches the sum of all account balances
+func TotalSupply(keeper Keeper) sdk.Invariant {
+	return func(ctx sdk.Context) (string, bool) {
+		totalSupply := keeper.GetTotalSupply(ctx)
+		totalAccountsBalance := keeper.GetTotalAccountsBalance(ctx)
+
+		broken := !totalSupply.IsEqual(totalAccountsBalance)
+		return sdk.FormatInvariant(
+			"bank", "total-supply",
+			fmt.Sprintf(
+				"total supply %s != sum of accounts balances %s",
+				totalSupply, totalAccountsBalance,
+			),
+		), broken
+	}
+}
+
+// HandleMsg handles all the messages for the bank module
+func (m Module) HandleMsg(ctx sdk.Context, msg sdk.Msg) (*sdk.Result, error) {
+	switch msg := msg.(type) {
+	case MsgSend:
+		return handleMsgSend(ctx, m.keeper, msg)
+	default:
+		return nil, sdk.ErrUnknownRequest(fmt.Sprintf("unrecognized bank message type: %T", msg))
+	}
+}
+
+// MsgSend defines a message to send coins from one account to another
+type MsgSend struct {
+	FromAddress sdk.AccAddress `json:"from_address"`
+	ToAddress   sdk.AccAddress `json:"to_address"`
+	Amount      sdk.Coins      `json:"amount"`
+}
+
+// handleMsgSend handles the MsgSend message
+func handleMsgSend(ctx sdk.Context, keeper Keeper, msg MsgSend) (*sdk.Result, error) {
+	// Check if the sender has enough coins
+	if !keeper.HasCoins(ctx, msg.FromAddress, msg.Amount) {
+		return nil, sdk.ErrInsufficientFunds("insufficient funds")
+	}
+
+	// Transfer coins from sender to receiver
+	err := keeper.SendCoins(ctx, msg.FromAddress, msg.ToAddress, msg.Amount)
+	if err != nil {
+		return nil, err
+	}
+
+	// Emit an event for the transfer
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, "bank"),
+			sdk.NewAttribute(sdk.AttributeKeySender, msg.FromAddress.String()),
+			sdk.NewAttribute(sdk.AttributeKeyRecipient, msg.ToAddress.String()),
+			sdk.NewAttribute(sdk.AttributeKeyAmount, msg.Amount.String()),
+		),
+	)
+
+	return &amp;sdk.Result{
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
+}
+</code></pre>
+<h4 id="other-notable-go-blockchain-projects"><a class="header" href="#other-notable-go-blockchain-projects">Other Notable Go Blockchain Projects</a></h4>
+<ul>
+<li><strong>Solana</strong>: Uses Go for various tools and infrastructure components</li>
+<li><strong>Avalanche</strong>: Uses Go for its core implementation</li>
+<li><strong>Polkadot</strong>: Uses Go for some of its tools and infrastructure</li>
+<li><strong>Algorand</strong>: Core node implementation is in Go</li>
+<li><strong>Filecoin</strong>: Implements its blockchain in Go</li>
+</ul>
+<p>Go's dominance in the blockchain space is a testament to its suitability for building secure, high-performance distributed systems. In the following sections, we'll explore how to build blockchain applications in Go, from cryptographic primitives to smart contract integration and beyond.</p>
+<h2 id="362-cryptographic-fundamentals-in-go"><a class="header" href="#362-cryptographic-fundamentals-in-go"><strong>36.2 Cryptographic Fundamentals in Go</strong></a></h2>
+<p>Cryptography is the cornerstone of blockchain technology, and Go provides robust cryptographic capabilities through its standard library and ecosystem. This section explores the essential cryptographic primitives and how to implement them in Go.</p>
+<h3 id="cryptographic-primitives-in-the-standard-library"><a class="header" href="#cryptographic-primitives-in-the-standard-library">Cryptographic Primitives in the Standard Library</a></h3>
+<p>Go's standard library includes the <code>crypto</code> package and its subpackages, which provide implementations of various cryptographic algorithms:</p>
+<pre><code class="language-go">package main
+
+import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
+	"io"
+	"log"
+)
+
+func main() {
+	// Generate a hash
+	data := []byte("Hello, Blockchain!")
+	hash := sha256.Sum256(data)
+	fmt.Printf("SHA-256: %x\n", hash)
+
+	// Symmetric encryption with AES
+	plaintext := []byte("Secret blockchain data")
+
+	// Generate a random key
+	key := make([]byte, 32) // AES-256
+	if _, err := io.ReadFull(rand.Reader, key); err != nil {
+		log.Fatal(err)
+	}
+
+	// Create cipher block
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create GCM mode
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Generate a nonce
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		log.Fatal(err)
+	}
+
+	// Encrypt
+	ciphertext := gcm.Seal(nonce, nonce, plaintext, nil)
+	fmt.Printf("Encrypted: %x\n", ciphertext)
+
+	// Decrypt
+	nonceSize := gcm.NonceSize()
+	if len(ciphertext) &lt; nonceSize {
+		log.Fatal("Ciphertext too short")
+	}
+
+	nonce, ciphertext = ciphertext[:nonceSize], ciphertext[nonceSize:]
+	decrypted, err := gcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("Decrypted: %s\n", decrypted)
+}
+</code></pre>
+<p>Go's crypto package includes several important subpackages for blockchain development:</p>
+<div class="table-wrapper"><table><thead><tr><th>Package</th><th>Description</th><th>Common Blockchain Use</th></tr></thead><tbody>
+<tr><td><code>crypto/sha256</code></td><td>SHA-256 hash algorithm</td><td>Transaction and block hashing</td></tr>
+<tr><td><code>crypto/sha512</code></td><td>SHA-512 hash algorithm</td><td>Enhanced security hashing</td></tr>
+<tr><td><code>crypto/ecdsa</code></td><td>Elliptic Curve Digital Signature Algorithm</td><td>Transaction signing and verification</td></tr>
+<tr><td><code>crypto/aes</code></td><td>Advanced Encryption Standard</td><td>Symmetric encryption for wallet security</td></tr>
+<tr><td><code>crypto/rand</code></td><td>Cryptographically secure random number generation</td><td>Key generation, nonce creation</td></tr>
+<tr><td><code>crypto/rsa</code></td><td>RSA encryption and signatures</td><td>Alternative signature schemes</td></tr>
+<tr><td><code>crypto/hmac</code></td><td>Hash-based Message Authentication Codes</td><td>Authentication and integrity verification</td></tr>
+</tbody></table>
+</div>
+<h3 id="hash-functions-and-digital-signatures"><a class="header" href="#hash-functions-and-digital-signatures">Hash Functions and Digital Signatures</a></h3>
+<p>Hash functions and digital signatures are fundamental to blockchain security. Here's how to implement them in Go:</p>
+<pre><code class="language-go">package main
+
+import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"crypto/sha256"
+	"fmt"
+	"log"
+	"math/big"
+)
+
+func main() {
+	// Create a message to sign
+	message := []byte("Transfer 1.5 BTC to address 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")
+
+	// Hash the message (single round)
+	hash1 := sha256.Sum256(message)
+	fmt.Printf("SHA-256: %x\n", hash1)
+
+	// Double SHA-256 (used in Bitcoin)
+	hash2 := sha256.Sum256(hash1[:])
+	fmt.Printf("Double SHA-256: %x\n", hash2)
+
+	// Generate ECDSA key pair
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Sign the hash
+	r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash1[:])
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Verify the signature
+	valid := ecdsa.Verify(&amp;privateKey.PublicKey, hash1[:], r, s)
+	fmt.Printf("Signature valid: %v\n", valid)
+
+	// Export the signature components
+	fmt.Printf("Signature r: %x\n", r.Bytes())
+	fmt.Printf("Signature s: %x\n", s.Bytes())
+}
+</code></pre>
+<h4 id="blockchain-hashing-in-practice"><a class="header" href="#blockchain-hashing-in-practice">Blockchain Hashing in Practice</a></h4>
+<p>In blockchain systems, hashing is used in various ways:</p>
+<ol>
+<li><strong>Transaction Hashing</strong>: Each transaction is hashed to create a unique identifier</li>
+<li><strong>Merkle Trees</strong>: Transactions are organized in Merkle trees for efficient verification</li>
+<li><strong>Block Hashing</strong>: The block header is hashed to create a unique block identifier</li>
+<li><strong>Proof of Work</strong>: Miners repeatedly hash block headers with different nonces to find a hash below a target difficulty</li>
+</ol>
+<p>Here's a simple implementation of a Merkle tree, which is fundamental to blockchain data structures:</p>
+<pre><code class="language-go">package main
+
+import (
+	"crypto/sha256"
+	"fmt"
+)
+
+// MerkleNode represents a node in a Merkle tree
+type MerkleNode struct {
+	Left  *MerkleNode
+	Right *MerkleNode
+	Data  []byte
+}
+
+// NewMerkleNode creates a new Merkle tree node
+func NewMerkleNode(left, right *MerkleNode, data []byte) *MerkleNode {
+	node := MerkleNode{}
+
+	if left == nil &amp;&amp; right == nil {
+		// Leaf node - hash the data
+		hash := sha256.Sum256(data)
+		node.Data = hash[:]
+	} else {
+		// Internal node - hash the concatenation of children
+		prevHashes := append(left.Data, right.Data...)
+		hash := sha256.Sum256(prevHashes)
+		node.Data = hash[:]
+	}
+
+	node.Left = left
+	node.Right = right
+
+	return &amp;node
+}
+
+// NewMerkleTree creates a new Merkle tree from a list of data
+func NewMerkleTree(data [][]byte) *MerkleNode {
+	var nodes []*MerkleNode
+
+	// Create leaf nodes
+	for _, datum := range data {
+		node := NewMerkleNode(nil, nil, datum)
+		nodes = append(nodes, node)
+	}
+
+	// If we have an odd number of leaves, duplicate the last one
+	if len(nodes)%2 != 0 {
+		nodes = append(nodes, nodes[len(nodes)-1])
+	}
+
+	// Build the tree bottom-up
+	for len(nodes) &gt; 1 {
+		var level []*MerkleNode
+
+		for i := 0; i &lt; len(nodes); i += 2 {
+			node := NewMerkleNode(nodes[i], nodes[i+1], nil)
+			level = append(level, node)
+		}
+
+		// If we have an odd number of nodes at this level, duplicate the last one
+		if len(level)%2 != 0 &amp;&amp; len(level) &gt; 1 {
+			level = append(level, level[len(level)-1])
+		}
+
+		nodes = level
+	}
+
+	// Return the root node
+	return nodes[0]
+}
+
+func main() {
+	// Example transactions
+	data1 := []byte("Transaction 1: Alice sends 1 BTC to Bob")
+	data2 := []byte("Transaction 2: Bob sends 0.5 BTC to Charlie")
+	data3 := []byte("Transaction 3: Charlie sends 0.25 BTC to Dave")
+	data4 := []byte("Transaction 4: Dave sends 0.1 BTC to Eve")
+
+	// Create a Merkle tree from transactions
+	tree := NewMerkleTree([][]byte{data1, data2, data3, data4})
+
+	// Print the Merkle root
+	fmt.Printf("Merkle Root: %x\n", tree.Data)
+
+	// Create a second tree with the same data to verify
+	tree2 := NewMerkleTree([][]byte{data1, data2, data3, data4})
+	fmt.Printf("Second Merkle Root: %x\n", tree2.Data)
+	fmt.Printf("Roots match: %v\n", string(tree.Data) == string(tree2.Data))
+
+	// Create a tree with modified data to show how it changes the root
+	data3Modified := []byte("Transaction 3: Charlie sends 1.25 BTC to Dave")
+	treeModified := NewMerkleTree([][]byte{data1, data2, data3Modified, data4})
+	fmt.Printf("Modified Merkle Root: %x\n", treeModified.Data)
+	fmt.Printf("Original and modified roots match: %v\n", string(tree.Data) == string(treeModified.Data))
+}
+</code></pre>
+<h3 id="key-generation-and-management"><a class="header" href="#key-generation-and-management">Key Generation and Management</a></h3>
+<p>Proper key management is crucial for blockchain applications. Here's how to implement secure key handling in Go:</p>
+<pre><code class="language-go">package main
+
+import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"log"
+)
+
+// Generate a new ECDSA key pair
+func generateKeyPair() (*ecdsa.PrivateKey, error) {
+	return ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+}
+
+// Derive an address from a public key (simplified)
+func deriveAddress(publicKey *ecdsa.PublicKey) string {
+	// Serialize the public key
+	x := publicKey.X.Bytes()
+	y := publicKey.Y.Bytes()
+	pubKeyBytes := append(x, y...)
+
+	// Hash the public key
+	hash := sha256.Sum256(pubKeyBytes)
+
+	// In real blockchain systems, additional steps like RIPEMD-160
+	// and checksums would be applied
+
+	// Return first 20 bytes as hex (similar to Ethereum)
+	return hex.EncodeToString(hash[:20])
+}
+
+// Sign a message with a private key
+func signMessage(privateKey *ecdsa.PrivateKey, message []byte) ([]byte, error) {
+	// Hash the message
+	hash := sha256.Sum256(message)
+
+	// Sign the hash
+	r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash[:])
+	if err != nil {
+		return nil, err
+	}
+
+	// Combine r and s into a single signature
+	rBytes := r.Bytes()
+	sBytes := s.Bytes()
+	signature := append(rBytes, sBytes...)
+
+	return signature, nil
+}
+
+// Verify a signature against a public key
+func verifySignature(publicKey *ecdsa.PublicKey, message, signature []byte) bool {
+	// Hash the message
+	hash := sha256.Sum256(message)
+
+	// Split signature into r and s components
+	// This is simplified; in practice, parsing would be more robust
+	sigLen := len(signature)
+	r := new(big.Int).SetBytes(signature[:sigLen/2])
+	s := new(big.Int).SetBytes(signature[sigLen/2:])
+
+	// Verify the signature
+	return ecdsa.Verify(publicKey, hash[:], r, s)
+}
+
+func main() {
+	// Generate a key pair
+	privateKey, err := generateKeyPair()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Derive address from public key
+	address := deriveAddress(&amp;privateKey.PublicKey)
+	fmt.Printf("Derived address: %s\n", address)
+
+	// Create a message to sign
+	message := []byte("Send 5 BTC to address 3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy")
+
+	// Sign the message
+	signature, err := signMessage(privateKey, message)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Signature: %x\n", signature)
+
+	// Verify the signature
+	valid := verifySignature(&amp;privateKey.PublicKey, message, signature)
+	fmt.Printf("Signature valid: %v\n", valid)
+
+	// Try to verify with a tampered message
+	tamperedMessage := []byte("Send 50 BTC to address 3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy")
+	validTampered := verifySignature(&amp;privateKey.PublicKey, tamperedMessage, signature)
+	fmt.Printf("Tampered message signature valid: %v\n", validTampered)
+}
+</code></pre>
+<h3 id="secure-random-number-generation"><a class="header" href="#secure-random-number-generation">Secure Random Number Generation</a></h3>
+<p>Secure random number generation is essential for cryptographic operations. Go provides the <code>crypto/rand</code> package for this purpose:</p>
+<pre><code class="language-go">package main
+
+import (
+	"crypto/rand"
+	"encoding/hex"
+	"fmt"
+	"log"
+	"math/big"
+)
+
+func main() {
+	// Generate random bytes (e.g., for a private key)
+	privateKeyBytes := make([]byte, 32)
+	_, err := rand.Read(privateKeyBytes)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Random private key: %x\n", privateKeyBytes)
+
+	// Generate a random number between 0 and 2^256-1
+	max := new(big.Int)
+	max.Exp(big.NewInt(2), big.NewInt(256), nil)
+	max.Sub(max, big.NewInt(1))
+
+	n, err := rand.Int(rand.Reader, max)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Random number: %s\n", n.String())
+
+	// Generate a random nonce for mining
+	miningNonce, err := rand.Int(rand.Reader, big.NewInt(4294967295)) // 2^32 - 1
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Mining nonce: %d\n", miningNonce)
+}
+</code></pre>
+<h3 id="building-a-simplified-transaction-signing-system"><a class="header" href="#building-a-simplified-transaction-signing-system">Building a Simplified Transaction Signing System</a></h3>
+<p>Let's combine these concepts to build a simplified transaction signing system:</p>
+<pre><code class="language-go">package main
+
+import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"log"
+	"math/big"
+	"time"
+)
+
+// Transaction represents a basic blockchain transaction
+type Transaction struct {
+	Sender    string `json:"sender"`
+	Recipient string `json:"recipient"`
+	Amount    string `json:"amount"`
+	Nonce     uint64 `json:"nonce"`
+	Timestamp int64  `json:"timestamp"`
+	Signature string `json:"signature,omitempty"`
+}
+
+// NewTransaction creates a new unsigned transaction
+func NewTransaction(sender, recipient, amount string, nonce uint64) *Transaction {
+	return &amp;Transaction{
+		Sender:    sender,
+		Recipient: recipient,
+		Amount:    amount,
+		Nonce:     nonce,
+		Timestamp: time.Now().Unix(),
+	}
+}
+
+// Hash calculates the hash of the transaction
+func (tx *Transaction) Hash() []byte {
+	// Create a copy without the signature
+	txCopy := *tx
+	txCopy.Signature = ""
+
+	// Marshal to JSON
+	jsonData, err := json.Marshal(txCopy)
+	if err != nil {
+		log.Fatalf("Failed to marshal transaction: %v", err)
+	}
+
+	// Return the SHA-256 hash
+	hash := sha256.Sum256(jsonData)
+	return hash[:]
+}
+
+// Sign signs the transaction with a private key
+func (tx *Transaction) Sign(privateKey *ecdsa.PrivateKey) error {
+	// Get the transaction hash
+	hash := tx.Hash()
+
+	// Sign the hash
+	r, s, err := ecdsa.Sign(rand.Reader, privateKey, hash)
+	if err != nil {
+		return err
+	}
+
+	// Combine r and s into a signature
+	rBytes := r.Bytes()
+	sBytes := s.Bytes()
+	signature := append(rBytes, sBytes...)
+
+	// Store the signature as hex
+	tx.Signature = hex.EncodeToString(signature)
+	return nil
+}
+
+// Verify verifies the transaction signature
+func (tx *Transaction) Verify(publicKey *ecdsa.PublicKey) bool {
+	// Cannot verify if no signature
+	if tx.Signature == "" {
+		return false
+	}
+
+	// Get the transaction hash
+	hash := tx.Hash()
+
+	// Decode the signature
+	signatureBytes, err := hex.DecodeString(tx.Signature)
+	if err != nil {
+		return false
+	}
+
+	// Split signature into r and s
+	// This is simplified; in practice, parsing would be more robust
+	sigLen := len(signatureBytes)
+	r := new(big.Int).SetBytes(signatureBytes[:sigLen/2])
+	s := new(big.Int).SetBytes(signatureBytes[sigLen/2:])
+
+	// Verify the signature
+	return ecdsa.Verify(publicKey, hash, r, s)
+}
+
+func main() {
+	// Generate a key pair for the sender
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Derive address from public key (simplified)
+	pubKeyBytes := elliptic.Marshal(elliptic.P256(), privateKey.PublicKey.X, privateKey.PublicKey.Y)
+	pubKeyHash := sha256.Sum256(pubKeyBytes)
+	senderAddress := hex.EncodeToString(pubKeyHash[:20])
+
+	// Create a recipient address
+	recipientAddress := "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy"
+
+	// Create a new transaction
+	tx := NewTransaction(senderAddress, recipientAddress, "1.5 BTC", 1)
+
+	// Sign the transaction
+	if err := tx.Sign(privateKey); err != nil {
+		log.Fatal(err)
+	}
+
+	// Verify the signature
+	valid := tx.Verify(&amp;privateKey.PublicKey)
+
+	// Print transaction details
+	fmt.Printf("Transaction:\n")
+	fmt.Printf("  Sender:    %s\n", tx.Sender)
+	fmt.Printf("  Recipient: %s\n", tx.Recipient)
+	fmt.Printf("  Amount:    %s\n", tx.Amount)
+	fmt.Printf("  Nonce:     %d\n", tx.Nonce)
+	fmt.Printf("  Timestamp: %d\n", tx.Timestamp)
+	fmt.Printf("  Signature: %s\n", tx.Signature)
+	fmt.Printf("  Valid:     %v\n", valid)
+
+	// Demonstrate tamper detection
+	tamperedTx := *tx
+	tamperedTx.Amount = "10.0 BTC"
+	tamperedValid := tamperedTx.Verify(&amp;privateKey.PublicKey)
+	fmt.Printf("\nTampered transaction valid: %v\n", tamperedValid)
+}
+</code></pre>
+<h3 id="secure-key-storage-patterns"><a class="header" href="#secure-key-storage-patterns">Secure Key Storage Patterns</a></h3>
+<p>Securely storing private keys is crucial for blockchain applications. Here's a simple example of encrypted key storage:</p>
+<pre><code class="language-go">package main
+
+import (
+	"bytes"
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/ecdsa"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
+	"time"
+
+	"golang.org/x/crypto/scrypt"
+)
+
+// EncryptedKeystore represents an encrypted private key
+type EncryptedKeystore struct {
+	IV        string `json:"iv"`
+	Ciphertext string `json:"ciphertext"`
+	Salt       string `json:"salt"`
+	KDF        string `json:"kdf"`
+	KDFParams  struct {
+		N      int    `json:"n"`
+		R      int    `json:"r"`
+		P      int    `json:"p"`
+		DKLen  int    `json:"dklen"`
+	} `json:"kdfparams"`
+	MAC        string `json:"mac"`
+}
+
+// WalletData represents the wallet data to be encrypted
+type WalletData struct {
+	Mnemonic   string            `json:"mnemonic"`
+	PrivateKey string            `json:"private_key"`
+	Addresses  map[string]string `json:"addresses"`
+}
+
+// encryptWallet encrypts wallet data with a password
+func encryptWallet(data *WalletData, password string) (*EncryptedKeystore, error) {
+	// Convert wallet data to JSON
+	dataJSON, err := json.Marshal(data)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal wallet data: %w", err)
+	}
+
+	// Generate random salt
+	salt := make([]byte, 32)
+	if _, err := io.ReadFull(rand.Reader, salt); err != nil {
+		return nil, err
+	}
+
+	// Derive key from password using scrypt
+	derivedKey, err := scrypt.Key([]byte(password), salt, 1&lt;&lt;18, 8, 1, 32)
+	if err != nil {
+		return nil, err
+	}
+
+	// Generate random IV
+	iv := make([]byte, 16)
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+
+	// Create AES cipher
+	block, err := aes.NewCipher(derivedKey[:16])
+	if err != nil {
+		return nil, err
+	}
+
+	// Encrypt data
+	ciphertext := make([]byte, len(dataJSON))
+	stream := cipher.NewCTR(block, iv)
+	stream.XORKeyStream(ciphertext, dataJSON)
+
+	// Calculate MAC
+	mac := sha256.Sum256(append(derivedKey[16:], ciphertext...))
+
+	// Create encrypted wallet
+	encrypted := &amp;EncryptedKeystore{
+		IV:         hex.EncodeToString(iv),
+		Ciphertext: hex.EncodeToString(ciphertext),
+		Salt:       hex.EncodeToString(salt),
+		KDF:        "scrypt",
+		MAC:        hex.EncodeToString(mac[:]),
+	}
+	encrypted.KDFParams.N = 1 &lt;&lt; 18
+	encrypted.KDFParams.R = 8
+	encrypted.KDFParams.P = 1
+	encrypted.KDFParams.DKLen = 32
+
+	return encrypted, nil
+}
+
+// decryptWallet decrypts an encrypted wallet with a password
+func decryptWallet(encrypted *EncryptedKeystore, password string) (*WalletData, error) {
+	// Decode hex strings
+	iv, err := hex.DecodeString(encrypted.IV)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode IV: %w", err)
+	}
+
+	ciphertext, err := hex.DecodeString(encrypted.Ciphertext)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode ciphertext: %w", err)
+	}
+
+	salt, err := hex.DecodeString(encrypted.Salt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode salt: %w", err)
+	}
+
+	mac, err := hex.DecodeString(encrypted.MAC)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode MAC: %w", err)
+	}
+
+	// Derive key from password
+	derivedKey, err := scrypt.Key(
+		[]byte(password),
+		salt,
+		encrypted.KDFParams.N,
+		encrypted.KDFParams.R,
+		encrypted.KDFParams.P,
+		encrypted.KDFParams.DKLen,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to derive key: %w", err)
+	}
+
+	// Verify MAC
+	calculatedMAC := sha256.Sum256(append(derivedKey[16:], ciphertext...))
+	if !bytes.Equal(calculatedMAC[:], mac) {
+		return nil, fmt.Errorf("invalid password (MAC mismatch)")
+	}
+
+	// Decrypt data
+	block, err := aes.NewCipher(derivedKey[:16])
+	if err != nil {
+		return nil, fmt.Errorf("failed to create cipher: %w", err)
+	}
+
+	plaintext := make([]byte, len(ciphertext))
+	stream := cipher.NewCTR(block, iv)
+	stream.XORKeyStream(plaintext, ciphertext)
+
+	// Unmarshal wallet data
+	var walletData WalletData
+	if err := json.Unmarshal(plaintext, &amp;walletData); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal wallet data: %w", err)
+	}
+
+	return &amp;walletData, nil
+}
+
+// saveWalletToFile saves an encrypted wallet to a file
+func saveWalletToFile(encrypted *EncryptedKeystore, filePath string) error {
+	// Create directory if it doesn't exist
+	if err := os.MkdirAll(filepath.Dir(filePath), 0700); err != nil {
+		return fmt.Errorf("failed to create directory: %w", err)
+	}
+
+	// Marshal to JSON
+	data, err := json.MarshalIndent(encrypted, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal wallet: %w", err)
+	}
+
+	// Write to file
+	if err := ioutil.WriteFile(filePath, data, 0600); err != nil {
+		return fmt.Errorf("failed to write file: %w", err)
+	}
+
+	return nil
+}
+
+// loadWalletFromFile loads an encrypted wallet from a file
+func loadWalletFromFile(filePath string) (*EncryptedKeystore, error) {
+	// Read file
+	data, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file: %w", err)
+	}
+
+	// Unmarshal JSON
+	var encrypted EncryptedKeystore
+	if err := json.Unmarshal(data, &amp;encrypted); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal wallet: %w", err)
+	}
+
+	return &amp;encrypted, nil
+}
+
+func main() {
+	// Sample wallet data
+	walletData := &amp;WalletData{
+		Mnemonic:   "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+		PrivateKey: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+		Addresses: map[string]string{
+			"eth": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+			"btc": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+		},
+	}
+
+	// Encrypt wallet
+	password := "supersecurepassword"
+	encryptedWallet, err := encryptWallet(walletData, password)
+	if err != nil {
+		log.Fatalf("Failed to encrypt wallet: %v", err)
+	}
+
+	// Save to file
+	filePath := "./wallet.json"
+	if err := saveWalletToFile(encryptedWallet, filePath); err != nil {
+		log.Fatalf("Failed to save wallet: %v", err)
+	}
+
+	fmt.Printf("Saved encrypted wallet to: %s\n", filePath)
+}
+</code></pre>
+<p>These examples demonstrate the key components of a blockchain wallet implementation in Go:</p>
+<ol>
+<li><strong>Key Generation</strong>: Creating secure cryptographic key pairs</li>
+<li><strong>Transaction Signing</strong>: Preparing and signing blockchain transactions</li>
+<li><strong>Mnemonic Phrases</strong>: Implementing BIP-39 for seed generation from words</li>
+<li><strong>HD Wallet Derivation</strong>: Using BIP-44 to derive multiple accounts from a single seed</li>
+<li><strong>Secure Storage</strong>: Encrypting and storing wallet data securely</li>
+</ol>
+<p>In a production environment, you would typically use established libraries like go-ethereum's accounts package or btcutil for these operations, but understanding the underlying concepts is essential for blockchain developers.</p>
+<h2 id="363-building-a-simple-blockchain"><a class="header" href="#363-building-a-simple-blockchain"><strong>36.3 Building a Simple Blockchain</strong></a></h2>
+<p>Now that we understand the cryptographic fundamentals, let's build a simple blockchain from scratch in Go. This implementation will cover the core concepts: blocks, chains, proof of work, and transaction validation.</p>
+<h3 id="core-blockchain-data-structures"><a class="header" href="#core-blockchain-data-structures">Core Blockchain Data Structures</a></h3>
+<p>The fundamental data structure in a blockchain is the block. Each block contains a header with metadata and a list of transactions:</p>
+<pre><code class="language-go">package main
+
+import (
+	"bytes"
+	"crypto/sha256"
+	"encoding/gob"
+	"encoding/hex"
+	"fmt"
+	"log"
+	"math"
+	"math/big"
+	"time"
+)
+
+// Block represents a block in the blockchain
+type Block struct {
+	Timestamp     int64
+	Transactions  []*Transaction
+	PrevBlockHash []byte
+	Hash          []byte
+	Nonce         int
+	Difficulty    int
+}
+
+// NewBlock creates and returns a new block
+func NewBlock(transactions []*Transaction, prevBlockHash []byte, difficulty int) *Block {
+	block := &amp;Block{
+		Timestamp:     time.Now().Unix(),
+		Transactions:  transactions,
+		PrevBlockHash: prevBlockHash,
+		Hash:          []byte{},
+		Nonce:         0,
+		Difficulty:    difficulty,
+	}
+
+	block.MineBlock()
+
+	return block
+}
+
+// NewGenesisBlock creates the genesis block
+func NewGenesisBlock(coinbase *Transaction, difficulty int) *Block {
+	return NewBlock([]*Transaction{coinbase}, []byte{}, difficulty)
+}
+
+// HashTransactions creates a hash of all transactions in the block
+func (b *Block) HashTransactions() []byte {
+	var txHashes [][]byte
+
+	for _, tx := range b.Transactions {
+		txHashes = append(txHashes, tx.Hash())
+	}
+
+	// Create a merkle tree from transaction hashes
+	tree := NewMerkleTree(txHashes)
+
+	return tree.Data
+}
+
+// Serialize serializes the block
+func (b *Block) Serialize() []byte {
+	var result bytes.Buffer
+	encoder := gob.NewEncoder(&amp;result)
+
+	err := encoder.Encode(b)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return result.Bytes()
+}
+
+// DeserializeBlock deserializes a block
+func DeserializeBlock(d []byte) *Block {
+	var block Block
+
+	decoder := gob.NewDecoder(bytes.NewReader(d))
+	err := decoder.Decode(&amp;block)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return &amp;block
+}
+
+// Blockchain represents a chain of blocks
+type Blockchain struct {
+	Blocks       []*Block
+	Difficulty   int
+	MiningReward int
+}
+
+// NewBlockchain creates a new blockchain with a genesis block
+func NewBlockchain(address string, difficulty, miningReward int) *Blockchain {
+	// Create coinbase transaction for the genesis block
+	coinbaseTx := NewCoinbaseTX(address, "Genesis Block")
+	genesis := NewGenesisBlock(coinbaseTx, difficulty)
+
+	return &amp;Blockchain{
+		Blocks:       []*Block{genesis},
+		Difficulty:   difficulty,
+		MiningReward: miningReward,
+	}
+}
+
+// AddBlock adds a new block to the blockchain
+func (bc *Blockchain) AddBlock(transactions []*Transaction) {
+	// Validate transactions
+	var validTxs []*Transaction
+	for _, tx := range transactions {
+		if bc.VerifyTransaction(tx) {
+			validTxs = append(validTxs, tx)
+		}
+	}
+
+	// Get the last block to find its hash
+	prevBlock := bc.Blocks[len(bc.Blocks)-1]
+
+	// Create a new block with the transactions
+	newBlock := NewBlock(validTxs, prevBlock.Hash, bc.Difficulty)
+
+	// Add the new block to the chain
+	bc.Blocks = append(bc.Blocks, newBlock)
+}
+
+// FindUnspentTransactions finds all unspent transactions
+func (bc *Blockchain) FindUnspentTransactions(address string) []*Transaction {
+	var unspentTXs []*Transaction
+	spentTXOs := make(map[string][]int)
+
+	// Iterate over blocks in reverse order (newest first)
+	for i := len(bc.Blocks) - 1; i &gt;= 0; i-- {
+		block := bc.Blocks[i]
+
+		// Iterate over transactions in the block
+		for _, tx := range block.Transactions {
+			txID := hex.EncodeToString(tx.ID)
+
+			// Check outputs
+			for outIdx, out := range tx.Outputs {
+				// Check if output is spent
+				if spentTXOs[txID] != nil {
+					for _, spentOut := range spentTXOs[txID] {
+						if spentOut == outIdx {
+							continue
+						}
+					}
+				}
+
+				// If output belongs to the address, add to unspent
+				if out.CanBeUnlockedWith(address) {
+					unspentTXs = append(unspentTXs, tx)
+				}
+			}
+
+			// Add inputs to spent outputs
+			if !tx.IsCoinbase() {
+				for _, in := range tx.Inputs {
+					if in.CanUnlockOutputWith(address) {
+						inTxID := hex.EncodeToString(in.TxID)
+						spentTXOs[inTxID] = append(spentTXOs[inTxID], in.OutputIndex)
+					}
+				}
+			}
+		}
+	}
+
+	return unspentTXs
+}
+
+// FindUTXO finds all unspent transaction outputs for an address
+func (bc *Blockchain) FindUTXO(address string) []TXOutput {
+	var UTXOs []TXOutput
+	unspentTXs := bc.FindUnspentTransactions(address)
+
+	for _, tx := range unspentTXs {
+		for _, out := range tx.Outputs {
+			if out.CanBeUnlockedWith(address) {
+				UTXOs = append(UTXOs, out)
+			}
+		}
+	}
+
+	return UTXOs
+}
+
+// GetBalance returns the balance of an address
+func (bc *Blockchain) GetBalance(address string) int {
+	balance := 0
+	UTXOs := bc.FindUTXO(address)
+
+	for _, out := range UTXOs {
+		balance += out.Value
+	}
+
+	return balance
+}
+
+// VerifyTransaction verifies a transaction
+func (bc *Blockchain) VerifyTransaction(tx *Transaction) bool {
+	if tx.IsCoinbase() {
+		return true
+	}
+
+	// Verify each input
+	for _, input := range tx.Inputs {
+		// Find the referenced transaction
+		refTx := bc.FindTransaction(input.TxID)
+		if refTx == nil {
+			return false
+		}
+
+		// Check if the output index is valid
+		if input.OutputIndex &gt;= len(refTx.Outputs) {
+			return false
+		}
+
+		// Verify the signature
+		// Note: In a real implementation, this would use proper signature verification
+		if !input.CanUnlockOutputWith(refTx.Outputs[input.OutputIndex].ScriptPubKey) {
+			return false
+		}
+	}
+
+	return true
+}
+
+// FindTransaction finds a transaction by ID
+func (bc *Blockchain) FindTransaction(ID []byte) *Transaction {
+	for _, block := range bc.Blocks {
+		for _, tx := range block.Transactions {
+			if bytes.Equal(tx.ID, ID) {
+				return tx
+			}
+		}
+	}
+
+	return nil
+}
+
+// FindSpendableOutputs finds spendable outputs for an address up to an amount
+func (bc *Blockchain) FindSpendableOutputs(address string, amount int) (int, map[string][]int) {
+	unspentOutputs := make(map[string][]int)
+	unspentTXs := bc.FindUnspentTransactions(address)
+	accumulated := 0
+
+Work:
+	for _, tx := range unspentTXs {
+		txID := hex.EncodeToString(tx.ID)
+
+		for outIdx, out := range tx.Outputs {
+			if out.CanBeUnlockedWith(address) &amp;&amp; accumulated &lt; amount {
+				accumulated += out.Value
+				unspentOutputs[txID] = append(unspentOutputs[txID], outIdx)
+
+				if accumulated &gt;= amount {
+					break Work
+				}
+			}
+		}
+	}
+
+	return accumulated, unspentOutputs
+}
+</code></pre>
+<h3 id="implementing-proof-of-work"><a class="header" href="#implementing-proof-of-work">Implementing Proof of Work</a></h3>
+<p>Proof of Work (PoW) is the consensus mechanism used by Bitcoin and many other blockchains. It requires miners to find a value (nonce) that, when hashed with the block data, produces a hash with a specific number of leading zeros:</p>
+<pre><code class="language-go">// MineBlock mines a new block with the provided transactions
+func (b *Block) MineBlock() {
+	target := big.NewInt(1)
+	target.Lsh(target, uint(256-b.Difficulty))
+
+	var hashInt big.Int
+	var hash [32]byte
+	nonce := 0
+
+	fmt.Printf("Mining a new block")
+	for nonce &lt; math.MaxInt64 {
+		data := b.prepareData(nonce)
+		hash = sha256.Sum256(data)
+		fmt.Printf("\r%x", hash)
+
+		hashInt.SetBytes(hash[:])
+		if hashInt.Cmp(target) == -1 {
+			break
+		}
+		nonce++
+	}
+	fmt.Println()
+
+	b.Hash = hash[:]
+	b.Nonce = nonce
+}
+
+// prepareData prepares data for hashing
+func (b *Block) prepareData(nonce int) []byte {
+	data := bytes.Join(
+		[][]byte{
+			b.PrevBlockHash,
+			b.HashTransactions(),
+			[]byte(fmt.Sprintf("%d", b.Timestamp)),
+			[]byte(fmt.Sprintf("%d", b.Difficulty)),
+			[]byte(fmt.Sprintf("%d", nonce)),
+		},
+		[]byte{},
+	)
+
+	return data
+}
+
+// ValidatePoW validates the Proof of Work
+func (b *Block) ValidatePoW() bool {
+	var hashInt big.Int
+
+	target := big.NewInt(1)
+	target.Lsh(target, uint(256-b.Difficulty))
+
+	data := b.prepareData(b.Nonce)
+	hash := sha256.Sum256(data)
+	hashInt.SetBytes(hash[:])
+
+	return hashInt.Cmp(target) == -1
+}
+</code></pre>
+<h3 id="transaction-structure-and-validation"><a class="header" href="#transaction-structure-and-validation">Transaction Structure and Validation</a></h3>
+<p>In a blockchain, transactions represent the transfer of value. Here's a simplified transaction model:</p>
+<pre><code class="language-go">// TXInput represents a transaction input
+type TXInput struct {
+	TxID        []byte // Reference to the transaction containing the output
+	OutputIndex int    // Which output of that transaction
+	ScriptSig   string // Data to unlock the output (simplified)
+}
+
+// TXOutput represents a transaction output
+type TXOutput struct {
+	Value        int    // Amount
+	ScriptPubKey string // Conditions to unlock this output (simplified)
+}
+
+// CanUnlockOutputWith checks if the input can unlock an output
+func (in *TXInput) CanUnlockOutputWith(unlockingData string) bool {
+	return in.ScriptSig == unlockingData
+}
+
+// CanBeUnlockedWith checks if the output can be unlocked
+func (out *TXOutput) CanBeUnlockedWith(unlockingData string) bool {
+	return out.ScriptPubKey == unlockingData
+}
+
+// Transaction represents a blockchain transaction
+type Transaction struct {
+	ID      []byte
+	Inputs  []TXInput
+	Outputs []TXOutput
+}
+
+// SetID sets the ID of a transaction
+func (tx *Transaction) SetID() {
+	var encoded bytes.Buffer
+	enc := gob.NewEncoder(&amp;encoded)
+	err := enc.Encode(tx)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	hash := sha256.Sum256(encoded.Bytes())
+	tx.ID = hash[:]
+}
+
+// IsCoinbase checks if a transaction is a coinbase
+func (tx *Transaction) IsCoinbase() bool {
+	return len(tx.Inputs) == 1 &amp;&amp; len(tx.Inputs[0].TxID) == 0 &amp;&amp; tx.Inputs[0].OutputIndex == -1
+}
+
+// NewCoinbaseTX creates a new coinbase transaction
+func NewCoinbaseTX(to, data string) *Transaction {
+	if data == "" {
+		data = fmt.Sprintf("Reward to %s", to)
+	}
+
+	txin := TXInput{[]byte{}, -1, data}
+	txout := TXOutput{50, to} // 50 is the reward
+
+	tx := Transaction{nil, []TXInput{txin}, []TXOutput{txout}}
+	tx.SetID()
+
+	return &amp;tx
+}
+
+// NewUTXOTransaction creates a new transaction
+func NewUTXOTransaction(from, to string, amount int, bc *Blockchain) *Transaction {
+	var inputs []TXInput
+	var outputs []TXOutput
+
+	// Find spendable outputs
+	acc, validOutputs := bc.FindSpendableOutputs(from, amount)
+	if acc &lt; amount {
+		log.Panic("Not enough funds")
+	}
+
+	// Build inputs
+	for txid, outs := range validOutputs {
+		txID, err := hex.DecodeString(txid)
+		if err != nil {
+			log.Panic(err)
+		}
+
+		for _, out := range outs {
+			input := TXInput{txID, out, from}
+			inputs = append(inputs, input)
+		}
+	}
+
+	// Build outputs
+	outputs = append(outputs, TXOutput{amount, to})
+	if acc &gt; amount {
+		outputs = append(outputs, TXOutput{acc - amount, from}) // Change
+	}
+
+	tx := Transaction{nil, inputs, outputs}
+	tx.SetID()
+
+	return &amp;tx
+}
+
+// Hash returns the hash of the transaction
+func (tx *Transaction) Hash() []byte {
+	var hash [32]byte
+	txCopy := *tx
+	txCopy.ID = []byte{}
+
+	var encoded bytes.Buffer
+	enc := gob.NewEncoder(&amp;encoded)
+	err := enc.Encode(txCopy)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	hash = sha256.Sum256(encoded.Bytes())
+	return hash[:]
+}
+</code></pre>
+<h3 id="putting-it-all-together"><a class="header" href="#putting-it-all-together">Putting It All Together</a></h3>
+<p>Now let's implement a simple CLI to interact with our blockchain:</p>
+<pre><code class="language-go">func main() {
+	// Initialize blockchain
+	bc := NewBlockchain("miner-address", 4, 50) // Difficulty 4, reward 50
+
+	// Create some transactions
+	tx1 := NewUTXOTransaction("miner-address", "alice", 10, bc)
+	tx2 := NewUTXOTransaction("miner-address", "bob", 15, bc)
+
+	// Add a block with these transactions
+	bc.AddBlock([]*Transaction{tx1, tx2})
+
+	// Mine another block with a transaction between alice and bob
+	tx3 := NewUTXOTransaction("alice", "bob", 5, bc)
+	bc.AddBlock([]*Transaction{tx3})
+
+	// Print blockchain state
+	fmt.Println("Blockchain state:")
+	for i, block := range bc.Blocks {
+		fmt.Printf("Block %d:\n", i)
+		fmt.Printf("  Timestamp: %d\n", block.Timestamp)
+		fmt.Printf("  Hash: %x\n", block.Hash)
+		fmt.Printf("  PrevHash: %x\n", block.PrevBlockHash)
+		fmt.Printf("  Nonce: %d\n", block.Nonce)
+		fmt.Printf("  Transactions: %d\n", len(block.Transactions))
+		fmt.Println()
+	}
+
+	// Check balances
+	fmt.Printf("Balance of miner: %d\n", bc.GetBalance("miner-address"))
+	fmt.Printf("Balance of alice: %d\n", bc.GetBalance("alice"))
+	fmt.Printf("Balance of bob: %d\n", bc.GetBalance("bob"))
+}
+</code></pre>
+<p>This implementation covers the fundamental concepts of a blockchain:</p>
+<ol>
+<li><strong>Blocks</strong>: Data structures containing transactions and metadata</li>
+<li><strong>Chain</strong>: A sequence of blocks where each references the previous one</li>
+<li><strong>Proof of Work</strong>: A consensus mechanism to prevent spam and attacks</li>
+<li><strong>Transactions</strong>: A system for transferring value between addresses</li>
+<li><strong>UTXO Model</strong>: Tracking unspent transaction outputs for balance management</li>
+</ol>
+<p>In a production blockchain, you would need to add:</p>
+<ol>
+<li><strong>Networking</strong>: P2P communication between nodes</li>
+<li><strong>Persistence</strong>: Storing the blockchain in a database</li>
+<li><strong>Wallet Management</strong>: Proper key management and address generation</li>
+<li><strong>Scripting</strong>: More sophisticated transaction conditions</li>
+<li><strong>Consensus Rules</strong>: Handling forks and chain reorganizations</li>
+</ol>
+<p>The example above uses simplified addressing and signature verification. In a real blockchain implementation, you would use proper cryptographic signatures and address derivation as shown in the previous section.</p>
+<h2 id="364-smart-contract-integration"><a class="header" href="#364-smart-contract-integration"><strong>36.4 Smart Contract Integration</strong></a></h2>
+<p>Smart contracts are self-executing programs that run on blockchain networks. In this section, we'll explore how to interact with smart contracts on Ethereum and other blockchain platforms using Go.</p>
+<h3 id="connecting-to-ethereum-networks"><a class="header" href="#connecting-to-ethereum-networks">Connecting to Ethereum Networks</a></h3>
+<p>Go-Ethereum (geth) provides a comprehensive client for connecting to Ethereum networks. Here's how to connect to various Ethereum networks:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"math/big"
+	"time"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethclient"
+)
+
+// EthClient wraps the standard ethclient with additional functionality
+type EthClient struct {
+	client     *ethclient.Client
+	chainID    *big.Int
+	retryLimit int
+	retryDelay time.Duration
+}
+
+// NewEthClient creates a new Ethereum client
+func NewEthClient(url string) (*EthClient, error) {
+	client, err := ethclient.Dial(url)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to Ethereum node: %w", err)
+	}
+
+	// Get chain ID
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	chainID, err := client.NetworkID(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get chain ID: %w", err)
+	}
+
+	return &amp;EthClient{
+		client:     client,
+		chainID:    chainID,
+		retryLimit: 3,
+		retryDelay: 2 * time.Second,
+	}, nil
+}
+
+// Close closes the Ethereum client
+func (c *EthClient) Close() {
+	c.client.Close()
+}
+
+// GetBalance gets the balance of an address
+func (c *EthClient) GetBalance(address common.Address) (*big.Int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	balance, err := c.client.BalanceAt(ctx, address, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get balance: %w", err)
+	}
+
+	return balance, nil
+}
+
+// GetTransaction gets a transaction by hash
+func (c *EthClient) GetTransaction(txHash common.Hash) (*types.Transaction, bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	tx, isPending, err := c.client.TransactionByHash(ctx, txHash)
+	if err != nil {
+		return nil, false, fmt.Errorf("failed to get transaction: %w", err)
+	}
+
+	return tx, isPending, nil
+}
+
+// WaitForTransaction waits for a transaction to be mined
+func (c *EthClient) WaitForTransaction(txHash common.Hash, timeout time.Duration) (*types.Receipt, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	// Create a ticker to poll for the transaction receipt
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case &lt;-ctx.Done():
+			return nil, fmt.Errorf("timeout waiting for transaction %s", txHash.Hex())
+		case &lt;-ticker.C:
+			receipt, err := c.client.TransactionReceipt(ctx, txHash)
+			if err != nil {
+				continue
+			}
+			return receipt, nil
+		}
+	}
+}
+
+// SendTransaction sends a signed transaction with retry mechanism
+func (c *EthClient) SendTransaction(tx *types.Transaction) (common.Hash, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	var err error
+	for i := 0; i &lt; c.retryLimit; i++ {
+		err = c.client.SendTransaction(ctx, tx)
+		if err == nil {
+			return tx.Hash(), nil
+		}
+
+		// Wait before retrying
+		time.Sleep(c.retryDelay)
+	}
+
+	return common.Hash{}, fmt.Errorf("failed to send transaction after %d attempts: %w", c.retryLimit, err)
+}
+
+// GetGasPrice gets the current gas price
+func (c *EthClient) GetGasPrice() (*big.Int, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	gasPrice, err := c.client.SuggestGasPrice(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get gas price: %w", err)
+	}
+
+	return gasPrice, nil
+}
+
+// EstimateGas estimates the gas needed for a transaction
+func (c *EthClient) EstimateGas(msg ethereum.CallMsg) (uint64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	gas, err := c.client.EstimateGas(ctx, msg)
+	if err != nil {
+		return 0, fmt.Errorf("failed to estimate gas: %w", err)
+	}
+
+	return gas, nil
+}
+
+func main() {
+	// Connect to an Ethereum node
+	client, err := NewEthClient("https://mainnet.infura.io/v3/YOUR-PROJECT-ID")
+	if err != nil {
+		log.Fatalf("Failed to create Ethereum client: %v", err)
+	}
+	defer client.Close()
+
+	// Get the chain ID
+	fmt.Printf("Connected to Ethereum network with Chain ID: %s\n", client.chainID.String())
+
+	// Get the balance of an address
+	address := common.HexToAddress("0x742d35Cc6634C0532925a3b844Bc454e4438f44e")
+	balance, err := client.GetBalance(address)
+	if err != nil {
+		log.Fatalf("Failed to get balance: %v", err)
+	}
+
+	// Convert to Ether
+	ether := new(big.Float).Quo(
+		new(big.Float).SetInt(balance),
+		new(big.Float).SetInt(big.NewInt(1e18)),
+	)
+
+	fmt.Printf("Balance of %s: %s ETH\n", address.Hex(), ether.String())
+
+	// Get information about a transaction
+	txHash := common.HexToHash("0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef")
+	tx, isPending, err := client.GetTransaction(txHash)
+	if err != nil {
+		log.Fatalf("Failed to get transaction: %v", err)
+	}
+
+	fmt.Printf("Transaction %s is pending: %v\n", txHash.Hex(), isPending)
+	if tx.To() != nil {
+		fmt.Printf("  To: %s\n", tx.To().Hex())
+	} else {
+		fmt.Printf("  To: Contract Creation\n")
+	}
+	fmt.Printf("  Value: %s Wei\n", tx.Value().String())
+	fmt.Printf("  Gas Limit: %d\n", tx.Gas())
+	fmt.Printf("  Gas Price: %s Gwei\n", new(big.Float).Quo(
+		new(big.Float).SetInt(tx.GasPrice()),
+		new(big.Float).SetInt(big.NewInt(1e9)),
+	).String())
+
+	// Get current gas price
+	gasPrice, err := client.GetGasPrice()
+	if err != nil {
+		log.Fatalf("Failed to get gas price: %v", err)
+	}
+
+	fmt.Printf("Current gas price: %s Gwei\n", new(big.Float).Quo(
+		new(big.Float).SetInt(gasPrice),
+		new(big.Float).SetInt(big.NewInt(1e9)),
+	).String())
+}
+</code></pre>
+<h3 id="bitcoin-integration"><a class="header" href="#bitcoin-integration">Bitcoin Integration</a></h3>
+<p>Interacting with Bitcoin networks requires different libraries. Let's implement a simple Bitcoin client:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"log"
+	"time"
+
+	"github.com/btcsuite/btcd/btcjson"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcd/rpcclient"
+	"github.com/btcsuite/btcutil"
+)
+
+// BTCClient represents a Bitcoin client
+type BTCClient struct {
+	client *rpcclient.Client
+	params *chaincfg.Params
+}
+
+// NewBTCClient creates a new Bitcoin client
+func NewBTCClient(host, user, pass string, useSSL bool, testnet bool) (*BTCClient, error) {
+	// Set connection configuration
+	connCfg := &amp;rpcclient.ConnConfig{
+		Host:         host,
+		User:         user,
+		Pass:         pass,
+		HTTPPostMode: true,
+		DisableTLS:   !useSSL,
+	}
+
+	// Create the client
+	client, err := rpcclient.New(connCfg, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create Bitcoin client: %w", err)
+	}
+
+	// Set network parameters
+	var params *chaincfg.Params
+	if testnet {
+		params = &amp;chaincfg.TestNet3Params
+	} else {
+		params = &amp;chaincfg.MainNetParams
+	}
+
+	return &amp;BTCClient{
+		client: client,
+		params: params,
+	}, nil
+}
+
+// Close closes the Bitcoin client
+func (c *BTCClient) Close() {
+	c.client.Shutdown()
+}
+
+// GetBlockCount gets the current block height
+func (c *BTCClient) GetBlockCount() (int64, error) {
+	count, err := c.client.GetBlockCount()
+	if err != nil {
+		return 0, fmt.Errorf("failed to get block count: %w", err)
+	}
+	return count, nil
+}
+
+// GetBalance gets the balance of an address
+func (c *BTCClient) GetBalance(address string) (float64, error) {
+	// This is a simplified approach - in practice, you would need to scan the UTXO set
+	// for the address, which requires more complex logic
+
+	// Validate address
+	_, err := btcutil.DecodeAddress(address, c.params)
+	if err != nil {
+		return 0, fmt.Errorf("invalid Bitcoin address: %w", err)
+	}
+
+	// For demonstration purposes, we'll use the wallet's getreceivedbyaddress command
+	// This only works if the address is in the wallet
+	balance, err := c.client.GetReceivedByAddress(address)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get balance: %w", err)
+	}
+
+	return balance, nil
+}
+
+// GetTransaction gets a transaction by hash
+func (c *BTCClient) GetTransaction(txHash string) (*btcjson.GetTransactionResult, error) {
+	tx, err := c.client.GetTransaction(txHash)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get transaction: %w", err)
+	}
+	return tx, nil
+}
+
+// SendToAddress sends Bitcoin to an address
+func (c *BTCClient) SendToAddress(address string, amount float64) (string, error) {
+	// Validate address
+	addr, err := btcutil.DecodeAddress(address, c.params)
+	if err != nil {
+		return "", fmt.Errorf("invalid Bitcoin address: %w", err)
+	}
+
+	// Send the transaction
+	txHash, err := c.client.SendToAddress(addr, btcutil.Amount(amount*1e8))
+	if err != nil {
+		return "", fmt.Errorf("failed to send transaction: %w", err)
+	}
+
+	return txHash.String(), nil
+}
+
+func main() {
+	// Create a Bitcoin client
+	client, err := NewBTCClient("localhost:8332", "username", "password", false, false)
+	if err != nil {
+		log.Fatalf("Failed to create Bitcoin client: %v", err)
+	}
+	defer client.Close()
+
+	// Get the current block count
+	blockCount, err := client.GetBlockCount()
+	if err != nil {
+		log.Fatalf("Failed to get block count: %v", err)
+	}
+	fmt.Printf("Current block height: %d\n", blockCount)
+
+	// Get the balance of an address
+	address := "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa" // Example address (Bitcoin genesis block)
+	balance, err := client.GetBalance(address)
+	if err != nil {
+		log.Printf("Failed to get balance: %v", err)
+	} else {
+		fmt.Printf("Balance of %s: %.8f BTC\n", address, balance)
+	}
+
+	// Get a transaction
+	txHash := "4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b" // Genesis block coinbase transaction
+	tx, err := client.GetTransaction(txHash)
+	if err != nil {
+		log.Printf("Failed to get transaction: %v", err)
+	} else {
+		fmt.Printf("Transaction %s:\n", txHash)
+		fmt.Printf("  Amount: %.8f BTC\n", tx.Amount)
+		fmt.Printf("  Confirmations: %d\n", tx.Confirmations)
+		fmt.Printf("  Time: %s\n", time.Unix(tx.Time, 0).String())
+	}
+}
+</code></pre>
+<h3 id="multi-chain-client"><a class="header" href="#multi-chain-client">Multi-Chain Client</a></h3>
+<p>For applications that need to interact with multiple blockchain networks, we can create a unified client interface:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"log"
+	"math/big"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
+)
+
+// BlockchainClient is an interface for blockchain clients
+type BlockchainClient interface {
+	GetBalance(address string) (string, error)
+	SendTransaction(from, to string, amount string) (string, error)
+	Close()
+}
+
+// EthereumClient implements BlockchainClient for Ethereum
+type EthereumClient struct {
+	client  *ethclient.Client
+	chainID *big.Int
+}
+
+// NewEthereumClient creates a new Ethereum client
+func NewEthereumClient(url string) (*EthereumClient, error) {
+	client, err := ethclient.Dial(url)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to Ethereum node: %w", err)
+	}
+
+	// Get chain ID
+	chainID, err := client.NetworkID(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("failed to get chain ID: %w", err)
+	}
+
+	return &amp;EthereumClient{
+		client:  client,
+		chainID: chainID,
+	}, nil
+}
+
+// GetBalance gets the balance of an Ethereum address
+func (c *EthereumClient) GetBalance(address string) (string, error) {
+	// Convert address string to Ethereum address
+	ethAddress := common.HexToAddress(address)
+
+	// Get balance
+	balance, err := c.client.BalanceAt(context.Background(), ethAddress, nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to get balance: %w", err)
+	}
+
+	// Convert to Ether
+	ether := new(big.Float).Quo(
+		new(big.Float).SetInt(balance),
+		new(big.Float).SetInt(big.NewInt(1e18)),
+	)
+
+	return ether.String() + " ETH", nil
+}
+
+// SendTransaction sends Ethereum to an address
+func (c *EthereumClient) SendTransaction(from, to string, amount string) (string, error) {
+	// This is a simplified implementation
+	// In a real application, you would need to:
+	// 1. Parse the amount
+	// 2. Load the private key for the sender
+	// 3. Sign and send the transaction
+
+	return "transaction_hash", nil
+}
+
+// Close closes the Ethereum client
+func (c *EthereumClient) Close() {
+	c.client.Close()
+}
+
+// BitcoinClient implements BlockchainClient for Bitcoin
+type BitcoinClient struct {
+	// In a real implementation, this would contain the Bitcoin client
+}
+
+// NewBitcoinClient creates a new Bitcoin client
+func NewBitcoinClient(url, user, pass string) (*BitcoinClient, error) {
+	// Initialize Bitcoin client
+	return &amp;BitcoinClient{}, nil
+}
+
+// GetBalance gets the balance of a Bitcoin address
+func (c *BitcoinClient) GetBalance(address string) (string, error) {
+	// Simplified implementation
+	return "0.0 BTC", nil
+}
+
+// SendTransaction sends Bitcoin to an address
+func (c *BitcoinClient) SendTransaction(from, to string, amount string) (string, error) {
+	// Simplified implementation
+	return "transaction_hash", nil
+}
+
+// Close closes the Bitcoin client
+func (c *BitcoinClient) Close() {
+	// Close the Bitcoin client
+}
+
+// MultiChainClient manages multiple blockchain clients
+type MultiChainClient struct {
+	clients map[string]BlockchainClient
+}
+
+// NewMultiChainClient creates a new multi-chain client
+func NewMultiChainClient() *MultiChainClient {
+	return &amp;MultiChainClient{
+		clients: make(map[string]BlockchainClient),
+	}
+}
+
+// AddClient adds a blockchain client
+func (c *MultiChainClient) AddClient(chain string, client BlockchainClient) {
+	c.clients[chain] = client
+}
+
+// GetClient gets a blockchain client by chain
+func (c *MultiChainClient) GetClient(chain string) (BlockchainClient, error) {
+	client, ok := c.clients[chain]
+	if !ok {
+		return nil, fmt.Errorf("client for chain %s not found", chain)
+	}
+	return client, nil
+}
+
+// GetBalance gets the balance of an address on a specific chain
+func (c *MultiChainClient) GetBalance(chain, address string) (string, error) {
+	client, err := c.GetClient(chain)
+	if err != nil {
+		return "", err
+	}
+	return client.GetBalance(address)
+}
+
+// SendTransaction sends a transaction on a specific chain
+func (c *MultiChainClient) SendTransaction(chain, from, to, amount string) (string, error) {
+	client, err := c.GetClient(chain)
+	if err != nil {
+		return "", err
+	}
+	return client.SendTransaction(from, to, amount)
+}
+
+// Close closes all blockchain clients
+func (c *MultiChainClient) Close() {
+	for _, client := range c.clients {
+		client.Close()
+	}
+}
+
+func main() {
+	// Create a multi-chain client
+	multiClient := NewMultiChainClient()
+
+	// Add Ethereum client
+	ethClient, err := NewEthereumClient("https://mainnet.infura.io/v3/YOUR-PROJECT-ID")
+	if err != nil {
+		log.Fatalf("Failed to create Ethereum client: %v", err)
+	}
+	multiClient.AddClient("ethereum", ethClient)
+
+	// Add Bitcoin client
+	btcClient, err := NewBitcoinClient("localhost:8332", "username", "password")
+	if err != nil {
+		log.Fatalf("Failed to create Bitcoin client: %v", err)
+	}
+	multiClient.AddClient("bitcoin", btcClient)
+
+	// Get balances
+	ethAddress := "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+	ethBalance, err := multiClient.GetBalance("ethereum", ethAddress)
+	if err != nil {
+		log.Printf("Failed to get Ethereum balance: %v", err)
+	} else {
+		fmt.Printf("Ethereum balance of %s: %s\n", ethAddress, ethBalance)
+	}
+
+	btcAddress := "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+	btcBalance, err := multiClient.GetBalance("bitcoin", btcAddress)
+	if err != nil {
+		log.Printf("Failed to get Bitcoin balance: %v", err)
+	} else {
+		fmt.Printf("Bitcoin balance of %s: %s\n", btcAddress, btcBalance)
+	}
+
+	// Close all clients
+	multiClient.Close()
+}
+</code></pre>
+<h3 id="cross-chain-interactions"><a class="header" href="#cross-chain-interactions">Cross-Chain Interactions</a></h3>
+<p>Advanced blockchain applications often need to interact across different chains. Here's a simple example of monitoring events on multiple chains:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"sync"
+	"time"
+
+	"github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/ethclient"
+)
+
+// ChainMonitor monitors blockchain events
+type ChainMonitor struct {
+	clients map[string]*ethclient.Client
+	filters map[string]ethereum.FilterQuery
+	ctx     context.Context
+	cancel  context.CancelFunc
+	wg      sync.WaitGroup
+}
+
+// NewChainMonitor creates a new chain monitor
+func NewChainMonitor() *ChainMonitor {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	return &amp;ChainMonitor{
+		clients: make(map[string]*ethclient.Client),
+		filters: make(map[string]ethereum.FilterQuery),
+		ctx:     ctx,
+		cancel:  cancel,
+	}
+}
+
+// AddChain adds a chain to monitor
+func (m *ChainMonitor) AddChain(name, url string, filter ethereum.FilterQuery) error {
+	client, err := ethclient.Dial(url)
+	if err != nil {
+		return fmt.Errorf("failed to connect to %s: %w", name, err)
+	}
+
+	m.clients[name] = client
+	m.filters[name] = filter
+
+	return nil
+}
+
+// Start starts monitoring all chains
+func (m *ChainMonitor) Start(callback func(chainName string, log types.Log)) {
+	for name, client := range m.clients {
+		m.wg.Add(1)
+		go m.monitorChain(name, client, m.filters[name], callback)
+	}
+}
+
+// monitorChain monitors a single chain
+func (m *ChainMonitor) monitorChain(name string, client *ethclient.Client, filter ethereum.FilterQuery, callback func(string, types.Log)) {
+	defer m.wg.Done()
+
+	logs := make(chan types.Log)
+	sub, err := client.SubscribeFilterLogs(m.ctx, filter, logs)
+	if err != nil {
+		log.Printf("Failed to subscribe to %s logs: %v", name, err)
+		return
+	}
+	defer sub.Unsubscribe()
+
+	for {
+		select {
+		case &lt;-m.ctx.Done():
+			return
+		case err := &lt;-sub.Err():
+			log.Printf("Error in %s subscription: %v", name, err)
+			return
+		case eventLog := &lt;-logs:
+			callback(name, eventLog)
+		}
+	}
+}
+
+// Stop stops monitoring all chains
+func (m *ChainMonitor) Stop() {
+	m.cancel()
+	m.wg.Wait()
+
+	for name, client := range m.clients {
+		client.Close()
+		delete(m.clients, name)
+	}
+}
+
+func main() {
+	// Create a chain monitor
+	monitor := NewChainMonitor()
+
+	// Define USDC contract addresses on different chains
+	usdcEthereum := common.HexToAddress("0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48")
+	usdcPolygon := common.HexToAddress("0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174")
+
+	// Add Ethereum mainnet
+	err := monitor.AddChain(
+		"ethereum",
+		"wss://mainnet.infura.io/ws/v3/YOUR-PROJECT-ID",
+		ethereum.FilterQuery{
+			Addresses: []common.Address{usdcEthereum},
+		},
+	)
+	if err != nil {
+		log.Fatalf("Failed to add Ethereum: %v", err)
+	}
+
+	// Add Polygon mainnet
+	err = monitor.AddChain(
+		"polygon",
+		"wss://polygon-mainnet.infura.io/ws/v3/YOUR-PROJECT-ID",
+		ethereum.FilterQuery{
+			Addresses: []common.Address{usdcPolygon},
+		},
+	)
+	if err != nil {
+		log.Fatalf("Failed to add Polygon: %v", err)
+	}
+
+	// Start monitoring
+	monitor.Start(func(chainName string, eventLog types.Log) {
+		fmt.Printf("Event on %s:\n", chainName)
+		fmt.Printf("  Block: %d\n", eventLog.BlockNumber)
+		fmt.Printf("  TxHash: %s\n", eventLog.TxHash.Hex())
+		fmt.Printf("  Address: %s\n", eventLog.Address.Hex())
+		fmt.Printf("  Topics: %v\n", eventLog.Topics)
+	})
+
+	fmt.Println("Monitoring USDC events on Ethereum and Polygon...")
+	fmt.Println("Press Ctrl+C to stop")
+
+	// Run for a while
+	time.Sleep(10 * time.Minute)
+
+	// Stop monitoring
+	monitor.Stop()
+}
+</code></pre>
+<p>These examples demonstrate how to interact with different blockchain networks using Go. The key aspects to consider when building blockchain integrations include:</p>
+<ol>
+<li><strong>Connection Management</strong>: Properly handling connections to blockchain nodes</li>
+<li><strong>Error Handling</strong>: Implementing retry mechanisms for network errors</li>
+<li><strong>Transaction Monitoring</strong>: Tracking transaction status across networks</li>
+<li><strong>Cross-Chain Communication</strong>: Coordinating operations across multiple blockchains</li>
+<li><strong>Security</strong>: Ensuring secure key management and transaction signing</li>
+</ol>
+<p>In the next section, we'll explore how to build complete decentralized applications (dApps) with Go backends.</p>
+<h2 id="367-building-decentralized-applications-dapps"><a class="header" href="#367-building-decentralized-applications-dapps"><strong>36.7 Building Decentralized Applications (dApps)</strong></a></h2>
+<ul>
+<li>Architecture patterns for Web3 applications</li>
+<li>Backend services for dApps</li>
+<li>Authentication with wallets</li>
+<li>Handling blockchain events</li>
+</ul>
+<h2 id="368-layer-2-solutions-and-scaling"><a class="header" href="#368-layer-2-solutions-and-scaling"><strong>36.8 Layer 2 Solutions and Scaling</strong></a></h2>
+<ul>
+<li>Implementing state channels</li>
+<li>Optimistic rollups</li>
+<li>Zero-knowledge proofs</li>
+<li>Sidechains and cross-chain bridges</li>
+</ul>
+<h2 id="369-security-best-practices"><a class="header" href="#369-security-best-practices"><strong>36.9 Security Best Practices</strong></a></h2>
+<p>Security is paramount in blockchain applications. A single vulnerability can lead to significant financial losses and erode trust in the system. This section explores essential security practices for blockchain applications written in Go.</p>
+<h3 id="common-vulnerabilities-in-blockchain-applications"><a class="header" href="#common-vulnerabilities-in-blockchain-applications">Common Vulnerabilities in Blockchain Applications</a></h3>
+<p>Blockchain applications face unique security challenges. Here are the most common vulnerabilities and how to mitigate them:</p>
+<h4 id="1-private-key-management"><a class="header" href="#1-private-key-management">1. Private Key Management</a></h4>
+<p>The most critical vulnerability in blockchain applications is improper private key management. If an attacker gains access to a private key, they gain complete control over the associated assets.</p>
+<p><strong>Best practices:</strong></p>
+<pre><code class="language-go">package main
+
+import (
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"strings"
+	"syscall"
+
+	"golang.org/x/crypto/scrypt"
+	"golang.org/x/term"
+)
+
+// Never store private keys in code or configuration files
+const (
+	keyStorePath = "./keys"  // Store in a secure location
+	minPassLen   = 12        // Minimum password length
+)
+
+// EncryptKey encrypts a private key with a password
+func EncryptKey(privateKey, password string) (string, error) {
+	// Validate password strength
+	if len(password) &lt; minPassLen {
+		return "", fmt.Errorf("password too short, minimum length is %d", minPassLen)
+	}
+
+	if !hasUpperLower(password) || !hasNumbers(password) || !hasSpecialChars(password) {
+		return "", fmt.Errorf("password must contain uppercase, lowercase, numbers, and special characters")
+	}
+
+	// Generate salt
+	salt := make([]byte, 32)
+	if _, err := io.ReadFull(rand.Reader, salt); err != nil {
+		return "", err
+	}
+
+	// Derive key using scrypt (memory-hard KDF)
+	derivedKey, err := scrypt.Key([]byte(password), salt, 1&lt;&lt;18, 8, 1, 32)
+	if err != nil {
+		return "", err
+	}
+
+	// Create AES-256 cipher
+	block, err := aes.NewCipher(derivedKey[:32])
+	if err != nil {
+		return "", err
+	}
+
+	// Generate nonce for GCM
+	nonce := make([]byte, 12)
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		return "", err
+	}
+
+	// Create GCM mode
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", err
+	}
+
+	// Encrypt the private key
+	ciphertext := aesgcm.Seal(nil, nonce, []byte(privateKey), nil)
+
+	// Combine salt, nonce, and ciphertext for storage
+	result := append(salt, append(nonce, ciphertext...)...)
+
+	return hex.EncodeToString(result), nil
+}
+
+// DecryptKey decrypts a private key with a password
+func DecryptKey(encryptedKey, password string) (string, error) {
+	data, err := hex.DecodeString(encryptedKey)
+	if err != nil {
+		return "", err
+	}
+
+	// Extract salt, nonce, and ciphertext
+	salt := data[:32]
+	nonce := data[32:44]
+	ciphertext := data[44:]
+
+	// Derive key using scrypt
+	derivedKey, err := scrypt.Key([]byte(password), salt, 1&lt;&lt;18, 8, 1, 32)
+	if err != nil {
+		return "", err
+	}
+
+	// Create AES-256 cipher
+	block, err := aes.NewCipher(derivedKey[:32])
+	if err != nil {
+		return "", err
+	}
+
+	// Create GCM mode
+	aesgcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return "", err
+	}
+
+	// Decrypt the private key
+	plaintext, err := aesgcm.Open(nil, nonce, ciphertext, nil)
+	if err != nil {
+		return "", err
+	}
+
+	return string(plaintext), nil
+}
+
+// StoreKey stores an encrypted key to the filesystem
+func StoreKey(address, encryptedKey string) error {
+	// Create keystore directory if it doesn't exist
+	if err := os.MkdirAll(keyStorePath, 0700); err != nil {
+		return err
+	}
+
+	// Create file with restricted permissions
+	filePath := filepath.Join(keyStorePath, address+".key")
+	return os.WriteFile(filePath, []byte(encryptedKey), 0600)
+}
+
+// SecurePasswordPrompt prompts for a password without echoing
+func SecurePasswordPrompt(prompt string) (string, error) {
+	fmt.Print(prompt)
+	password, err := term.ReadPassword(int(syscall.Stdin))
+	fmt.Println()
+	if err != nil {
+		return "", err
+	}
+	return string(password), nil
+}
+
+// Helper functions for password strength
+func hasUpperLower(s string) bool {
+	return strings.ContainsAny(s, "ABCDEFGHIJKLMNOPQRSTUVWXYZ") &amp;&amp;
+           strings.ContainsAny(s, "abcdefghijklmnopqrstuvwxyz")
+}
+
+func hasNumbers(s string) bool {
+	return strings.ContainsAny(s, "0123456789")
+}
+
+func hasSpecialChars(s string) bool {
+	return strings.ContainsAny(s, "!@#$%^&amp;*()_+-=[]{}|;:,.&lt;&gt;?")
+}
+
+func main() {
+	// Example usage
+	privateKey := "7a1a91f3a0c1e7167c3b32ecc88c8e14e6b7779d416d88fb7c4ff41b5aa5bdfd"
+
+	// Get password securely
+	password, err := SecurePasswordPrompt("Enter password to encrypt key: ")
+	if err != nil {
+		fmt.Printf("Error reading password: %v\n", err)
+		return
+	}
+
+	// Encrypt the key
+	encryptedKey, err := EncryptKey(privateKey, password)
+	if err != nil {
+		fmt.Printf("Error encrypting key: %v\n", err)
+		return
+	}
+
+	// Store the encrypted key
+	address := "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+	if err := StoreKey(address, encryptedKey); err != nil {
+		fmt.Printf("Error storing key: %v\n", err)
+		return
+	}
+
+	fmt.Println("Key encrypted and stored successfully!")
+}
+</code></pre>
+<h4 id="2-secure-random-number-generation"><a class="header" href="#2-secure-random-number-generation">2. Secure Random Number Generation</a></h4>
+<p>Predictable random numbers can lead to vulnerabilities. Always use cryptographically secure random number generators:</p>
+<pre><code class="language-go">// Insecure random number generation - DO NOT USE
+rand.Seed(time.Now().UnixNano())
+randomBytes := make([]byte, 32)
+for i := range randomBytes {
+    randomBytes[i] = byte(rand.Intn(256))
+}
+
+// Secure random number generation - RECOMMENDED
+secureRandomBytes := make([]byte, 32)
+if _, err := io.ReadFull(crypto/rand.Reader, secureRandomBytes); err != nil {
+    log.Fatal(err)
+}
+</code></pre>
+<h4 id="3-transaction-replay-protection"><a class="header" href="#3-transaction-replay-protection">3. Transaction Replay Protection</a></h4>
+<p>Without proper replay protection, an attacker can resubmit a transaction multiple times. Ethereum's EIP-155 introduced replay protection by including the chain ID in transaction signatures:</p>
+<pre><code class="language-go">func signTransactionWithReplayProtection(tx *types.Transaction, privateKey *ecdsa.PrivateKey, chainID *big.Int) (*types.Transaction, error) {
+    // Use EIP-155 signer which includes chainID in the signature
+    signer := types.NewEIP155Signer(chainID)
+    signedTx, err := types.SignTx(tx, signer, privateKey)
+    if err != nil {
+        return nil, err
+    }
+    return signedTx, nil
+}
+</code></pre>
+<h4 id="4-smart-contract-vulnerabilities"><a class="header" href="#4-smart-contract-vulnerabilities">4. Smart Contract Vulnerabilities</a></h4>
+<p>When interacting with smart contracts, be aware of common vulnerabilities:</p>
+<ul>
+<li><strong>Reentrancy</strong>: A contract function is called repeatedly before the first execution is complete</li>
+<li><strong>Integer Overflow/Underflow</strong>: Mathematical operations exceeding the size limits of variables</li>
+<li><strong>Front-Running</strong>: Exploiting transaction ordering in the mempool</li>
+</ul>
+<h3 id="transaction-validation"><a class="header" href="#transaction-validation">Transaction Validation</a></h3>
+<p>Always validate transactions before signing or broadcasting them:</p>
+<pre><code class="language-go">func validateTransaction(tx *Transaction, blockchain *Blockchain) error {
+    // 1. Check if inputs exist and are unspent
+    for _, input := range tx.Inputs {
+        if !blockchain.IsUTXO(input.TxID, input.OutputIndex) {
+            return errors.New("transaction input is not an unspent output")
+        }
+    }
+
+    // 2. Verify the sender owns the inputs
+    for _, input := range tx.Inputs {
+        prevOutput, err := blockchain.GetOutput(input.TxID, input.OutputIndex)
+        if err != nil {
+            return err
+        }
+
+        if !verifySignature(input.Signature, input.PublicKey, prevOutput.ScriptPubKey) {
+            return errors.New("invalid transaction signature")
+        }
+    }
+
+    // 3. Check that output values don't exceed input values
+    inputSum := 0
+    for _, input := range tx.Inputs {
+        prevOutput, _ := blockchain.GetOutput(input.TxID, input.OutputIndex)
+        inputSum += prevOutput.Value
+    }
+
+    outputSum := 0
+    for _, output := range tx.Outputs {
+        outputSum += output.Value
+
+        // Ensure no negative values
+        if output.Value &lt;= 0 {
+            return errors.New("transaction outputs cannot have negative value")
+        }
+    }
+
+    if outputSum &gt; inputSum {
+        return errors.New("transaction outputs exceed inputs")
+    }
+
+    return nil
+}
+</code></pre>
+<h3 id="secure-rpc-implementations"><a class="header" href="#secure-rpc-implementations">Secure RPC Implementations</a></h3>
+<p>When exposing blockchain services via RPC, implement proper security controls:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"crypto/tls"
+	"crypto/x509"
+	"io/ioutil"
+	"log"
+	"net"
+	"net/http"
+	"strings"
+	"time"
+
+	"github.com/gorilla/mux"
+	"github.com/gorilla/rpc/v2"
+	"github.com/gorilla/rpc/v2/json"
+)
+
+// WalletService provides RPC methods for wallet operations
+type WalletService struct {
+	// Service state
+}
+
+// CreateTransactionArgs represents the arguments for the CreateTransaction method
+type CreateTransactionArgs struct {
+	Sender    string
+	Recipient string
+	Amount    string
+	APIKey    string
+}
+
+// TransactionResponse represents the response for the CreateTransaction method
+type TransactionResponse struct {
+	TxHash string
+}
+
+// CreateTransaction is an RPC method to create a transaction
+func (s *WalletService) CreateTransaction(r *http.Request, args *CreateTransactionArgs, result *TransactionResponse) error {
+	// Validate API key
+	if !validateAPIKey(args.APIKey) {
+		return errors.New("invalid API key")
+	}
+
+	// Rate limiting (implement with a proper rate limiter)
+	if isRateLimited(getClientIP(r)) {
+		return errors.New("rate limit exceeded")
+	}
+
+	// Log the request (excluding sensitive data)
+	log.Printf("Transaction request: from=%s, to=%s, amount=%s",
+		anonymizeAddress(args.Sender),
+		anonymizeAddress(args.Recipient),
+		args.Amount)
+
+	// Create and sign transaction
+	// ...
+
+	// Set result
+	result.TxHash = "0x123..."
+	return nil
+}
+
+// Setup a secure RPC server
+func main() {
+	// Create a new RPC server
+	rpcServer := rpc.NewServer()
+	rpcServer.RegisterCodec(json.NewCodec(), "application/json")
+
+	// Register services
+	walletService := new(WalletService)
+	rpcServer.RegisterService(walletService, "Wallet")
+
+	// Create router
+	router := mux.NewRouter()
+	router.Handle("/rpc", rpcServer)
+
+	// Add middleware
+	router.Use(loggingMiddleware)
+	router.Use(securityHeadersMiddleware)
+
+	// Load TLS certificates
+	cert, err := tls.LoadX509KeyPair("server.crt", "server.key")
+	if err != nil {
+		log.Fatalf("Failed to load certificates: %v", err)
+	}
+
+	// Configure TLS
+	tlsConfig := &amp;tls.Config{
+		Certificates: []tls.Certificate{cert},
+		MinVersion:   tls.VersionTLS12,
+		CipherSuites: []uint16{
+			tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+			tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+		},
+	}
+
+	// Create HTTPS server
+	server := &amp;http.Server{
+		Addr:         ":8443",
+		Handler:      router,
+		TLSConfig:    tlsConfig,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
+
+	// Start the server
+	log.Println("Starting secure RPC server on :8443")
+	log.Fatal(server.ListenAndServeTLS("", ""))
+}
+
+// Middleware to add security headers
+func securityHeadersMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Security-Policy", "default-src 'self'")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("X-XSS-Protection", "1; mode=block")
+		next.ServeHTTP(w, r)
+	})
+}
+
+// Helper functions
+func validateAPIKey(apiKey string) bool {
+	// Implement proper API key validation
+	return apiKey == "valid-api-key"
+}
+
+func isRateLimited(clientIP string) bool {
+	// Implement proper rate limiting
+	return false
+}
+
+func getClientIP(r *http.Request) string {
+	// Get client IP, respecting X-Forwarded-For if behind a proxy
+	ip := r.Header.Get("X-Forwarded-For")
+	if ip == "" {
+		ip, _, _ = net.SplitHostPort(r.RemoteAddr)
+	}
+	return ip
+}
+
+func anonymizeAddress(address string) string {
+	if len(address) &lt;= 10 {
+		return address
+	}
+	return address[:6] + "..." + address[len(address)-4:]
+}
+</code></pre>
+<h3 id="zero-knowledge-proofs-in-go"><a class="header" href="#zero-knowledge-proofs-in-go">Zero-Knowledge Proofs in Go</a></h3>
+<p>Zero-knowledge proofs (ZKPs) allow one party to prove knowledge of a value without revealing the value itself. ZKPs are increasingly important for privacy-preserving blockchain applications.</p>
+<p>Here's an example implementing a simple ZKP system using the Bulletproofs library:</p>
+<pre><code class="language-go">package main
+
+import (
+	"crypto/rand"
+	"fmt"
+	"log"
+	"math/big"
+
+	"github.com/gtank/cryptopasta"
+	"github.com/consensys/gnark/backend/groth16"
+	"github.com/consensys/gnark/frontend"
+	"github.com/consensys/gnark/std/hash/mimc"
+)
+
+// Circuit defines a ZKP circuit for proving knowledge of a preimage
+type Circuit struct {
+	// Public inputs (visible to verifier)
+	Hash frontend.Variable `gnark:",public"`
+
+	// Private inputs (known only to prover)
+	Preimage frontend.Variable
+}
+
+// Define defines the circuit constraints
+func (c *Circuit) Define(api frontend.API) error {
+	// Hash the preimage using MiMC
+	mimcHash, err := mimc.NewMiMC(api)
+	if err != nil {
+		return err
+	}
+
+	mimcHash.Write(c.Preimage)
+	api.AssertIsEqual(c.Hash, mimcHash.Sum())
+
+	return nil
+}
+
+func main() {
+	// 1. Setup the circuit
+	var circuit Circuit
+	r1cs, err := frontend.Compile(ecc.BN254, r1cs.NewBuilder, &amp;circuit)
+	if err != nil {
+		log.Fatalf("Failed to compile circuit: %v", err)
+	}
+
+	// 2. Generate proving and verification keys
+	pk, vk, err := groth16.Setup(r1cs)
+	if err != nil {
+		log.Fatalf("Failed to set up circuit: %v", err)
+	}
+
+	// 3. Define a witness (the actual values)
+	preimage := "secret value"
+
+	// 4. Create a hash of the preimage (using MiMC for compatibility)
+	mimcHash := mimc.NewMiMC()
+	mimcHash.Write([]byte(preimage))
+	hash := mimcHash.Sum(nil)
+
+	// 5. Create and fill the witness
+	var witness Circuit
+	witness.Preimage = preimage
+	witness.Hash = hash
+
+	// 6. Generate a proof
+	proof, err := groth16.Prove(r1cs, pk, &amp;witness)
+	if err != nil {
+		log.Fatalf("Failed to generate proof: %v", err)
+	}
+
+	// 7. Define public inputs for verification
+	var publicInputs Circuit
+	publicInputs.Hash = hash
+
+	// 8. Verify the proof
+	err = groth16.Verify(proof, vk, &amp;publicInputs)
+	if err != nil {
+		log.Fatalf("Failed to verify proof: %v", err)
+	}
+
+	fmt.Println("Proof verified successfully!")
+}
+</code></pre>
+<h3 id="auditing-and-formal-verification"><a class="header" href="#auditing-and-formal-verification">Auditing and Formal Verification</a></h3>
+<p>Regular security audits and formal verification are essential for blockchain applications. Here are some tools and techniques:</p>
+<ol>
+<li>
+<p><strong>Automatic code analysis</strong>:</p>
+<ul>
+<li>Use <code>go vet</code> and static analysis tools</li>
+<li>Implement pre-commit hooks to catch security issues</li>
+</ul>
+</li>
+<li>
+<p><strong>Formal verification</strong>:</p>
+<ul>
+<li>Use tools like TLA+ or Coq to prove correctness</li>
+<li>Model critical paths in your application</li>
+</ul>
+</li>
+<li>
+<p><strong>Regular security audits</strong>:</p>
+<ul>
+<li>Conduct penetration testing</li>
+<li>Hire external security researchers</li>
+</ul>
+</li>
+</ol>
+<h3 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h3>
+<p>Security in blockchain applications requires constant vigilance. Following these best practices helps mitigate common vulnerabilities:</p>
+<ol>
+<li><strong>Protect private keys</strong> with strong encryption and secure storage</li>
+<li><strong>Use cryptographically secure random number generation</strong></li>
+<li><strong>Implement transaction replay protection</strong></li>
+<li><strong>Validate all inputs</strong> thoroughly before processing</li>
+<li><strong>Secure your RPC endpoints</strong> with proper authentication and rate limiting</li>
+<li><strong>Consider privacy-enhancing technologies</strong> like zero-knowledge proofs</li>
+<li><strong>Conduct regular security audits</strong> and formal verification</li>
+</ol>
+<p>Remember that security is a continuous process, not a one-time effort. Stay updated on the latest vulnerabilities and security techniques in the blockchain space.</p>
+<h2 id="3610-real-world-applications-and-case-studies"><a class="header" href="#3610-real-world-applications-and-case-studies"><strong>36.10 Real-world Applications and Case Studies</strong></a></h2>
+<ul>
+<li>Decentralized finance (DeFi) implementations</li>
+<li>NFT marketplaces and platforms</li>
+<li>Supply chain traceability</li>
+<li>Identity management systems</li>
+</ul>
+<h2 id="3611-regulatory-compliance-and-legal-considerations"><a class="header" href="#3611-regulatory-compliance-and-legal-considerations"><strong>36.11 Regulatory Compliance and Legal Considerations</strong></a></h2>
+<ul>
+<li>KYC/AML integration</li>
+<li>Transaction monitoring</li>
+<li>Compliance reporting</li>
+<li>Privacy-preserving techniques</li>
+</ul>
+<h2 id="3612-conclusion"><a class="header" href="#3612-conclusion"><strong>36.12 Conclusion</strong></a></h2>
+<ul>
+<li>Future of Go in blockchain development</li>
+<li>Emerging trends in cryptocurrency</li>
+<li>Building a career in blockchain with Go</li>
+</ul>
+<h2 id="365-wallet-implementation"><a class="header" href="#365-wallet-implementation"><strong>36.5 Wallet Implementation</strong></a></h2>
+<p>Wallets are a critical component of blockchain applications, allowing users to securely store and manage their private keys and interact with blockchain networks. In this section, we'll explore how to implement wallet functionality in Go.</p>
+<h3 id="creating-and-managing-keypairs"><a class="header" href="#creating-and-managing-keypairs">Creating and Managing Keypairs</a></h3>
+<p>Let's start with the basics of creating and managing cryptographic key pairs:</p>
+<pre><code class="language-go">package main
+
+import (
+	"crypto/ecdsa"
+	"crypto/elliptic"
+	"crypto/rand"
+	"encoding/hex"
+	"fmt"
+	"log"
+
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/crypto"
+)
+
+// Wallet represents a simple cryptocurrency wallet
+type Wallet struct {
+	PrivateKey *ecdsa.PrivateKey
+	PublicKey  *ecdsa.PublicKey
+	Address    string
+}
+
+// NewWallet creates a new wallet with a random private key
+func NewWallet() (*Wallet, error) {
+	// Generate a new ECDSA private key
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate private key: %w", err)
+	}
+
+	// Get the public key
+	publicKey := &amp;privateKey.PublicKey
+
+	// Create a new wallet
+	wallet := &amp;Wallet{
+		PrivateKey: privateKey,
+		PublicKey:  publicKey,
+		Address:    deriveAddress(publicKey),
+	}
+
+	return wallet, nil
+}
+
+// NewWalletFromPrivateKey creates a wallet from an existing private key
+func NewWalletFromPrivateKey(privateKeyHex string) (*Wallet, error) {
+	// Decode the private key
+	privateKeyBytes, err := hex.DecodeString(privateKeyHex)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode private key: %w", err)
+	}
+
+	// Convert bytes to ECDSA private key
+	privateKey, err := crypto.ToECDSA(privateKeyBytes)
+	if err != nil {
+		return nil, fmt.Errorf("invalid private key: %w", err)
+	}
+
+	// Get the public key
+	publicKey := &amp;privateKey.PublicKey
+
+	// Create a new wallet
+	wallet := &amp;Wallet{
+		PrivateKey: privateKey,
+		PublicKey:  publicKey,
+		Address:    deriveAddress(publicKey),
+	}
+
+	return wallet, nil
+}
+
+// deriveAddress derives an Ethereum-style address from a public key
+func deriveAddress(publicKey *ecdsa.PublicKey) string {
+	// Convert public key to bytes
+	publicKeyBytes := elliptic.Marshal(publicKey.Curve, publicKey.X, publicKey.Y)
+
+	// Hash the public key using Keccak-256
+	hash := crypto.Keccak256(publicKeyBytes[1:]) // Skip the first byte (compression flag)
+
+	// Take the last 20 bytes of the hash to get the address
+	address := hash[12:]
+
+	// Return as hex string with 0x prefix
+	return hexutil.Encode(address)
+}
+
+func main() {
+	// Create a new wallet
+	wallet, err := NewWallet()
+	if err != nil {
+		log.Fatalf("Failed to create wallet: %v", err)
+	}
+
+	// Display wallet information
+	fmt.Printf("New Wallet:\n")
+	fmt.Printf("  Address:     %s\n", wallet.Address)
+	fmt.Printf("  Private Key: %x\n", crypto.FromECDSA(wallet.PrivateKey))
+	fmt.Printf("  Public Key:  %x\n", crypto.FromECDSAPub(wallet.PublicKey))
+
+	// Create a wallet from an existing private key
+	privateKeyHex := hex.EncodeToString(crypto.FromECDSA(wallet.PrivateKey))
+	importedWallet, err := NewWalletFromPrivateKey(privateKeyHex)
+	if err != nil {
+		log.Fatalf("Failed to import wallet: %v", err)
+	}
+
+	fmt.Printf("\nImported Wallet:\n")
+	fmt.Printf("  Address:     %s\n", importedWallet.Address)
+	fmt.Printf("  Private Key: %x\n", crypto.FromECDSA(importedWallet.PrivateKey))
+	fmt.Printf("  Public Key:  %x\n", crypto.FromECDSAPub(importedWallet.PublicKey))
+}
+</code></pre>
+<h3 id="transaction-signing"><a class="header" href="#transaction-signing">Transaction Signing</a></h3>
+<p>Let's implement transaction signing for Ethereum using Go:</p>
+<pre><code class="language-go">package main
+
+import (
+	"context"
+	"crypto/ecdsa"
+	"fmt"
+	"log"
+	"math/big"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/ethereum/go-ethereum/ethclient"
+)
+
+// signTransaction signs an Ethereum transaction
+func signTransaction(client *ethclient.Client, privateKey *ecdsa.PrivateKey, to common.Address, amount *big.Int) (*types.Transaction, error) {
+	// Get the sender address from the private key
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		return nil, fmt.Errorf("error casting public key to ECDSA")
+	}
+	from := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+	// Get the nonce for the sender account
+	nonce, err := client.PendingNonceAt(context.Background(), from)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get nonce: %w", err)
+	}
+
+	// Get gas price
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("failed to suggest gas price: %w", err)
+	}
+
+	// Get chain ID
+	chainID, err := client.NetworkID(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("failed to get network ID: %w", err)
+	}
+
+	// Create transaction
+	tx := types.NewTransaction(nonce, to, amount, 21000, gasPrice, nil)
+
+	// Sign the transaction
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privateKey)
+	if err != nil {
+		return nil, fmt.Errorf("failed to sign transaction: %w", err)
+	}
+
+	return signedTx, nil
+}
+
+// sendTransaction sends a signed transaction to the network
+func sendTransaction(client *ethclient.Client, signedTx *types.Transaction) (common.Hash, error) {
+	// Send the transaction
+	err := client.SendTransaction(context.Background(), signedTx)
+	if err != nil {
+		return common.Hash{}, fmt.Errorf("failed to send transaction: %w", err)
+	}
+
+	return signedTx.Hash(), nil
+}
+
+func main() {
+	// Connect to an Ethereum node
+	client, err := ethclient.Dial("https://goerli.infura.io/v3/YOUR-PROJECT-ID")
+	if err != nil {
+		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
+	}
+	defer client.Close()
+
+	// Load or generate a private key
+	privateKey, err := crypto.GenerateKey()
+	if err != nil {
+		log.Fatalf("Failed to generate private key: %v", err)
+	}
+
+	// Get the sender address
+	from := crypto.PubkeyToAddress(privateKey.PublicKey)
+	fmt.Printf("From address: %s\n", from.Hex())
+
+	// Recipient address
+	to := common.HexToAddress("0x742d35Cc6634C0532925a3b844Bc454e4438f44e")
+
+	// Amount to send: 0.01 ETH
+	amount := new(big.Int)
+	amount.Exp(big.NewInt(10), big.NewInt(16), nil) // 10^16 wei = 0.01 ETH
+
+	// Sign the transaction
+	signedTx, err := signTransaction(client, privateKey, to, amount)
+	if err != nil {
+		log.Fatalf("Failed to sign transaction: %v", err)
+	}
+
+	// Send the transaction
+	txHash, err := sendTransaction(client, signedTx)
+	if err != nil {
+		log.Fatalf("Failed to send transaction: %v", err)
+	}
+
+	fmt.Printf("Transaction sent: %s\n", txHash.Hex())
+}
+</code></pre>
+<h3 id="bip-39-mnemonic-phrases"><a class="header" href="#bip-39-mnemonic-phrases">BIP-39 Mnemonic Phrases</a></h3>
+<p>BIP-39 defines a way to generate mnemonic phrases (a sequence of words) that can be used to derive deterministic keys. Let's implement BIP-39 support in our wallet:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/tyler-smith/go-bip39"
+)
+
+// generateMnemonic generates a new BIP-39 mnemonic phrase
+func generateMnemonic() (string, error) {
+	// Generate entropy (128 bits = 12 words, 256 bits = 24 words)
+	entropy, err := bip39.NewEntropy(256)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate entropy: %w", err)
+	}
+
+	// Generate mnemonic from entropy
+	mnemonic, err := bip39.NewMnemonic(entropy)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate mnemonic: %w", err)
+	}
+
+	return mnemonic, nil
+}
+
+// mnemonicToSeed converts a mnemonic phrase to a seed
+func mnemonicToSeed(mnemonic, passphrase string) []byte {
+	return bip39.NewSeed(mnemonic, passphrase)
+}
+
+// validateMnemonic checks if a mnemonic phrase is valid
+func validateMnemonic(mnemonic string) bool {
+	return bip39.IsMnemonicValid(mnemonic)
+}
+
+func main() {
+	// Generate a new mnemonic
+	mnemonic, err := generateMnemonic()
+	if err != nil {
+		log.Fatalf("Failed to generate mnemonic: %v", err)
+	}
+
+	fmt.Printf("Mnemonic (24 words):\n%s\n\n", mnemonic)
+
+	// Validate the mnemonic
+	isValid := validateMnemonic(mnemonic)
+	fmt.Printf("Mnemonic is valid: %v\n\n", isValid)
+
+	// Convert mnemonic to seed
+	// Optional passphrase adds extra security
+	seed := mnemonicToSeed(mnemonic, "optional passphrase")
+	fmt.Printf("Seed: %x\n\n", seed)
+
+	// Generate a private key from the seed
+	// This is a simplified approach; in a real wallet, you'd use HD wallet derivation
+	privateKey, err := crypto.ToECDSA(crypto.Keccak256(seed)[:32])
+	if err != nil {
+		log.Fatalf("Failed to generate private key: %v", err)
+	}
+
+	// Get the address
+	address := crypto.PubkeyToAddress(privateKey.PublicKey)
+	fmt.Printf("Derived address: %s\n", address.Hex())
+}
+</code></pre>
+<h3 id="hd-wallet-derivation-paths"><a class="header" href="#hd-wallet-derivation-paths">HD Wallet Derivation Paths</a></h3>
+<p>Hierarchical Deterministic (HD) wallets allow the generation of multiple keypairs from a single seed. Let's implement BIP-44 derivation:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"log"
+
+	"github.com/btcsuite/btcd/btcec"
+	"github.com/btcsuite/btcd/chaincfg"
+	"github.com/btcsuite/btcutil/hdkeychain"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/tyler-smith/go-bip39"
+)
+
+// HDWallet represents a hierarchical deterministic wallet
+type HDWallet struct {
+	Mnemonic  string
+	Seed      []byte
+	MasterKey *hdkeychain.ExtendedKey
+}
+
+// NewHDWallet creates a new HD wallet from a mnemonic
+func NewHDWallet(mnemonic string, passphrase string) (*HDWallet, error) {
+	if !bip39.IsMnemonicValid(mnemonic) {
+		return nil, fmt.Errorf("invalid mnemonic")
+	}
+
+	seed := bip39.NewSeed(mnemonic, passphrase)
+	masterKey, err := hdkeychain.NewMaster(seed, &amp;chaincfg.MainNetParams)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create master key: %w", err)
+	}
+
+	return &amp;HDWallet{
+		Mnemonic:  mnemonic,
+		Seed:      seed,
+		MasterKey: masterKey,
+	}, nil
+}
+
+// NewRandomHDWallet creates a new random HD wallet
+func NewRandomHDWallet() (*HDWallet, error) {
+	// Generate a new mnemonic
+	entropy, err := bip39.NewEntropy(256)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate entropy: %w", err)
+	}
+
+	mnemonic, err := bip39.NewMnemonic(entropy)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate mnemonic: %w", err)
+	}
+
+	return NewHDWallet(mnemonic, "")
+}
+
+// DeriveEthereumAccount derives an Ethereum account at the specified index
+func (w *HDWallet) DeriveEthereumAccount(index uint32) (common.Address, *btcec.PrivateKey, error) {
+	// BIP-44 derivation path for Ethereum: m/44'/60'/0'/0/index
+	// Purpose: 44'
+	purpose, err := w.MasterKey.Derive(hdkeychain.HardenedKeyStart + 44)
+	if err != nil {
+		return common.Address{}, nil, fmt.Errorf("failed to derive purpose: %w", err)
+	}
+
+	// Coin type: 60' (Ethereum)
+	coinType, err := purpose.Derive(hdkeychain.HardenedKeyStart + 60)
+	if err != nil {
+		return common.Address{}, nil, fmt.Errorf("failed to derive coin type: %w", err)
+	}
+
+	// Account: 0'
+	account, err := coinType.Derive(hdkeychain.HardenedKeyStart + 0)
+	if err != nil {
+		return common.Address{}, nil, fmt.Errorf("failed to derive account: %w", err)
+	}
+
+	// Change: 0 (external chain)
+	change, err := account.Derive(0)
+	if err != nil {
+		return common.Address{}, nil, fmt.Errorf("failed to derive change: %w", err)
+	}
+
+	// Address index
+	addressKey, err := change.Derive(index)
+	if err != nil {
+		return common.Address{}, nil, fmt.Errorf("failed to derive address: %w", err)
+	}
+
+	// Get the private key
+	privateKey, err := addressKey.ECPrivKey()
+	if err != nil {
+		return common.Address{}, nil, fmt.Errorf("failed to get private key: %w", err)
+	}
+
+	// Convert to Ethereum address
+	privateKeyBytes := privateKey.Serialize()
+	ethPrivateKey, err := crypto.ToECDSA(privateKeyBytes)
+	if err != nil {
+		return common.Address{}, nil, fmt.Errorf("failed to convert to ECDSA: %w", err)
+	}
+
+	address := crypto.PubkeyToAddress(ethPrivateKey.PublicKey)
+	return address, privateKey, nil
+}
+
+func main() {
+	// Create a new random HD wallet
+	wallet, err := NewRandomHDWallet()
+	if err != nil {
+		log.Fatalf("Failed to create wallet: %v", err)
+	}
+
+	fmt.Printf("Mnemonic:\n%s\n\n", wallet.Mnemonic)
+	fmt.Printf("Seed: %x\n\n", wallet.Seed)
+
+	// Derive multiple Ethereum accounts
+	fmt.Println("Derived Ethereum accounts:")
+	for i := uint32(0); i &lt; 5; i++ {
+		address, _, err := wallet.DeriveEthereumAccount(i)
+		if err != nil {
+			log.Fatalf("Failed to derive account %d: %v", i, err)
+		}
+		fmt.Printf("Account %d: %s\n", i, address.Hex())
+	}
+
+	// Use an existing mnemonic
+	existingMnemonic := "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+	existingWallet, err := NewHDWallet(existingMnemonic, "")
+	if err != nil {
+		log.Fatalf("Failed to create wallet from existing mnemonic: %v", err)
+	}
+
+	fmt.Printf("\nDerived accounts from test mnemonic:\n")
+	for i := uint32(0); i &lt; 5; i++ {
+		address, _, err := existingWallet.DeriveEthereumAccount(i)
+		if err != nil {
+			log.Fatalf("Failed to derive account %d: %v", i, err)
+		}
+		fmt.Printf("Account %d: %s\n", i, address.Hex())
+	}
+}
+</code></pre>
+<h3 id="storing-wallet-securely"><a class="header" href="#storing-wallet-securely">Storing Wallet Securely</a></h3>
+<p>Securely storing private keys is crucial for blockchain applications. Here's a simple example of encrypted key storage:</p>
+<pre><code class="language-go">package main
+
+import (
+	"bytes"
+	"crypto/aes"
+	"crypto/cipher"
+	"crypto/ecdsa"
+	"crypto/rand"
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
+	"time"
+
+	"golang.org/x/crypto/scrypt"
+)
+
+// EncryptedKeystore represents an encrypted private key
+type EncryptedKeystore struct {
+	IV        string `json:"iv"`
+	Ciphertext string `json:"ciphertext"`
+	Salt       string `json:"salt"`
+	KDF        string `json:"kdf"`
+	KDFParams  struct {
+		N      int    `json:"n"`
+		R      int    `json:"r"`
+		P      int    `json:"p"`
+		DKLen  int    `json:"dklen"`
+	} `json:"kdfparams"`
+	MAC        string `json:"mac"`
+}
+
+// WalletData represents the wallet data to be encrypted
+type WalletData struct {
+	Mnemonic   string            `json:"mnemonic"`
+	PrivateKey string            `json:"private_key"`
+	Addresses  map[string]string `json:"addresses"`
+}
+
+// encryptWallet encrypts wallet data with a password
+func encryptWallet(data *WalletData, password string) (*EncryptedKeystore, error) {
+	// Convert wallet data to JSON
+	dataJSON, err := json.Marshal(data)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal wallet data: %w", err)
+	}
+
+	// Generate random salt
+	salt := make([]byte, 32)
+	if _, err := io.ReadFull(rand.Reader, salt); err != nil {
+		return nil, err
+	}
+
+	// Derive key from password using scrypt
+	derivedKey, err := scrypt.Key([]byte(password), salt, 1&lt;&lt;18, 8, 1, 32)
+	if err != nil {
+		return nil, err
+	}
+
+	// Generate random IV
+	iv := make([]byte, 16)
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+
+	// Create AES cipher
+	block, err := aes.NewCipher(derivedKey[:16])
+	if err != nil {
+		return nil, err
+	}
+
+	// Encrypt data
+	ciphertext := make([]byte, len(dataJSON))
+	stream := cipher.NewCTR(block, iv)
+	stream.XORKeyStream(ciphertext, dataJSON)
+
+	// Calculate MAC
+	mac := sha256.Sum256(append(derivedKey[16:], ciphertext...))
+
+	// Create encrypted wallet
+	encrypted := &amp;EncryptedKeystore{
+		IV:         hex.EncodeToString(iv),
+		Ciphertext: hex.EncodeToString(ciphertext),
+		Salt:       hex.EncodeToString(salt),
+		KDF:        "scrypt",
+		MAC:        hex.EncodeToString(mac[:]),
+	}
+	encrypted.KDFParams.N = 1 &lt;&lt; 18
+	encrypted.KDFParams.R = 8
+	encrypted.KDFParams.P = 1
+	encrypted.KDFParams.DKLen = 32
+
+	return encrypted, nil
+}
+
+// decryptWallet decrypts an encrypted wallet with a password
+func decryptWallet(encrypted *EncryptedKeystore, password string) (*WalletData, error) {
+	// Decode hex strings
+	iv, err := hex.DecodeString(encrypted.IV)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode IV: %w", err)
+	}
+
+	ciphertext, err := hex.DecodeString(encrypted.Ciphertext)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode ciphertext: %w", err)
+	}
+
+	salt, err := hex.DecodeString(encrypted.Salt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode salt: %w", err)
+	}
+
+	mac, err := hex.DecodeString(encrypted.MAC)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode MAC: %w", err)
+	}
+
+	// Derive key from password
+	derivedKey, err := scrypt.Key(
+		[]byte(password),
+		salt,
+		encrypted.KDFParams.N,
+		encrypted.KDFParams.R,
+		encrypted.KDFParams.P,
+		encrypted.KDFParams.DKLen,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to derive key: %w", err)
+	}
+
+	// Verify MAC
+	calculatedMAC := sha256.Sum256(append(derivedKey[16:], ciphertext...))
+	if !bytes.Equal(calculatedMAC[:], mac) {
+		return nil, fmt.Errorf("invalid password (MAC mismatch)")
+	}
+
+	// Decrypt data
+	block, err := aes.NewCipher(derivedKey[:16])
+	if err != nil {
+		return nil, fmt.Errorf("failed to create cipher: %w", err)
+	}
+
+	plaintext := make([]byte, len(ciphertext))
+	stream := cipher.NewCTR(block, iv)
+	stream.XORKeyStream(plaintext, ciphertext)
+
+	// Unmarshal wallet data
+	var walletData WalletData
+	if err := json.Unmarshal(plaintext, &amp;walletData); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal wallet data: %w", err)
+	}
+
+	return &amp;walletData, nil
+}
+
+// saveWalletToFile saves an encrypted wallet to a file
+func saveWalletToFile(encrypted *EncryptedKeystore, filePath string) error {
+	// Create directory if it doesn't exist
+	if err := os.MkdirAll(filepath.Dir(filePath), 0700); err != nil {
+		return fmt.Errorf("failed to create directory: %w", err)
+	}
+
+	// Marshal to JSON
+	data, err := json.MarshalIndent(encrypted, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal wallet: %w", err)
+	}
+
+	// Write to file
+	if err := ioutil.WriteFile(filePath, data, 0600); err != nil {
+		return fmt.Errorf("failed to write file: %w", err)
+	}
+
+	return nil
+}
+
+// loadWalletFromFile loads an encrypted wallet from a file
+func loadWalletFromFile(filePath string) (*EncryptedKeystore, error) {
+	// Read file
+	data, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file: %w", err)
+	}
+
+	// Unmarshal JSON
+	var encrypted EncryptedKeystore
+	if err := json.Unmarshal(data, &amp;encrypted); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal wallet: %w", err)
+	}
+
+	return &amp;encrypted, nil
+}
+
+func main() {
+	// Sample wallet data
+	walletData := &amp;WalletData{
+		Mnemonic:   "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+		PrivateKey: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+		Addresses: map[string]string{
+			"eth": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+			"btc": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+		},
+	}
+
+	// Encrypt wallet
+	password := "supersecurepassword"
+	encryptedWallet, err := encryptWallet(walletData, password)
+	if err != nil {
+		log.Fatalf("Failed to encrypt wallet: %v", err)
+	}
+
+	// Save to file
+	filePath := "./wallet.json"
+	if err := saveWalletToFile(encryptedWallet, filePath); err != nil {
+		log.Fatalf("Failed to save wallet: %v", err)
+	}
+
+	fmt.Printf("Saved encrypted wallet to: %s\n", filePath)
+}
+</code></pre>
+<p>These examples demonstrate the key components of a blockchain wallet implementation in Go:</p>
+<ol>
+<li><strong>Key Generation</strong>: Creating secure cryptographic key pairs</li>
+<li><strong>Transaction Signing</strong>: Preparing and signing blockchain transactions</li>
+<li><strong>Mnemonic Phrases</strong>: Implementing BIP-39 for seed generation from words</li>
+<li><strong>HD Wallet Derivation</strong>: Using BIP-44 to derive multiple accounts from a single seed</li>
+<li><strong>Secure Storage</strong>: Encrypting and storing wallet data securely</li>
+</ol>
+<p>In a production environment, you would typically use established libraries like go-ethereum's accounts package or btcutil for these operations, but understanding the underlying concepts is essential for blockchain developers.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-35-Go-for-AI-and-LLMs.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-35-Go-for-AI-and-LLMs.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

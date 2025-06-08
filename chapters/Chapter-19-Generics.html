@@ -1,0 +1,1040 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Generics - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-19-Generics.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-19-generics-in-go"><a class="header" href="#chapter-19-generics-in-go"><strong>Chapter 19: Generics in Go</strong></a></h1>
+<p>Go 1.18 introduced generics, a long-awaited feature that enables developers to write more reusable and type-safe code. This chapter explores generics in Go, from basic concepts to practical applications, helping you understand how to leverage this powerful feature in your projects.</p>
+<h2 id="191-introduction-to-generics"><a class="header" href="#191-introduction-to-generics"><strong>19.1 Introduction to Generics</strong></a></h2>
+<p>Generics allow you to write functions and data structures that operate on different types while maintaining type safety. Before generics, Go developers had to choose between type-specific implementations (resulting in code duplication) or using empty interfaces (sacrificing type safety).</p>
+<h3 id="1911-the-problem-generics-solve"><a class="header" href="#1911-the-problem-generics-solve"><strong>19.1.1 The Problem Generics Solve</strong></a></h3>
+<p>Consider these two functions that find the minimum value in a slice of integers or floats:</p>
+<pre><code class="language-go">func MinInt(values []int) int {
+    if len(values) == 0 {
+        panic("empty slice")
+    }
+
+    min := values[0]
+    for _, v := range values[1:] {
+        if v &lt; min {
+            min = v
+        }
+    }
+    return min
+}
+
+func MinFloat64(values []float64) float64 {
+    if len(values) == 0 {
+        panic("empty slice")
+    }
+
+    min := values[0]
+    for _, v := range values[1:] {
+        if v &lt; min {
+            min = v
+        }
+    }
+    return min
+}
+</code></pre>
+<p>The logic is identical, but we need separate implementations for each type. With generics, we can write a single function that works with multiple types:</p>
+<pre><code class="language-go">func Min[T constraints.Ordered](values []T) T {
+    if len(values) == 0 {
+        panic("empty slice")
+    }
+
+    min := values[0]
+    for _, v := range values[1:] {
+        if v &lt; min {
+            min = v
+        }
+    }
+    return min
+}
+</code></pre>
+<h3 id="1912-key-concepts-in-go-generics"><a class="header" href="#1912-key-concepts-in-go-generics"><strong>19.1.2 Key Concepts in Go Generics</strong></a></h3>
+<ol>
+<li><strong>Type Parameters</strong>: Placeholders for types that will be specified later</li>
+<li><strong>Type Constraints</strong>: Restrictions on what types can be used as type arguments</li>
+<li><strong>Type Inference</strong>: Go's ability to deduce type arguments from the context</li>
+<li><strong>Type Sets</strong>: A set of types that satisfy a constraint</li>
+</ol>
+<h2 id="192-type-parameters-and-constraints"><a class="header" href="#192-type-parameters-and-constraints"><strong>19.2 Type Parameters and Constraints</strong></a></h2>
+<h3 id="1921-basic-syntax-for-type-parameters"><a class="header" href="#1921-basic-syntax-for-type-parameters"><strong>19.2.1 Basic Syntax for Type Parameters</strong></a></h3>
+<p>Type parameters are specified in square brackets after the function name:</p>
+<pre><code class="language-go">func FunctionName[T Constraint](param T) ReturnType {
+    // Function body
+}
+</code></pre>
+<p>Where:</p>
+<ul>
+<li><code>T</code> is the type parameter (you can use any identifier)</li>
+<li><code>Constraint</code> defines what types T can be</li>
+<li><code>param T</code> means the parameter is of type T</li>
+</ul>
+<h3 id="1922-predefined-constraints"><a class="header" href="#1922-predefined-constraints"><strong>19.2.2 Predefined Constraints</strong></a></h3>
+<p>Go's standard library provides several predefined constraints in the <code>constraints</code> package:</p>
+<pre><code class="language-go">package main
+
+import (
+    "constraints"
+    "fmt"
+)
+
+func Add[T constraints.Integer | constraints.Float](a, b T) T {
+    return a + b
+}
+
+func main() {
+    fmt.Println(Add(5, 3))       // 8
+    fmt.Println(Add(2.5, 3.7))   // 6.2
+}
+</code></pre>
+<p>Common predefined constraints include:</p>
+<ul>
+<li><code>any</code> (equivalent to <code>interface{}</code>)</li>
+<li><code>comparable</code> (types that support <code>==</code> and <code>!=</code>)</li>
+<li><code>constraints.Ordered</code> (types that support <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>)</li>
+<li><code>constraints.Integer</code>, <code>constraints.Float</code>, <code>constraints.Complex</code></li>
+</ul>
+<h3 id="1923-creating-custom-constraints"><a class="header" href="#1923-creating-custom-constraints"><strong>19.2.3 Creating Custom Constraints</strong></a></h3>
+<p>You can define custom constraints using interface types:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+// Define a constraint for types that support addition
+type Addable interface {
+    int | int64 | float64 | string
+}
+
+func Concat[T Addable](a, b T) T {
+    return a + b
+}
+
+func main() {
+    fmt.Println(Concat(5, 3))             // 8
+    fmt.Println(Concat(2.5, 3.7))         // 6.2
+    fmt.Println(Concat("Hello, ", "Go!")) // "Hello, Go!"
+}
+</code></pre>
+<h3 id="1924-type-inference"><a class="header" href="#1924-type-inference"><strong>19.2.4 Type Inference</strong></a></h3>
+<p>In many cases, Go can infer the type parameter from the arguments:</p>
+<pre><code class="language-go">package main
+
+import (
+    "constraints"
+    "fmt"
+)
+
+func Max[T constraints.Ordered](a, b T) T {
+    if a &gt; b {
+        return a
+    }
+    return b
+}
+
+func main() {
+    // Type is inferred as int
+    fmt.Println(Max(5, 3))     // 5
+
+    // Type is inferred as float64
+    fmt.Println(Max(2.5, 3.7)) // 3.7
+
+    // Type is inferred as string
+    fmt.Println(Max("abc", "def")) // "def"
+}
+</code></pre>
+<h2 id="193-generic-functions"><a class="header" href="#193-generic-functions"><strong>19.3 Generic Functions</strong></a></h2>
+<p>Let's explore how to create and use generic functions in Go.</p>
+<h3 id="1931-basic-generic-functions"><a class="header" href="#1931-basic-generic-functions"><strong>19.3.1 Basic Generic Functions</strong></a></h3>
+<p>Here's a simple generic function that prints any type of value:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func Print[T any](value T) {
+    fmt.Printf("Value: %v, Type: %T\n", value, value)
+}
+
+func main() {
+    Print(42)                  // Value: 42, Type: int
+    Print("Hello, Generics!")  // Value: Hello, Generics!, Type: string
+    Print(true)                // Value: true, Type: bool
+    Print(3.14)                // Value: 3.14, Type: float64
+}
+</code></pre>
+<h3 id="1932-generic-functions-with-multiple-type-parameters"><a class="header" href="#1932-generic-functions-with-multiple-type-parameters"><strong>19.3.2 Generic Functions with Multiple Type Parameters</strong></a></h3>
+<p>Functions can have multiple type parameters:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func Swap[T any](a, b T) (T, T) {
+    return b, a
+}
+
+func Pair[T, U any](first T, second U) (T, U) {
+    return first, second
+}
+
+func main() {
+    a, b := Swap(10, 20)
+    fmt.Println(a, b)  // 20 10
+
+    name, age := Pair("Alice", 30)
+    fmt.Println(name, age)  // Alice 30
+}
+</code></pre>
+<h3 id="1933-practical-generic-functions"><a class="header" href="#1933-practical-generic-functions"><strong>19.3.3 Practical Generic Functions</strong></a></h3>
+<p>Let's implement some useful generic functions:</p>
+<pre><code class="language-go">package main
+
+import (
+    "constraints"
+    "fmt"
+)
+
+// Find returns the first element that satisfies the predicate
+func Find[T any](slice []T, predicate func(T) bool) (T, bool) {
+    for _, v := range slice {
+        if predicate(v) {
+            return v, true
+        }
+    }
+    var zero T
+    return zero, false
+}
+
+// Filter returns all elements that satisfy the predicate
+func Filter[T any](slice []T, predicate func(T) bool) []T {
+    var result []T
+    for _, v := range slice {
+        if predicate(v) {
+            result = append(result, v)
+        }
+    }
+    return result
+}
+
+// Map transforms each element using a transformation function
+func Map[T, U any](slice []T, transform func(T) U) []U {
+    result := make([]U, len(slice))
+    for i, v := range slice {
+        result[i] = transform(v)
+    }
+    return result
+}
+
+func main() {
+    numbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+    // Find the first even number
+    even, found := Find(numbers, func(n int) bool {
+        return n%2 == 0
+    })
+    fmt.Println("First even:", even, found)  // First even: 2 true
+
+    // Filter even numbers
+    evenNumbers := Filter(numbers, func(n int) bool {
+        return n%2 == 0
+    })
+    fmt.Println("Even numbers:", evenNumbers)  // Even numbers: [2 4 6 8 10]
+
+    // Map numbers to their squares
+    squares := Map(numbers, func(n int) int {
+        return n * n
+    })
+    fmt.Println("Squares:", squares)  // Squares: [1 4 9 16 25 36 49 64 81 100]
+}
+</code></pre>
+<h2 id="194-generic-data-structures"><a class="header" href="#194-generic-data-structures"><strong>19.4 Generic Data Structures</strong></a></h2>
+<p>Generics really shine when creating reusable data structures.</p>
+<h3 id="1941-generic-structs"><a class="header" href="#1941-generic-structs"><strong>19.4.1 Generic Structs</strong></a></h3>
+<p>Let's start with a simple generic pair structure:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+// Pair holds two values of potentially different types
+type Pair[T, U any] struct {
+    First  T
+    Second U
+}
+
+func NewPair[T, U any](first T, second U) Pair[T, U] {
+    return Pair[T, U]{First: first, Second: second}
+}
+
+func (p Pair[T, U]) Swap() Pair[U, T] {
+    return Pair[U, T]{First: p.Second, Second: p.First}
+}
+
+func main() {
+    p1 := NewPair(42, "answer")
+    fmt.Printf("Original: %v\n", p1)  // Original: {42 answer}
+
+    p2 := p1.Swap()
+    fmt.Printf("Swapped: %v\n", p2)   // Swapped: {answer 42}
+}
+</code></pre>
+<h3 id="1942-generic-stack-implementation"><a class="header" href="#1942-generic-stack-implementation"><strong>19.4.2 Generic Stack Implementation</strong></a></h3>
+<p>Here's a generic stack implementation:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+// Stack is a generic stack implementation
+type Stack[T any] struct {
+    elements []T
+}
+
+// Push adds an element to the top of the stack
+func (s *Stack[T]) Push(value T) {
+    s.elements = append(s.elements, value)
+}
+
+// Pop removes and returns the top element
+func (s *Stack[T]) Pop() (T, bool) {
+    if len(s.elements) == 0 {
+        var zero T
+        return zero, false
+    }
+
+    index := len(s.elements) - 1
+    value := s.elements[index]
+    s.elements = s.elements[:index]
+    return value, true
+}
+
+// Peek returns the top element without removing it
+func (s *Stack[T]) Peek() (T, bool) {
+    if len(s.elements) == 0 {
+        var zero T
+        return zero, false
+    }
+
+    return s.elements[len(s.elements)-1], true
+}
+
+// Size returns the number of elements in the stack
+func (s *Stack[T]) Size() int {
+    return len(s.elements)
+}
+
+// IsEmpty returns true if the stack has no elements
+func (s *Stack[T]) IsEmpty() bool {
+    return len(s.elements) == 0
+}
+
+func main() {
+    // Integer stack
+    intStack := Stack[int]{}
+    intStack.Push(10)
+    intStack.Push(20)
+    intStack.Push(30)
+
+    fmt.Println("Stack size:", intStack.Size())  // Stack size: 3
+
+    if val, ok := intStack.Peek(); ok {
+        fmt.Println("Top value:", val)  // Top value: 30
+    }
+
+    for !intStack.IsEmpty() {
+        if val, ok := intStack.Pop(); ok {
+            fmt.Printf("Popped: %v\n", val)
+        }
+    }
+    // Popped: 30
+    // Popped: 20
+    // Popped: 10
+
+    // String stack
+    stringStack := Stack[string]{}
+    stringStack.Push("Go")
+    stringStack.Push("is")
+    stringStack.Push("awesome")
+
+    for !stringStack.IsEmpty() {
+        if val, ok := stringStack.Pop(); ok {
+            fmt.Printf("Popped: %v\n", val)
+        }
+    }
+    // Popped: awesome
+    // Popped: is
+    // Popped: Go
+}
+</code></pre>
+<h3 id="1943-generic-set-implementation"><a class="header" href="#1943-generic-set-implementation"><strong>19.4.3 Generic Set Implementation</strong></a></h3>
+<p>Here's a generic set implementation:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+// Set is a generic set implementation
+type Set[T comparable] struct {
+    elements map[T]struct{}
+}
+
+// NewSet creates a new set
+func NewSet[T comparable]() Set[T] {
+    return Set[T]{elements: make(map[T]struct{})}
+}
+
+// Add adds an element to the set
+func (s *Set[T]) Add(value T) {
+    s.elements[value] = struct{}{}
+}
+
+// Remove removes an element from the set
+func (s *Set[T]) Remove(value T) {
+    delete(s.elements, value)
+}
+
+// Contains checks if the set contains the value
+func (s *Set[T]) Contains(value T) bool {
+    _, exists := s.elements[value]
+    return exists
+}
+
+// Size returns the number of elements in the set
+func (s *Set[T]) Size() int {
+    return len(s.elements)
+}
+
+// Values returns all elements in the set as a slice
+func (s *Set[T]) Values() []T {
+    values := make([]T, 0, len(s.elements))
+    for v := range s.elements {
+        values = append(values, v)
+    }
+    return values
+}
+
+// Union returns a new set containing all elements from both sets
+func (s *Set[T]) Union(other Set[T]) Set[T] {
+    result := NewSet[T]()
+    for v := range s.elements {
+        result.Add(v)
+    }
+    for v := range other.elements {
+        result.Add(v)
+    }
+    return result
+}
+
+// Intersection returns a new set containing common elements
+func (s *Set[T]) Intersection(other Set[T]) Set[T] {
+    result := NewSet[T]()
+    for v := range s.elements {
+        if other.Contains(v) {
+            result.Add(v)
+        }
+    }
+    return result
+}
+
+func main() {
+    set1 := NewSet[int]()
+    set1.Add(1)
+    set1.Add(2)
+    set1.Add(3)
+
+    set2 := NewSet[int]()
+    set2.Add(3)
+    set2.Add(4)
+    set2.Add(5)
+
+    fmt.Println("Set1 contains 2:", set1.Contains(2))  // true
+    fmt.Println("Set1 contains 4:", set1.Contains(4))  // false
+
+    union := set1.Union(set2)
+    fmt.Println("Union:", union.Values())  // [1 2 3 4 5] (order may vary)
+
+    intersection := set1.Intersection(set2)
+    fmt.Println("Intersection:", intersection.Values())  // [3]
+}
+</code></pre>
+<h2 id="195-advanced-generic-patterns"><a class="header" href="#195-advanced-generic-patterns"><strong>19.5 Advanced Generic Patterns</strong></a></h2>
+<p>Let's explore some advanced patterns with generics in Go.</p>
+<h3 id="1951-type-constraints-with-methods"><a class="header" href="#1951-type-constraints-with-methods"><strong>19.5.1 Type Constraints with Methods</strong></a></h3>
+<p>We can define constraints that require specific methods:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+// Stringer is an interface that has a String method
+type Stringer interface {
+    String() string
+}
+
+// ToString converts any Stringer to a string
+func ToString[T Stringer](value T) string {
+    return value.String()
+}
+
+// User implements Stringer
+type User struct {
+    Name string
+    Age  int
+}
+
+func (u User) String() string {
+    return fmt.Sprintf("%s (%d)", u.Name, u.Age)
+}
+
+func main() {
+    user := User{Name: "Alice", Age: 30}
+    fmt.Println(ToString(user))  // Alice (30)
+}
+</code></pre>
+<h3 id="1952-generic-type-constraints-with-operators"><a class="header" href="#1952-generic-type-constraints-with-operators"><strong>19.5.2 Generic Type Constraints with Operators</strong></a></h3>
+<p>We can create constraints based on operations the type supports:</p>
+<pre><code class="language-go">package main
+
+import (
+    "constraints"
+    "fmt"
+)
+
+// Sum calculates the sum of all elements in a slice
+func Sum[T constraints.Integer | constraints.Float](values []T) T {
+    var sum T
+    for _, v := range values {
+        sum += v
+    }
+    return sum
+}
+
+// Average calculates the average of elements in a slice
+func Average[T constraints.Integer | constraints.Float](values []T) float64 {
+    if len(values) == 0 {
+        return 0
+    }
+
+    sum := Sum(values)
+    return float64(sum) / float64(len(values))
+}
+
+func main() {
+    ints := []int{1, 2, 3, 4, 5}
+    floats := []float64{1.5, 2.5, 3.5, 4.5, 5.5}
+
+    fmt.Println("Sum of ints:", Sum(ints))          // 15
+    fmt.Println("Sum of floats:", Sum(floats))      // 17.5
+    fmt.Println("Average of ints:", Average(ints))   // 3
+    fmt.Println("Average of floats:", Average(floats)) // 3.5
+}
+</code></pre>
+<h3 id="1953-generic-function-composition"><a class="header" href="#1953-generic-function-composition"><strong>19.5.3 Generic Function Composition</strong></a></h3>
+<p>We can compose generic functions to build more complex operations:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "strings"
+)
+
+// Pipe composes two functions
+func Pipe[A, B, C any](f func(A) B, g func(B) C) func(A) C {
+    return func(a A) C {
+        return g(f(a))
+    }
+}
+
+func main() {
+    // Define some simple functions
+    toUpper := func(s string) string {
+        return strings.ToUpper(s)
+    }
+
+    addExclamation := func(s string) string {
+        return s + "!"
+    }
+
+    // Compose them
+    emphasize := Pipe(toUpper, addExclamation)
+
+    // Use the composed function
+    result := emphasize("hello")
+    fmt.Println(result)  // HELLO!
+}
+</code></pre>
+<h2 id="196-best-practices-for-using-generics"><a class="header" href="#196-best-practices-for-using-generics"><strong>19.6 Best Practices for Using Generics</strong></a></h2>
+<h3 id="1961-when-to-use-generics"><a class="header" href="#1961-when-to-use-generics"><strong>19.6.1 When to Use Generics</strong></a></h3>
+<p>Generics are particularly useful for:</p>
+<ol>
+<li><strong>Algorithms</strong> that operate on multiple types</li>
+<li><strong>Data structures</strong> like trees, graphs, stacks, and queues</li>
+<li><strong>Utility functions</strong> for slices, maps, and channels</li>
+<li><strong>Function adapters</strong> and composition</li>
+</ol>
+<p>However, generics should be used judiciously. If you only need a function to work with a specific type, don't make it generic.</p>
+<h3 id="1962-design-guidelines"><a class="header" href="#1962-design-guidelines"><strong>19.6.2 Design Guidelines</strong></a></h3>
+<ol>
+<li><strong>Keep constraints simple</strong>: Use predefined constraints when possible</li>
+<li><strong>Design for callers</strong>: Make your generic code easy to use</li>
+<li><strong>Document constraints</strong>: Explain what types work with your generic functions</li>
+<li><strong>Prefer type inference</strong>: Allow Go to infer types when possible</li>
+<li><strong>Test with multiple types</strong>: Ensure your code works with all supported types</li>
+</ol>
+<h3 id="1963-performance-considerations"><a class="header" href="#1963-performance-considerations"><strong>19.6.3 Performance Considerations</strong></a></h3>
+<p>Generic functions may have slightly different performance characteristics than type-specific functions:</p>
+<ol>
+<li><strong>Compile time</strong>: Generics may increase compilation time</li>
+<li><strong>Binary size</strong>: Generic functions can increase binary size as the compiler generates specialized code</li>
+<li><strong>Runtime performance</strong>: Generic code is monomorphized (specialized for each type), so runtime performance is typically similar to type-specific code</li>
+</ol>
+<h2 id="197-exercises"><a class="header" href="#197-exercises"><strong>19.7 Exercises</strong></a></h2>
+<h3 id="exercise-1-implement-a-generic-queue"><a class="header" href="#exercise-1-implement-a-generic-queue"><strong>Exercise 1: Implement a Generic Queue</strong></a></h3>
+<p>Create a generic queue implementation with Enqueue, Dequeue, and Peek operations.</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+// Queue is a generic FIFO queue
+type Queue[T any] struct {
+    elements []T
+}
+
+// Enqueue adds an element to the back of the queue
+func (q *Queue[T]) Enqueue(value T) {
+    q.elements = append(q.elements, value)
+}
+
+// Dequeue removes and returns the front element
+func (q *Queue[T]) Dequeue() (T, bool) {
+    if len(q.elements) == 0 {
+        var zero T
+        return zero, false
+    }
+
+    value := q.elements[0]
+    q.elements = q.elements[1:]
+    return value, true
+}
+
+// Peek returns the front element without removing it
+func (q *Queue[T]) Peek() (T, bool) {
+    if len(q.elements) == 0 {
+        var zero T
+        return zero, false
+    }
+
+    return q.elements[0], true
+}
+
+// IsEmpty returns true if the queue has no elements
+func (q *Queue[T]) IsEmpty() bool {
+    return len(q.elements) == 0
+}
+
+// Size returns the number of elements in the queue
+func (q *Queue[T]) Size() int {
+    return len(q.elements)
+}
+
+func main() {
+    queue := Queue[string]{}
+    queue.Enqueue("first")
+    queue.Enqueue("second")
+    queue.Enqueue("third")
+
+    fmt.Println("Queue size:", queue.Size()) // 3
+
+    if value, ok := queue.Peek(); ok {
+        fmt.Println("Front value:", value) // "first"
+    }
+
+    for !queue.IsEmpty() {
+        if value, ok := queue.Dequeue(); ok {
+            fmt.Println("Dequeued:", value)
+        }
+    }
+    // Dequeued: first
+    // Dequeued: second
+    // Dequeued: third
+}
+</code></pre>
+<h3 id="exercise-2-implement-generic-sorting"><a class="header" href="#exercise-2-implement-generic-sorting"><strong>Exercise 2: Implement Generic Sorting</strong></a></h3>
+<p>Create a generic function to sort a slice of any ordered type.</p>
+<pre><code class="language-go">package main
+
+import (
+    "constraints"
+    "fmt"
+)
+
+// Sort sorts a slice of any ordered type
+func Sort[T constraints.Ordered](slice []T) {
+    // Simple bubble sort implementation
+    n := len(slice)
+    for i := 0; i &lt; n-1; i++ {
+        for j := 0; j &lt; n-i-1; j++ {
+            if slice[j] &gt; slice[j+1] {
+                slice[j], slice[j+1] = slice[j+1], slice[j]
+            }
+        }
+    }
+}
+
+func main() {
+    // Sort integers
+    ints := []int{5, 2, 9, 1, 7, 3}
+    Sort(ints)
+    fmt.Println("Sorted ints:", ints) // [1 2 3 5 7 9]
+
+    // Sort strings
+    strings := []string{"banana", "apple", "cherry", "date"}
+    Sort(strings)
+    fmt.Println("Sorted strings:", strings) // [apple banana cherry date]
+
+    // Sort floats
+    floats := []float64{3.14, 1.41, 2.71, 1.73}
+    Sort(floats)
+    fmt.Println("Sorted floats:", floats) // [1.41 1.73 2.71 3.14]
+}
+</code></pre>
+<h3 id="exercise-3-implement-a-generic-binary-search-tree"><a class="header" href="#exercise-3-implement-a-generic-binary-search-tree"><strong>Exercise 3: Implement a Generic Binary Search Tree</strong></a></h3>
+<p>Create a generic binary search tree implementation.</p>
+<pre><code class="language-go">package main
+
+import (
+    "constraints"
+    "fmt"
+)
+
+// Node represents a node in the binary search tree
+type Node[T constraints.Ordered] struct {
+    Value T
+    Left  *Node[T]
+    Right *Node[T]
+}
+
+// BST is a generic binary search tree
+type BST[T constraints.Ordered] struct {
+    Root *Node[T]
+}
+
+// Insert adds a value to the tree
+func (bst *BST[T]) Insert(value T) {
+    if bst.Root == nil {
+        bst.Root = &amp;Node[T]{Value: value}
+        return
+    }
+
+    insertNode(bst.Root, value)
+}
+
+// insertNode recursively inserts a value into the tree
+func insertNode[T constraints.Ordered](node *Node[T], value T) {
+    if value &lt; node.Value {
+        if node.Left == nil {
+            node.Left = &amp;Node[T]{Value: value}
+        } else {
+            insertNode(node.Left, value)
+        }
+    } else {
+        if node.Right == nil {
+            node.Right = &amp;Node[T]{Value: value}
+        } else {
+            insertNode(node.Right, value)
+        }
+    }
+}
+
+// Contains checks if a value exists in the tree
+func (bst *BST[T]) Contains(value T) bool {
+    return contains(bst.Root, value)
+}
+
+// contains recursively checks if a value exists in the tree
+func contains[T constraints.Ordered](node *Node[T], value T) bool {
+    if node == nil {
+        return false
+    }
+
+    if value == node.Value {
+        return true
+    } else if value &lt; node.Value {
+        return contains(node.Left, value)
+    } else {
+        return contains(node.Right, value)
+    }
+}
+
+// InOrder returns the values in-order
+func (bst *BST[T]) InOrder() []T {
+    result := []T{}
+    inOrder(bst.Root, &amp;result)
+    return result
+}
+
+// inOrder recursively traverses the tree in-order
+func inOrder[T constraints.Ordered](node *Node[T], result *[]T) {
+    if node != nil {
+        inOrder(node.Left, result)
+        *result = append(*result, node.Value)
+        inOrder(node.Right, result)
+    }
+}
+
+func main() {
+    // Integer BST
+    intTree := BST[int]{}
+    intTree.Insert(5)
+    intTree.Insert(3)
+    intTree.Insert(7)
+    intTree.Insert(2)
+    intTree.Insert(4)
+
+    fmt.Println("In-order traversal:", intTree.InOrder()) // [2 3 4 5 7]
+    fmt.Println("Contains 4:", intTree.Contains(4)) // true
+    fmt.Println("Contains 6:", intTree.Contains(6)) // false
+
+    // String BST
+    stringTree := BST[string]{}
+    stringTree.Insert("banana")
+    stringTree.Insert("apple")
+    stringTree.Insert("cherry")
+
+    fmt.Println("In-order traversal:", stringTree.InOrder()) // [apple banana cherry]
+    fmt.Println("Contains apple:", stringTree.Contains("apple")) // true
+    fmt.Println("Contains date:", stringTree.Contains("date")) // false
+}
+</code></pre>
+<h2 id="198-summary"><a class="header" href="#198-summary"><strong>19.8 Summary</strong></a></h2>
+<p>Generics in Go enable developers to write more reusable and type-safe code. Key points from this chapter:</p>
+<ol>
+<li><strong>Generics solve code duplication</strong> by allowing functions and data structures to work with multiple types</li>
+<li><strong>Type parameters and constraints</strong> specify what types can be used with generic code</li>
+<li><strong>Generic functions and data structures</strong> enable type-safe, reusable code</li>
+<li><strong>Advanced patterns</strong> like function composition enhance code flexibility and reusability</li>
+<li><strong>Use generics judiciously</strong> for algorithms, data structures, and utility functions</li>
+</ol>
+<p>Go's implementation of generics balances simplicity with power, staying true to Go's philosophy of clear, readable code. By adding generics to your Go toolkit, you'll be able to write more concise, reusable, and maintainable code.</p>
+<p><strong>Next Chapter</strong>: In Chapter 20, we'll explore building RESTful APIs in Go, bringing together many of the concepts we've learned throughout this book.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-18-Reflection.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-20-Databases.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-18-Reflection.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-20-Databases.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
