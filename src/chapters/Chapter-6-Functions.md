@@ -992,4 +992,4 @@ In this chapter, we've explored Go's function system, which offers:
 
 Functions are more than just a way to organize code—they're the primary building blocks of Go programs. Mastering Go's function system will allow you to create code that's not only functional but also clean, maintainable, and idiomatic.
 
-**Next Up**: In Chapter 7, we'll dive into packages and modules, understanding how Go organizes code at a larger scale and how to structure your own projects effectively.
+**Next Up**: In Chapter 7, we'll dive into packages, modules, and error handling, understanding how Go organizes code at a larger scale and how to implement robust error handling strategies.
