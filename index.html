@@ -3,301 +3,386 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Go Universe - The Complete Go Programming Guide</title>
+    <title>Go Universe Book</title>
     <style>
-      :root {
-        --go-blue: #00add8;
-        --go-blue-dark: #0097c0;
-        --light-gray: #f5f5f5;
-        --dark-gray: #333;
-        --white: #fff;
-      }
-
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
-          sans-serif;
+        font-family: Arial, sans-serif;
         line-height: 1.6;
-        color: var(--dark-gray);
-        background-color: var(--white);
+        margin: 0;
+        padding: 20px;
+        color: #333;
+        background-color: #f5f5f5;
       }
-
       .container {
-        max-width: 1200px;
+        max-width: 1000px;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
-
-      header {
-        background-color: var(--white);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 20px 0;
-        position: fixed;
-        width: 100%;
-        z-index: 100;
+      h1 {
+        color: #00add8;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
       }
-
-      .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      h2 {
+        color: #333;
+        margin-top: 30px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
       }
-
-      .logo {
-        display: flex;
-        align-items: center;
+      h3 {
+        color: #666;
+        margin-top: 20px;
       }
-
-      .logo img {
-        height: 50px;
-        margin-right: 15px;
-      }
-
-      .logo h1 {
-        font-size: 24px;
-        color: var(--go-blue);
-        font-weight: 600;
-      }
-
-      .cta-button {
-        background-color: var(--go-blue);
-        color: var(--white);
-        padding: 10px 20px;
-        border-radius: 4px;
-        text-decoration: none;
-        font-weight: 500;
-        transition: background-color 0.3s;
-      }
-
-      .cta-button:hover {
-        background-color: var(--go-blue-dark);
-      }
-
-      .hero {
-        padding: 150px 0 80px;
-        background: linear-gradient(to bottom right, #f9f9f9, #e9f7fb);
-        text-align: center;
-      }
-
-      .hero h2 {
-        font-size: 48px;
-        margin-bottom: 20px;
-        color: var(--dark-gray);
-      }
-
-      .hero p {
-        font-size: 20px;
-        max-width: 700px;
-        margin: 0 auto 30px;
-        color: #555;
-      }
-
-      .hero img {
-        max-width: 100%;
-        height: auto;
-        margin-top: 40px;
-        max-height: 250px;
-      }
-
-      .features {
-        padding: 80px 0;
-        background-color: var(--white);
-      }
-
-      .features h2 {
-        text-align: center;
-        margin-bottom: 60px;
-        color: var(--go-blue);
-      }
-
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 40px;
-      }
-
-      .feature-card {
-        background-color: var(--light-gray);
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      }
-
-      .feature-card h3 {
-        color: var(--go-blue);
-        margin-bottom: 15px;
-      }
-
-      .cta-section {
-        padding: 80px 0;
-        text-align: center;
-        background-color: #e9f7fb;
-      }
-
-      .cta-section h2 {
-        margin-bottom: 20px;
-        color: var(--dark-gray);
-      }
-
-      .cta-section p {
-        margin-bottom: 30px;
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      footer {
-        background-color: var(--dark-gray);
-        color: var(--white);
-        padding: 40px 0;
-        text-align: center;
-      }
-
-      .footer-links {
-        margin-bottom: 20px;
-      }
-
-      .footer-links a {
-        color: var(--white);
-        margin: 0 15px;
+      a {
+        color: #00add8;
         text-decoration: none;
       }
-
-      .footer-links a:hover {
+      a:hover {
         text-decoration: underline;
       }
-
-      .copyright {
-        font-size: 14px;
-        color: #aaa;
+      .toc {
+        margin-top: 20px;
+        column-count: 2;
+        column-gap: 40px;
       }
-
+      .toc ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+      .toc ul ul {
+        padding-left: 20px;
+      }
+      .toc li {
+        margin-bottom: 8px;
+      }
+      .section {
+        margin-bottom: 15px;
+        break-inside: avoid;
+      }
+      .section-title {
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #00add8;
+      }
+      .logo {
+        display: block;
+        max-width: 200px;
+        margin: 0 auto 20px;
+      }
+      .cta-button {
+        display: inline-block;
+        background-color: #00add8;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-top: 20px;
+      }
+      .cta-button:hover {
+        background-color: #0092b8;
+        text-decoration: none;
+      }
+      .center {
+        text-align: center;
+      }
+      footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 0.9em;
+        color: #777;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+      }
       @media (max-width: 768px) {
-        .hero h2 {
-          font-size: 36px;
-        }
-
-        .hero p {
-          font-size: 18px;
-        }
-
-        .features-grid {
-          grid-template-columns: 1fr;
+        .toc {
+          column-count: 1;
         }
       }
     </style>
   </head>
   <body>
-    <header>
-      <div class="container header-content">
-        <div class="logo">
-          <img src="./src/images/go-universe.png" alt="Go Universe Logo" />
-          <h1>Go Universe</h1>
-        </div>
-        <a href="./book/index.html" class="cta-button">Read the Book</a>
+    <div class="container">
+      <div class="center">
+        <img src="go-universe.png" alt="Go Universe Logo" class="logo" />
+        <h1>Go Universe: Mastering Simplicity, Unlocking Power</h1>
       </div>
-    </header>
+      <p>
+        Welcome to the Go Universe Book! This comprehensive guide covers Go
+        programming from fundamentals to advanced enterprise applications.
+      </p>
 
-    <section class="hero">
-      <div class="container">
-        <h2>Master the Go Programming Language</h2>
+      <div class="center">
+        <a href="book/index.html" class="cta-button">Start Reading</a>
+      </div>
+
+      <h2>Table of Contents</h2>
+      <div class="toc">
+        <div class="section">
+          <div class="section-title">Section 1: Fundamentals</div>
+          <ul>
+            <li>
+              <a href="book/chapters/Chapter-1-introduction-to-go.html"
+                >Chapter 1: Introduction to Go</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-2-Essential-Go-Tooling.html"
+                >Chapter 2: Essential Go Tooling</a
+              >
+            </li>
+            <li>
+              <a
+                href="book/chapters/Chapter-3-Variables-Constants-and-Data-Types.html"
+                >Chapter 3: Variables, Constants, and Data Types</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-4-Operators-and-Expressions.html"
+                >Chapter 4: Operators and Expressions</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-5-Control-Structures.html"
+                >Chapter 5: Control Structures</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-6-Functions.html"
+                >Chapter 6: Functions</a
+              >
+            </li>
+            <li>
+              <a
+                href="book/chapters/Chapter-7-Packages-Modules-and-Error-Handling.html"
+                >Chapter 7: Packages, Modules, and Error Handling</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Section 2: Data Structures</div>
+          <ul>
+            <li>
+              <a href="book/chapters/Chapter-8-Arrays-Slices-Strings.html"
+                >Chapter 8: Arrays, Slices, and Strings</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-9-Maps-And-Pointers.html"
+                >Chapter 9: Maps and Pointers</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-10-Structs.html"
+                >Chapter 10: Structs and Methods</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Section 3: Concurrency</div>
+          <ul>
+            <li>
+              <a href="book/chapters/Chapter-11-Goroutines.html"
+                >Chapter 11: Goroutines</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-12-Channels.html"
+                >Chapter 12: Channels</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-13-Concurrency-Patterns.html"
+                >Chapter 13: Concurrency Patterns</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">
+            Section 4: Standard Library & Interfaces
+          </div>
+          <ul>
+            <li>
+              <a href="book/chapters/Chapter-14-Common-Packages.html"
+                >Chapter 14: Common Packages</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-15-File-IO.html"
+                >Chapter 15: File I/O</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-16-Testing.html"
+                >Chapter 16: Testing</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-17-Interfaces.html"
+                >Chapter 17: Interfaces</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-18-Reflection.html"
+                >Chapter 18: Reflection</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-19-Generics.html"
+                >Chapter 19: Generics</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Section 5: Building Applications</div>
+          <ul>
+            <li>
+              <a href="book/chapters/Chapter-20-Databases.html"
+                >Chapter 20: Databases</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-21-Building-RESTful-APIs.html"
+                >Chapter 21: Building RESTful APIs</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-22-Microservices.html"
+                >Chapter 22: Microservices</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-23-Clean-Code.html"
+                >Chapter 23: Clean Code</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-24-Design-Patterns.html"
+                >Chapter 24: Design Patterns</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-25-Performance.html"
+                >Chapter 25: Performance</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-26-CLI-Tools.html"
+                >Chapter 26: CLI Tools</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Section 6: Enterprise Go</div>
+          <ul>
+            <li>
+              <a href="book/chapters/Chapter-27-Platform-Engineering.html"
+                >Chapter 27: Platform Engineering</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-28-Event-Driven-Architecture.html"
+                >Chapter 28: Event-Driven Architecture</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-29-Domain-Driven-Design.html"
+                >Chapter 29: Domain-Driven Design</a
+              >
+            </li>
+            <li>
+              <a
+                href="book/chapters/Chapter-30-Observability-Driven-Development.html"
+                >Chapter 30: Observability-Driven Development</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-31-Go-for-Production.html"
+                >Chapter 31: Go for Production</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-32-Enterprise-Grade-Security.html"
+                >Chapter 32: Enterprise-Grade Security</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Section 7: Advanced Go</div>
+          <ul>
+            <li>
+              <a href="book/chapters/Chapter-33-High-Performance-Go.html"
+                >Chapter 33: High-Performance Go</a
+              >
+            </li>
+            <li>
+              <a href="book/chapters/Chapter-34-Cloud-Native-Go.html"
+                >Chapter 34: Cloud-Native Go</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Section 8: Specialized Domains</div>
+          <ul>
+            <li>
+              <a href="book/chapters/Chapter-35-Go-for-AI-and-LLMs.html"
+                >Chapter 35: Go for AI and LLMs</a
+              >
+            </li>
+            <li>
+              <a
+                href="book/chapters/Chapter-36-Go-for-Blockchain-and-Crypto.html"
+                >Chapter 36: Go for Blockchain and Crypto</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>About This Book</h2>
+      <p>
+        The Go Universe book is a comprehensive guide to the Go programming
+        language, covering everything from basic syntax to advanced topics like
+        microservices, cloud-native development, AI integration, and blockchain
+        applications.
+      </p>
+
+      <p>
+        This book is designed for both beginners looking to learn Go from
+        scratch and experienced developers who want to deepen their
+        understanding of Go's powerful features. With practical examples and
+        in-depth explanations, Go Universe helps you build real-world
+        applications using Go's elegant simplicity and robust standard library.
+      </p>
+
+      <div class="center">
+        <a href="book/index.html" class="cta-button">Start Reading</a>
+      </div>
+
+      <footer>
         <p>
-          A comprehensive guide taking you from the fundamentals to advanced Go
-          programming concepts and real-world applications.
+          <a href="https://github.com/saeedalam/go-universe">View on GitHub</a>
+          | Go Universe: Mastering Simplicity, Unlocking Power
         </p>
-        <a href="./book/index.html" class="cta-button">Start Learning</a>
-        <img src="./src/images/gopher.png" alt="Go Gopher" />
-      </div>
-    </section>
-
-    <section class="features">
-      <div class="container">
-        <h2>What You'll Learn</h2>
-        <div class="features-grid">
-          <div class="feature-card">
-            <h3>Go Fundamentals</h3>
-            <p>
-              Build a solid foundation with variables, types, control
-              structures, functions, and Go's unique approach to error handling.
-            </p>
-          </div>
-          <div class="feature-card">
-            <h3>Concurrency</h3>
-            <p>
-              Master Go's powerful concurrency model with goroutines, channels,
-              and advanced patterns for high-performance applications.
-            </p>
-          </div>
-          <div class="feature-card">
-            <h3>Web Development</h3>
-            <p>
-              Create robust APIs, microservices, and web applications using Go's
-              standard library and popular frameworks.
-            </p>
-          </div>
-          <div class="feature-card">
-            <h3>Production-Ready Go</h3>
-            <p>
-              Learn best practices for deploying, monitoring, and scaling Go
-              applications in production environments.
-            </p>
-          </div>
-          <div class="feature-card">
-            <h3>Advanced Topics</h3>
-            <p>
-              Explore Go for cloud-native applications, AI, machine learning,
-              blockchain, and other cutting-edge domains.
-            </p>
-          </div>
-          <div class="feature-card">
-            <h3>Practical Examples</h3>
-            <p>
-              Apply your knowledge with hands-on examples and real-world case
-              studies throughout all 37 chapters.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="cta-section">
-      <div class="container">
-        <h2>Ready to Start Your Go Journey?</h2>
-        <p>
-          Go Universe provides a structured learning path for developers at all
-          levels. Whether you're new to programming or an experienced developer
-          looking to add Go to your toolkit, this book has everything you need.
-        </p>
-        <a href="./book/index.html" class="cta-button">Read the Book Now</a>
-      </div>
-    </section>
-
-    <footer>
-      <div class="container">
-        <div class="footer-links">
-          <a href="https://github.com/saeedalam/go-universe"
-            >GitHub Repository</a
-          >
-          <a href="https://go.dev/">Official Go Website</a>
-          <a href="https://golang.org/doc/">Go Documentation</a>
-        </div>
-        <p class="copyright">
-          © 2023 Go Universe. The Go gopher was designed by Renee French.
-        </p>
-      </div>
-    </footer>
-
-    <!-- Optional JavaScript redirect after 5 minutes of inactivity -->
-    <script>
-      setTimeout(function () {
-        window.location.href = "./book/index.html";
-      }, 300000); // 5 minutes
-    </script>
+        <p>&copy; 2025 Saeed Alam</p>
+      </footer>
+    </div>
   </body>
 </html>
