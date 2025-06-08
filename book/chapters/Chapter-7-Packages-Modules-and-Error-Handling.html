@@ -1,0 +1,876 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Packages, Modules, and Error Handling - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-7-Packages-Modules-and-Error-Handling.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-7-packages-modules-and-error-handling"><a class="header" href="#chapter-7-packages-modules-and-error-handling"><strong>Chapter 7: Packages, Modules, and Error Handling</strong></a></h1>
+<p>Go's approach to code organization and error handling are two of its most distinctive features. The package and module systems provide a clean way to structure your code, while Go's error handling philosophy treats errors as values that can be explicitly returned, checked, and handled. Together, these systems help you write robust, maintainable code that's easy to collaborate on.</p>
+<p>In this chapter, you'll learn how to organize your code into packages, manage dependencies with modules, and implement effective error handling patterns that make your applications more reliable.</p>
+<h2 id="71-understanding-go-packages"><a class="header" href="#71-understanding-go-packages"><strong>7.1 Understanding Go Packages</strong></a></h2>
+<h3 id="711-what-is-a-package"><a class="header" href="#711-what-is-a-package"><strong>7.1.1 What is a Package?</strong></a></h3>
+<p>A package is Go's unit of code organization and reuse. Every Go file belongs to a package, declared at the top of the file:</p>
+<pre><code class="language-go">package mypackage
+</code></pre>
+<p>Packages serve several important purposes:</p>
+<ol>
+<li><strong>Code organization</strong>: Group related code together</li>
+<li><strong>Encapsulation</strong>: Control visibility of functions, types, and variables</li>
+<li><strong>Reusability</strong>: Use code across multiple projects</li>
+<li><strong>Compilation</strong>: Compiled as a unit</li>
+</ol>
+<h3 id="712-package-naming-conventions"><a class="header" href="#712-package-naming-conventions"><strong>7.1.2 Package Naming Conventions</strong></a></h3>
+<p>In Go, package names should be:</p>
+<ul>
+<li><strong>Short and concise</strong>: Prefer single-word names</li>
+<li><strong>Lowercase</strong>: Never use camelCase or snake_case</li>
+<li><strong>Descriptive</strong>: Reflect the package's purpose</li>
+<li><strong>Not pluralized</strong>: Use <code>store</code> not <code>stores</code></li>
+<li><strong>Not generic</strong>: Avoid names like <code>util</code>, <code>common</code>, or <code>misc</code></li>
+</ul>
+<p>Good package names include:</p>
+<pre><code>http     // for HTTP client and server implementations
+json     // for JSON encoding and decoding
+io       // for I/O operations
+fmt      // for formatting and printing
+strings  // for string manipulation
+math     // for mathematical operations
+</code></pre>
+<h3 id="713-package-visibility-rules"><a class="header" href="#713-package-visibility-rules"><strong>7.1.3 Package Visibility Rules</strong></a></h3>
+<p>Go controls visibility (public vs. private) through identifier naming:</p>
+<ul>
+<li><strong>Exported (public)</strong>: Identifiers starting with an uppercase letter are accessible from other packages</li>
+<li><strong>Unexported (private)</strong>: Identifiers starting with a lowercase letter are only accessible within the same package</li>
+</ul>
+<pre><code class="language-go">package geometry
+
+// Circle is exported (public) - accessible from other packages
+type Circle struct {
+    Radius float64 // Exported field
+    color  string  // Unexported field
+}
+
+// CalculateArea is exported (public) - accessible from other packages
+func (c Circle) CalculateArea() float64 {
+    return 3.14 * c.Radius * c.Radius
+}
+
+// setColor is unexported (private) - only accessible within this package
+func (c *Circle) setColor(color string) {
+    c.color = color
+}
+</code></pre>
+<h3 id="714-package-documentation"><a class="header" href="#714-package-documentation"><strong>7.1.4 Package Documentation</strong></a></h3>
+<p>Go emphasizes documentation as part of the development process. Package documentation follows a simple format:</p>
+<ul>
+<li>Package-level documentation appears before the package declaration</li>
+<li>Exported identifier documentation appears directly above the identifier</li>
+</ul>
+<pre><code class="language-go">// Package geometry provides utilities for geometric calculations.
+// It supports various shapes like circles, rectangles, and triangles.
+package geometry
+
+// Circle represents a circle shape with a radius.
+type Circle struct {
+    Radius float64
+}
+
+// CalculateArea returns the area of the circle.
+func (c Circle) CalculateArea() float64 {
+    return 3.14 * c.Radius * c.Radius
+}
+</code></pre>
+<p>Access documentation with <code>go doc</code>:</p>
+<pre><code class="language-bash">go doc geometry           # View package documentation
+go doc geometry.Circle    # View Circle type documentation
+</code></pre>
+<h2 id="72-working-with-multiple-files-and-packages"><a class="header" href="#72-working-with-multiple-files-and-packages"><strong>7.2 Working with Multiple Files and Packages</strong></a></h2>
+<h3 id="721-multi-file-packages"><a class="header" href="#721-multi-file-packages"><strong>7.2.1 Multi-file Packages</strong></a></h3>
+<p>A package can span multiple files. When you do this:</p>
+<ol>
+<li>Each file must declare the same package name</li>
+<li>All files in the same directory must belong to the same package</li>
+<li>Functions, types, and variables can reference each other directly without import</li>
+</ol>
+<p>Example:</p>
+<p><strong>shapes.go</strong>:</p>
+<pre><code class="language-go">package geometry
+
+// Shape is an interface that all shapes implement
+type Shape interface {
+    CalculateArea() float64
+    CalculatePerimeter() float64
+}
+
+// defaultColor returns the default color for shapes
+func defaultColor() string {
+    return "black"
+}
+</code></pre>
+<p><strong>circle.go</strong>:</p>
+<pre><code class="language-go">package geometry
+
+// Circle implements the Shape interface
+type Circle struct {
+    Radius float64
+    color  string
+}
+
+// NewCircle creates a new Circle with the default color
+func NewCircle(radius float64) Circle {
+    return Circle{
+        Radius: radius,
+        color:  defaultColor(), // Using function from shapes.go
+    }
+}
+
+// CalculateArea returns the area of the circle
+func (c Circle) CalculateArea() float64 {
+    return 3.14 * c.Radius * c.Radius
+}
+
+// CalculatePerimeter returns the perimeter of the circle
+func (c Circle) CalculatePerimeter() float64 {
+    return 2 * 3.14 * c.Radius
+}
+</code></pre>
+<h3 id="722-package-directory-structure"><a class="header" href="#722-package-directory-structure"><strong>7.2.2 Package Directory Structure</strong></a></h3>
+<p>A typical Go project with multiple packages might have a structure like this:</p>
+<pre><code>myproject/
+├── main.go                   # main package
+├── geometry/
+│   ├── shapes.go             # geometry package
+│   ├── circle.go
+│   └── rectangle.go
+└── drawing/
+    ├── canvas.go             # drawing package
+    └── color.go
+</code></pre>
+<p>Each subdirectory represents a separate package, and all files within that directory must belong to the same package.</p>
+<h3 id="723-importing-packages"><a class="header" href="#723-importing-packages"><strong>7.2.3 Importing Packages</strong></a></h3>
+<p>To use code from another package, you must import it:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "myproject/geometry"
+)
+
+func main() {
+    circle := geometry.NewCircle(5.0)
+    area := circle.CalculateArea()
+    fmt.Printf("Circle area: %.2f\n", area)
+}
+</code></pre>
+<p><strong>Import Aliases</strong>:</p>
+<p>You can create aliases for package names to avoid conflicts or for convenience:</p>
+<pre><code class="language-go">import (
+    "fmt"
+    geo "myproject/geometry"  // Alias for the geometry package
+)
+
+func main() {
+    circle := geo.NewCircle(5.0)
+    // ...
+}
+</code></pre>
+<p><strong>Dot Imports</strong>:</p>
+<p>The dot import makes exported identifiers directly accessible (without the package prefix), but it's generally discouraged as it reduces clarity:</p>
+<pre><code class="language-go">import (
+    "fmt"
+    . "myproject/geometry"  // Dot import, use with caution
+)
+
+func main() {
+    circle := NewCircle(5.0)  // No package prefix needed
+    // ...
+}
+</code></pre>
+<p><strong>Blank Imports</strong>:</p>
+<p>Sometimes you need to import a package for its side effects only (init functions):</p>
+<pre><code class="language-go">import (
+    "fmt"
+    _ "github.com/lib/pq"  // Registers PostgreSQL driver, but doesn't use the package directly
+)
+</code></pre>
+<h2 id="73-standard-library-packages"><a class="header" href="#73-standard-library-packages"><strong>7.3 Standard Library Packages</strong></a></h2>
+<p>The Go standard library is comprehensive and well-designed, providing core functionality without needing external dependencies.</p>
+<h3 id="731-core-packages"><a class="header" href="#731-core-packages"><strong>7.3.1 Core Packages</strong></a></h3>
+<p>Here are some of the most commonly used standard library packages:</p>
+<div class="table-wrapper"><table><thead><tr><th>Package</th><th>Description</th><th>Example Usage</th></tr></thead><tbody>
+<tr><td>fmt</td><td>Formatted I/O</td><td>Printing, string formatting</td></tr>
+<tr><td>io</td><td>Basic I/O interfaces</td><td>Readers, writers, copying</td></tr>
+<tr><td>os</td><td>Operating system functionality</td><td>File operations, environment vars</td></tr>
+<tr><td>strings</td><td>String manipulation</td><td>Searching, replacing, comparing</td></tr>
+<tr><td>strconv</td><td>String conversions</td><td>Parsing numbers, formatting</td></tr>
+<tr><td>time</td><td>Time-related functions</td><td>Date/time parsing, formatting</td></tr>
+<tr><td>encoding/json</td><td>JSON encoding/decoding</td><td>API responses, configuration</td></tr>
+<tr><td>net/http</td><td>HTTP client and server</td><td>Web APIs, microservices</td></tr>
+<tr><td>database/sql</td><td>Database access</td><td>Working with relational databases</td></tr>
+<tr><td>context</td><td>Request-scoped values, cancellation</td><td>API timeout, cancellation</td></tr>
+</tbody></table>
+</div>
+<h3 id="732-using-the-standard-library"><a class="header" href="#732-using-the-standard-library"><strong>7.3.2 Using the Standard Library</strong></a></h3>
+<p>The standard library is imported like any other package:</p>
+<pre><code class="language-go">package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "net/http"
+    "time"
+)
+
+type User struct {
+    Name     string    `json:"name"`
+    Email    string    `json:"email"`
+    JoinDate time.Time `json:"join_date"`
+}
+
+func main() {
+    // Using time package
+    now := time.Now()
+
+    // Create a struct
+    user := User{
+        Name:     "Alice",
+        Email:    "alice@example.com",
+        JoinDate: now,
+    }
+
+    // Using json package
+    jsonData, err := json.Marshal(user)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
+
+    fmt.Println(string(jsonData))
+
+    // Using http package
+    http.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(jsonData)
+    })
+
+    fmt.Println("Server starting on :8080...")
+    http.ListenAndServe(":8080", nil)
+}
+</code></pre>
+<p>The standard library is your first resource when solving common problems in Go. It's well-documented, thoroughly tested, and designed to work seamlessly with the language.</p>
+<h2 id="74-go-modules"><a class="header" href="#74-go-modules"><strong>7.4 Go Modules</strong></a></h2>
+<p>Go Modules, introduced in Go 1.11, is the official dependency management system for Go. It allows you to track, version, and manage dependencies outside of the GOPATH.</p>
+<h3 id="741-creating-a-new-module"><a class="header" href="#741-creating-a-new-module"><strong>7.4.1 Creating a New Module</strong></a></h3>
+<p>To create a new module, use the <code>go mod init</code> command:</p>
+<pre><code class="language-bash">mkdir myproject
+cd myproject
+go mod init github.com/username/myproject
+</code></pre>
+<p>This creates a <code>go.mod</code> file that defines your module and its dependencies:</p>
+<pre><code>module github.com/username/myproject
+
+go 1.18
+</code></pre>
+<h3 id="742-adding-dependencies"><a class="header" href="#742-adding-dependencies"><strong>7.4.2 Adding Dependencies</strong></a></h3>
+<p>When you import a package that's not in the standard library or your module, Go automatically adds it to your <code>go.mod</code> file when you run a command like <code>go build</code> or <code>go test</code>.</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "github.com/google/uuid"  // External dependency
+)
+
+func main() {
+    id := uuid.New()
+    fmt.Printf("Generated UUID: %s\n", id.String())
+}
+</code></pre>
+<p>Running <code>go build</code> will update your <code>go.mod</code> file:</p>
+<pre><code>module github.com/username/myproject
+
+go 1.18
+
+require github.com/google/uuid v1.3.0
+</code></pre>
+<p>It also creates a <code>go.sum</code> file that contains cryptographic hashes of your dependencies, ensuring reproducible builds.</p>
+<h3 id="743-managing-versions"><a class="header" href="#743-managing-versions"><strong>7.4.3 Managing Versions</strong></a></h3>
+<p>You can explicitly upgrade or downgrade dependencies:</p>
+<pre><code class="language-bash">go get github.com/google/uuid@v1.2.0  # Specific version
+go get github.com/google/uuid@latest  # Latest version
+go get -u                             # Update all dependencies
+</code></pre>
+<p>To clean up unused dependencies:</p>
+<pre><code class="language-bash">go mod tidy
+</code></pre>
+<h3 id="744-creating-versioned-releases"><a class="header" href="#744-creating-versioned-releases"><strong>7.4.4 Creating Versioned Releases</strong></a></h3>
+<p>For your own modules, you should follow semantic versioning with Git tags:</p>
+<pre><code class="language-bash">git tag v1.0.0
+git push origin v1.0.0
+</code></pre>
+<p>Major version changes (v2 and beyond) require special handling in Go modules, typically by adding the major version to the module path:</p>
+<pre><code>module github.com/username/myproject/v2
+</code></pre>
+<h2 id="75-gos-error-handling-philosophy"><a class="header" href="#75-gos-error-handling-philosophy"><strong>7.5 Go's Error Handling Philosophy</strong></a></h2>
+<h3 id="751-errors-as-values"><a class="header" href="#751-errors-as-values"><strong>7.5.1 Errors as Values</strong></a></h3>
+<p>Unlike many programming languages that use exceptions for error handling, Go treats errors as ordinary values. This fundamental design choice has several important implications:</p>
+<ul>
+<li><strong>Explicit error checking</strong>: Errors must be explicitly checked and handled</li>
+<li><strong>Predictable control flow</strong>: No hidden "throw" statements that might redirect execution</li>
+<li><strong>Composition over inheritance</strong>: Error types can be composed and wrapped</li>
+<li><strong>Simplicity</strong>: A single, consistent pattern for handling errors</li>
+</ul>
+<p>The standard <code>error</code> interface in Go is remarkably simple:</p>
+<pre><code class="language-go">type error interface {
+    Error() string
+}
+</code></pre>
+<p>Any type that implements this interface can be used as an error. This minimalist approach provides great flexibility while maintaining clarity.</p>
+<h3 id="752-the-multiple-return-value-pattern"><a class="header" href="#752-the-multiple-return-value-pattern"><strong>7.5.2 The Multiple Return Value Pattern</strong></a></h3>
+<p>The most common error handling pattern in Go uses multiple return values:</p>
+<pre><code class="language-go">func DoSomething() (Result, error) {
+    // Implementation...
+    if problem {
+        return ZeroValue, errors.New("something went wrong")
+    }
+    return result, nil
+}
+
+// Usage
+result, err := DoSomething()
+if err != nil {
+    // Handle error
+    return // Or continue with a fallback strategy
+}
+// Use result...
+</code></pre>
+<p>This pattern makes error handling visible and encourages developers to consider failure cases explicitly.</p>
+<h2 id="76-creating-and-returning-errors"><a class="header" href="#76-creating-and-returning-errors"><strong>7.6 Creating and Returning Errors</strong></a></h2>
+<h3 id="761-simple-error-creation"><a class="header" href="#761-simple-error-creation"><strong>7.6.1 Simple Error Creation</strong></a></h3>
+<p>The standard library provides several ways to create errors:</p>
+<pre><code class="language-go">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+func main() {
+    // Method 1: Using errors.New
+    err1 := errors.New("something went wrong")
+
+    // Method 2: Using fmt.Errorf (allows formatting)
+    name := "config file"
+    err2 := fmt.Errorf("failed to load %s", name)
+
+    fmt.Println(err1) // something went wrong
+    fmt.Println(err2) // failed to load config file
+}
+</code></pre>
+<h3 id="762-custom-error-types"><a class="header" href="#762-custom-error-types"><strong>7.6.2 Custom Error Types</strong></a></h3>
+<p>For more sophisticated error handling, you can create custom error types:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+)
+
+// ValidationError represents an input validation error
+type ValidationError struct {
+    Field string
+    Message string
+}
+
+// Implement the error interface
+func (e ValidationError) Error() string {
+    return fmt.Sprintf("validation error on field %s: %s", e.Field, e.Message)
+}
+
+// Function that returns custom error
+func ValidateUsername(username string) error {
+    if len(username) &lt; 3 {
+        return ValidationError{
+            Field: "username",
+            Message: "must be at least 3 characters long",
+        }
+    }
+    return nil
+}
+
+func main() {
+    err := ValidateUsername("ab")
+    if err != nil {
+        fmt.Println(err) // validation error on field username: must be at least 3 characters long
+
+        // Type assertion to access specific fields
+        if valErr, ok := err.(ValidationError); ok {
+            fmt.Printf("Field: %s, Message: %s\n", valErr.Field, valErr.Message)
+        }
+    }
+}
+</code></pre>
+<p>Custom error types allow you to:</p>
+<ul>
+<li>Include structured data in your errors</li>
+<li>Create type hierarchies for different error categories</li>
+<li>Enable type assertions for specific error handling</li>
+</ul>
+<h3 id="763-sentinel-errors"><a class="header" href="#763-sentinel-errors"><strong>7.6.3 Sentinel Errors</strong></a></h3>
+<p>For errors that need to be checked by identity rather than content, you can define package-level "sentinel" error variables:</p>
+<pre><code class="language-go">package userservice
+
+import "errors"
+
+// Public sentinel errors that can be checked by callers
+var (
+    ErrUserNotFound = errors.New("user not found")
+    ErrPermissionDenied = errors.New("permission denied")
+    ErrInvalidInput = errors.New("invalid input")
+)
+
+func GetUser(id string) (*User, error) {
+    // Implementation...
+    if userDoesNotExist {
+        return nil, ErrUserNotFound
+    }
+    // ...
+}
+
+// Usage in another package
+user, err := userservice.GetUser("123")
+if err == userservice.ErrUserNotFound {
+    // Handle specifically for user not found
+} else if err != nil {
+    // Handle other errors
+}
+</code></pre>
+<p>Sentinel errors are particularly useful for expected error conditions that callers might want to handle specifically.</p>
+<h2 id="77-error-handling-patterns"><a class="header" href="#77-error-handling-patterns"><strong>7.7 Error Handling Patterns</strong></a></h2>
+<h3 id="771-the-guard-clause-pattern"><a class="header" href="#771-the-guard-clause-pattern"><strong>7.7.1 The Guard Clause Pattern</strong></a></h3>
+<p>A common pattern in Go is to use "guard clauses" to handle errors early and reduce nesting:</p>
+<pre><code class="language-go">// Without guard clauses (deeply nested)
+func ProcessFile(path string) error {
+    file, err := os.Open(path)
+    if err == nil {
+        defer file.Close()
+
+        data, err := io.ReadAll(file)
+        if err == nil {
+            config, err := parseConfig(data)
+            if err == nil {
+                return processConfig(config)
+            } else {
+                return fmt.Errorf("parsing config: %w", err)
+            }
+        } else {
+            return fmt.Errorf("reading file: %w", err)
+        }
+    } else {
+        return fmt.Errorf("opening file: %w", err)
+    }
+}
+
+// With guard clauses (flat and clean)
+func ProcessFile(path string) error {
+    file, err := os.Open(path)
+    if err != nil {
+        return fmt.Errorf("opening file: %w", err)
+    }
+    defer file.Close()
+
+    data, err := io.ReadAll(file)
+    if err != nil {
+        return fmt.Errorf("reading file: %w", err)
+    }
+
+    config, err := parseConfig(data)
+    if err != nil {
+        return fmt.Errorf("parsing config: %w", err)
+    }
+
+    return processConfig(config)
+}
+</code></pre>
+<p>The guard clause pattern creates a flatter function structure that's easier to read and reason about.</p>
+<h3 id="772-wrapping-errors-for-context"><a class="header" href="#772-wrapping-errors-for-context"><strong>7.7.2 Wrapping Errors for Context</strong></a></h3>
+<p>Go 1.13 introduced error wrapping, which allows you to add context while preserving the original error:</p>
+<pre><code class="language-go">package main
+
+import (
+    "errors"
+    "fmt"
+)
+
+func readConfig(path string) error {
+    // Simulate a "file not found" error
+    err := errors.New("file not found")
+
+    // Wrap the error with additional context
+    return fmt.Errorf("failed to read config from %s: %w", path, err)
+}
+
+func setupApp() error {
+    err := readConfig("/etc/myapp/config.json")
+    if err != nil {
+        // Wrap again with higher-level context
+        return fmt.Errorf("app initialization failed: %w", err)
+    }
+    return nil
+}
+
+func main() {
+    err := setupApp()
+    if err != nil {
+        fmt.Println("Error:", err)
+
+        // Unwrap to check for specific error types
+        if errors.Is(err, errors.New("file not found")) {
+            fmt.Println("Config file is missing, creating default...")
+        }
+    }
+}
+</code></pre>
+<p>The <code>%w</code> verb wraps errors while preserving the original for later inspection using <code>errors.Is()</code> or <code>errors.As()</code>.</p>
+<h3 id="773-working-with-multiple-error-types"><a class="header" href="#773-working-with-multiple-error-types"><strong>7.7.3 Working with Multiple Error Types</strong></a></h3>
+<p>The <code>errors.Is()</code> and <code>errors.As()</code> functions help work with wrapped errors:</p>
+<pre><code class="language-go">package main
+
+import (
+    "errors"
+    "fmt"
+    "os"
+)
+
+func main() {
+    // Try to open a non-existent file
+    _, err := os.Open("non-existent.txt")
+
+    // Wrap the error
+    wrappedErr := fmt.Errorf("operation failed: %w", err)
+
+    // Check if the wrapped error contains a specific error
+    if errors.Is(wrappedErr, os.ErrNotExist) {
+        fmt.Println("The file does not exist")
+    }
+
+    // Working with custom error types
+    type ValidationError struct {
+        Field string
+    }
+
+    func (v ValidationError) Error() string {
+        return fmt.Sprintf("validation failed on %s", v.Field)
+    }
+
+    originalErr := ValidationError{Field: "username"}
+    wrappedErr = fmt.Errorf("could not process request: %w", originalErr)
+
+    // Extract the original error
+    var valErr ValidationError
+    if errors.As(wrappedErr, &amp;valErr) {
+        fmt.Println("Validation error on field:", valErr.Field)
+    }
+}
+</code></pre>
+<h2 id="78-best-practices-for-error-handling"><a class="header" href="#78-best-practices-for-error-handling"><strong>7.8 Best Practices for Error Handling</strong></a></h2>
+<h3 id="781-handle-errors-once"><a class="header" href="#781-handle-errors-once"><strong>7.8.1 Handle Errors Once</strong></a></h3>
+<p>Handle each error at the appropriate level and avoid re-handling the same error:</p>
+<pre><code class="language-go">// Good: Handle at appropriate level
+func processInput(input string) error {
+    value, err := parseInput(input)
+    if err != nil {
+        return fmt.Errorf("invalid input: %w", err)
+    }
+
+    result, err := calculate(value)
+    if err != nil {
+        return fmt.Errorf("calculation error: %w", err)
+    }
+
+    return saveResult(result)
+}
+
+// Bad: Multiple error logging
+func processInput(input string) error {
+    value, err := parseInput(input)
+    if err != nil {
+        log.Printf("Parse error: %v", err) // Don't log here
+        return err
+    }
+
+    result, err := calculate(value)
+    if err != nil {
+        log.Printf("Calculation error: %v", err) // Don't log here
+        return err
+    }
+
+    err = saveResult(result)
+    if err != nil {
+        log.Printf("Save error: %v", err) // Don't log here
+        return err
+    }
+
+    return nil
+}
+</code></pre>
+<h3 id="782-provide-context"><a class="header" href="#782-provide-context"><strong>7.8.2 Provide Context</strong></a></h3>
+<p>Always add context to errors to help with debugging:</p>
+<pre><code class="language-go">// Poor error handling (insufficient context)
+if err != nil {
+    return err
+}
+
+// Better error handling (with context)
+if err != nil {
+    return fmt.Errorf("processing order %d: %w", orderID, err)
+}
+</code></pre>
+<h3 id="783-dont-panic"><a class="header" href="#783-dont-panic"><strong>7.8.3 Don't Panic</strong></a></h3>
+<p>In production code, prefer returning errors over using <code>panic</code>:</p>
+<pre><code class="language-go">// Bad: Using panic
+func getConfigValue(key string) string {
+    value, exists := configs[key]
+    if !exists {
+        panic(fmt.Sprintf("missing required config: %s", key))
+    }
+    return value
+}
+
+// Good: Return error
+func getConfigValue(key string) (string, error) {
+    value, exists := configs[key]
+    if !exists {
+        return "", fmt.Errorf("missing required config: %s", key)
+    }
+    return value, nil
+}
+</code></pre>
+<p>Reserve <code>panic</code> for truly exceptional conditions that should crash the program.</p>
+<h2 id="79-summary"><a class="header" href="#79-summary"><strong>7.9 Summary</strong></a></h2>
+<p>In this chapter, we've explored two fundamental aspects of Go programming: package organization with modules and error handling.</p>
+<p>Go's package system provides a clean, modular approach to organizing code, with clear visibility rules controlled by capitalization. The module system builds on this to provide robust dependency management, making it easy to create reusable libraries and applications.</p>
+<p>Meanwhile, Go's error handling philosophy treats errors as values, encouraging explicit error checking and handling. This approach leads to more reliable code by making failure cases visible and requiring deliberate decisions about how to handle them.</p>
+<p>Together, these features contribute to Go's reputation for producing maintainable, reliable software that's easy to reason about and evolve over time.</p>
+<p><strong>Next Up:</strong> In Chapter 8, we'll explore Go's collection types including arrays, slices, and strings – the fundamental building blocks for storing and manipulating data in Go programs.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-6-Functions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-8-Arrays-Slices-Strings.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-6-Functions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-8-Arrays-Slices-Strings.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

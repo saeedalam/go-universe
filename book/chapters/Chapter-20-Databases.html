@@ -1,0 +1,1607 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Databases - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-20-Databases.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-20-working-with-databases-in-go"><a class="header" href="#chapter-20-working-with-databases-in-go"><strong>Chapter 20: Working with Databases in Go</strong></a></h1>
+<p>Go's strong performance characteristics and concurrency support make it an excellent choice for building database-driven applications. This chapter explores how to work with various database systems in Go, from SQL databases to NoSQL solutions, covering essential patterns and best practices for data persistence.</p>
+<h2 id="201-introduction-to-database-programming-in-go"><a class="header" href="#201-introduction-to-database-programming-in-go"><strong>20.1 Introduction to Database Programming in Go</strong></a></h2>
+<h3 id="2011-database-interactions-in-go"><a class="header" href="#2011-database-interactions-in-go"><strong>20.1.1 Database Interactions in Go</strong></a></h3>
+<p>Go's approach to database programming emphasizes simplicity and performance. The standard library provides core functionality through the <code>database/sql</code> package, which offers a generic interface for SQL databases. Third-party drivers implement this interface for specific database systems.</p>
+<p>Key benefits of Go for database applications include:</p>
+<ol>
+<li><strong>Concurrency</strong>: Goroutines and channels provide efficient management of concurrent database connections</li>
+<li><strong>Type Safety</strong>: Strong typing helps prevent many SQL injection vulnerabilities</li>
+<li><strong>Performance</strong>: Low memory footprint and fast execution speed</li>
+<li><strong>Simplicity</strong>: Clean syntax and standard interfaces make database code easy to understand</li>
+</ol>
+<h3 id="2012-types-of-databases"><a class="header" href="#2012-types-of-databases"><strong>20.1.2 Types of Databases</strong></a></h3>
+<p>When working with Go, you can choose from various database types:</p>
+<div class="table-wrapper"><table><thead><tr><th>Database Type</th><th>Examples</th><th>Best Used For</th></tr></thead><tbody>
+<tr><td>Relational (SQL)</td><td>PostgreSQL, MySQL, SQLite</td><td>Structured data with relationships, ACID transactions</td></tr>
+<tr><td>Document-oriented</td><td>MongoDB, CouchDB</td><td>Semi-structured data, flexible schemas</td></tr>
+<tr><td>Key-Value</td><td>Redis, etcd</td><td>Caching, configuration, simple data structures</td></tr>
+<tr><td>Wide-column</td><td>Cassandra, ScyllaDB</td><td>Time-series data, large datasets with predictable queries</td></tr>
+<tr><td>Graph</td><td>Neo4j, DGraph</td><td>Highly connected data with complex relationships</td></tr>
+<tr><td>Time-series</td><td>InfluxDB, TimescaleDB</td><td>Metrics, monitoring data, IoT data</td></tr>
+</tbody></table>
+</div>
+<h3 id="2013-database-access-patterns"><a class="header" href="#2013-database-access-patterns"><strong>20.1.3 Database Access Patterns</strong></a></h3>
+<p>Several patterns are commonly used when working with databases in Go:</p>
+<ol>
+<li><strong>Direct SQL</strong>: Using raw SQL queries with <code>database/sql</code></li>
+<li><strong>Query Builders</strong>: Libraries that help construct SQL programmatically</li>
+<li><strong>Object-Relational Mappers (ORMs)</strong>: Map database tables to Go structs</li>
+<li><strong>Repository Pattern</strong>: Abstract database operations behind interfaces</li>
+<li><strong>CQRS (Command Query Responsibility Segregation)</strong>: Separate read and write operations</li>
+</ol>
+<p>Each pattern has trade-offs in terms of control, simplicity, and performance. We'll explore these throughout the chapter.</p>
+<h2 id="202-working-with-sql-databases"><a class="header" href="#202-working-with-sql-databases"><strong>20.2 Working with SQL Databases</strong></a></h2>
+<h3 id="2021-the-databasesql-package"><a class="header" href="#2021-the-databasesql-package"><strong>20.2.1 The database/sql Package</strong></a></h3>
+<p>The <code>database/sql</code> package provides a generic interface around SQL (or SQL-like) databases. It manages connections and transactions while allowing specific SQL dialect usage.</p>
+<p>First, you need to import the package and a database driver:</p>
+<pre><code class="language-go">package main
+
+import (
+    "database/sql"
+    "fmt"
+    "log"
+
+    _ "github.com/lib/pq" // PostgreSQL driver
+)
+
+func main() {
+    // Open a database connection
+    db, err := sql.Open("postgres", "postgres://username:password@localhost/dbname?sslmode=disable")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // Test the connection
+    if err := db.Ping(); err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println("Successfully connected to the database!")
+}
+</code></pre>
+<p>Key components of the <code>database/sql</code> package:</p>
+<ul>
+<li><strong><code>sql.DB</code></strong>: A database handle representing a connection pool</li>
+<li><strong><code>sql.Tx</code></strong>: A transaction</li>
+<li><strong><code>sql.Stmt</code></strong>: A prepared statement</li>
+<li><strong><code>sql.Rows</code></strong>: Result set from a query</li>
+<li><strong><code>sql.Row</code></strong>: Single row result from a query</li>
+</ul>
+<h3 id="2022-basic-crud-operations"><a class="header" href="#2022-basic-crud-operations"><strong>20.2.2 Basic CRUD Operations</strong></a></h3>
+<p>Let's implement basic CRUD (Create, Read, Update, Delete) operations with <code>database/sql</code>:</p>
+<pre><code class="language-go">package main
+
+import (
+    "database/sql"
+    "fmt"
+    "log"
+    "time"
+
+    _ "github.com/lib/pq"
+)
+
+// User represents a user in our application
+type User struct {
+    ID        int
+    Username  string
+    Email     string
+    CreatedAt time.Time
+}
+
+func main() {
+    db, err := sql.Open("postgres", "postgres://username:password@localhost/dbname?sslmode=disable")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // Create a user
+    user, err := createUser(db, "johndoe", "john@example.com")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Created user: %+v\n", user)
+
+    // Read a user
+    retrievedUser, err := getUserByID(db, user.ID)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Retrieved user: %+v\n", retrievedUser)
+
+    // Update a user
+    err = updateUserEmail(db, user.ID, "newemail@example.com")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println("User email updated")
+
+    // Delete a user
+    err = deleteUser(db, user.ID)
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println("User deleted")
+}
+
+// createUser inserts a new user into the database
+func createUser(db *sql.DB, username, email string) (User, error) {
+    var user User
+
+    query := `
+        INSERT INTO users (username, email, created_at)
+        VALUES ($1, $2, $3)
+        RETURNING id, username, email, created_at
+    `
+
+    err := db.QueryRow(query, username, email, time.Now()).Scan(
+        &amp;user.ID,
+        &amp;user.Username,
+        &amp;user.Email,
+        &amp;user.CreatedAt,
+    )
+
+    return user, err
+}
+
+// getUserByID retrieves a user by their ID
+func getUserByID(db *sql.DB, id int) (User, error) {
+    var user User
+
+    query := `
+        SELECT id, username, email, created_at
+        FROM users
+        WHERE id = $1
+    `
+
+    err := db.QueryRow(query, id).Scan(
+        &amp;user.ID,
+        &amp;user.Username,
+        &amp;user.Email,
+        &amp;user.CreatedAt,
+    )
+
+    return user, err
+}
+
+// updateUserEmail updates a user's email
+func updateUserEmail(db *sql.DB, id int, email string) error {
+    query := `
+        UPDATE users
+        SET email = $1
+        WHERE id = $2
+    `
+
+    _, err := db.Exec(query, email, id)
+    return err
+}
+
+// deleteUser removes a user from the database
+func deleteUser(db *sql.DB, id int) error {
+    query := `
+        DELETE FROM users
+        WHERE id = $1
+    `
+
+    _, err := db.Exec(query, id)
+    return err
+}
+</code></pre>
+<h3 id="2023-handling-multiple-result-rows"><a class="header" href="#2023-handling-multiple-result-rows"><strong>20.2.3 Handling Multiple Result Rows</strong></a></h3>
+<p>When a query returns multiple rows, use the <code>Query</code> method and iterate through the results:</p>
+<pre><code class="language-go">// getAllUsers retrieves all users from the database
+func getAllUsers(db *sql.DB) ([]User, error) {
+    users := []User{}
+
+    query := `
+        SELECT id, username, email, created_at
+        FROM users
+        ORDER BY id
+    `
+
+    rows, err := db.Query(query)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    for rows.Next() {
+        var user User
+        if err := rows.Scan(&amp;user.ID, &amp;user.Username, &amp;user.Email, &amp;user.CreatedAt); err != nil {
+            return nil, err
+        }
+        users = append(users, user)
+    }
+
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    return users, nil
+}
+</code></pre>
+<p>Important points when working with rows:</p>
+<ul>
+<li>Always call <code>rows.Close()</code> when done (use <code>defer</code> to ensure this happens)</li>
+<li>Check for errors with <code>rows.Err()</code> after the loop</li>
+<li>Use <code>rows.Next()</code> to advance to the next row</li>
+<li>Call <code>rows.Scan()</code> to read the current row's values</li>
+</ul>
+<h3 id="2024-prepared-statements"><a class="header" href="#2024-prepared-statements"><strong>20.2.4 Prepared Statements</strong></a></h3>
+<p>Prepared statements improve performance and security by separating SQL logic from data:</p>
+<pre><code class="language-go">// getUsersByUsernamePattern finds users with usernames matching a pattern
+func getUsersByUsernamePattern(db *sql.DB, pattern string) ([]User, error) {
+    users := []User{}
+
+    // Prepare the statement
+    stmt, err := db.Prepare(`
+        SELECT id, username, email, created_at
+        FROM users
+        WHERE username LIKE $1
+        ORDER BY username
+    `)
+    if err != nil {
+        return nil, err
+    }
+    defer stmt.Close()
+
+    // Execute the prepared statement
+    rows, err := stmt.Query("%" + pattern + "%")
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    for rows.Next() {
+        var user User
+        if err := rows.Scan(&amp;user.ID, &amp;user.Username, &amp;user.Email, &amp;user.CreatedAt); err != nil {
+            return nil, err
+        }
+        users = append(users, user)
+    }
+
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    return users, nil
+}
+</code></pre>
+<p>Benefits of prepared statements:</p>
+<ul>
+<li><strong>Security</strong>: Help prevent SQL injection attacks</li>
+<li><strong>Performance</strong>: Database can optimize and reuse execution plans</li>
+<li><strong>Readability</strong>: Separate SQL logic from data values</li>
+</ul>
+<h3 id="2025-transactions"><a class="header" href="#2025-transactions"><strong>20.2.5 Transactions</strong></a></h3>
+<p>Transactions ensure multiple operations succeed or fail as a unit:</p>
+<pre><code class="language-go">// transferCredits transfers credits between users atomically
+func transferCredits(db *sql.DB, fromUserID, toUserID, amount int) error {
+    // Begin transaction
+    tx, err := db.Begin()
+    if err != nil {
+        return err
+    }
+
+    // Defer a rollback in case anything fails
+    defer tx.Rollback()
+
+    // Deduct from first user
+    _, err = tx.Exec(`
+        UPDATE users
+        SET credits = credits - $1
+        WHERE id = $2
+    `, amount, fromUserID)
+    if err != nil {
+        return err
+    }
+
+    // Add to second user
+    _, err = tx.Exec(`
+        UPDATE users
+        SET credits = credits + $1
+        WHERE id = $2
+    `, amount, toUserID)
+    if err != nil {
+        return err
+    }
+
+    // Commit the transaction
+    return tx.Commit()
+}
+</code></pre>
+<p>Key aspects of transactions:</p>
+<ul>
+<li>Begin with <code>db.Begin()</code></li>
+<li>Always defer <code>tx.Rollback()</code> to ensure cleanup</li>
+<li>Call <code>tx.Commit()</code> when all operations succeed</li>
+<li>Use transactions when multiple operations need to be atomic</li>
+</ul>
+<h3 id="2026-connection-management"><a class="header" href="#2026-connection-management"><strong>20.2.6 Connection Management</strong></a></h3>
+<p>The <code>sql.DB</code> object represents a pool of database connections. It's important to configure this pool correctly:</p>
+<pre><code class="language-go">func setupDBConnection() (*sql.DB, error) {
+    db, err := sql.Open("postgres", "postgres://username:password@localhost/dbname?sslmode=disable")
+    if err != nil {
+        return nil, err
+    }
+
+    // Set maximum number of open connections
+    db.SetMaxOpenConns(25)
+
+    // Set maximum number of idle connections
+    db.SetMaxIdleConns(5)
+
+    // Set maximum lifetime of a connection
+    db.SetConnMaxLifetime(5 * time.Minute)
+
+    // Verify connection
+    if err := db.Ping(); err != nil {
+        return nil, err
+    }
+
+    return db, nil
+}
+</code></pre>
+<p>Connection pool configuration considerations:</p>
+<ul>
+<li><strong>MaxOpenConns</strong>: Limits the number of connections to the database</li>
+<li><strong>MaxIdleConns</strong>: Controls how many connections remain open when idle</li>
+<li><strong>ConnMaxLifetime</strong>: Limits the maximum amount of time a connection may be reused</li>
+</ul>
+<p>It's important to close the database when your application shuts down:</p>
+<pre><code class="language-go">func main() {
+    db, err := setupDBConnection()
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // Use the database...
+}
+</code></pre>
+<h2 id="203-working-with-postgresql"><a class="header" href="#203-working-with-postgresql"><strong>20.3 Working with PostgreSQL</strong></a></h2>
+<p>PostgreSQL is a powerful open-source relational database system with advanced features. Go works particularly well with PostgreSQL.</p>
+<h3 id="2031-connecting-to-postgresql"><a class="header" href="#2031-connecting-to-postgresql"><strong>20.3.1 Connecting to PostgreSQL</strong></a></h3>
+<p>To connect to PostgreSQL, you'll need the <code>pq</code> driver:</p>
+<pre><code class="language-go">import (
+    "database/sql"
+    _ "github.com/lib/pq"
+)
+
+func connectToPG() (*sql.DB, error) {
+    connStr := "user=postgres dbname=myapp password=secret host=localhost port=5432 sslmode=disable"
+    db, err := sql.Open("postgres", connStr)
+    if err != nil {
+        return nil, err
+    }
+
+    if err := db.Ping(); err != nil {
+        return nil, err
+    }
+
+    return db, nil
+}
+</code></pre>
+<p>You can also use the connection URL format:</p>
+<pre><code class="language-go">connStr := "postgres://postgres:secret@localhost:5432/myapp?sslmode=disable"
+</code></pre>
+<h3 id="2032-postgresql-specific-features"><a class="header" href="#2032-postgresql-specific-features"><strong>20.3.2 PostgreSQL-Specific Features</strong></a></h3>
+<p>PostgreSQL offers many advanced features that Go applications can leverage:</p>
+<h4 id="json-data"><a class="header" href="#json-data"><strong>JSON Data</strong></a></h4>
+<p>PostgreSQL has excellent support for JSON data:</p>
+<pre><code class="language-go">// User with JSON metadata
+type User struct {
+    ID       int
+    Username string
+    Email    string
+    Metadata map[string]interface{}
+}
+
+// Store user with JSON metadata
+func createUserWithMetadata(db *sql.DB, user User) error {
+    metadataJSON, err := json.Marshal(user.Metadata)
+    if err != nil {
+        return err
+    }
+
+    _, err = db.Exec(`
+        INSERT INTO users (username, email, metadata)
+        VALUES ($1, $2, $3)
+    `, user.Username, user.Email, metadataJSON)
+
+    return err
+}
+
+// Retrieve user with JSON metadata
+func getUserWithMetadata(db *sql.DB, id int) (User, error) {
+    var user User
+    var metadataJSON []byte
+
+    err := db.QueryRow(`
+        SELECT id, username, email, metadata
+        FROM users
+        WHERE id = $1
+    `, id).Scan(&amp;user.ID, &amp;user.Username, &amp;user.Email, &amp;metadataJSON)
+
+    if err != nil {
+        return User{}, err
+    }
+
+    // Parse JSON metadata
+    user.Metadata = make(map[string]interface{})
+    if err := json.Unmarshal(metadataJSON, &amp;user.Metadata); err != nil {
+        return User{}, err
+    }
+
+    return user, nil
+}
+</code></pre>
+<h4 id="array-types"><a class="header" href="#array-types"><strong>Array Types</strong></a></h4>
+<p>PostgreSQL supports array types, which can be mapped to Go slices:</p>
+<pre><code class="language-go">// User with string array of roles
+type User struct {
+    ID    int
+    Name  string
+    Roles []string
+}
+
+// Store user with roles
+func createUserWithRoles(db *sql.DB, user User) error {
+    _, err := db.Exec(`
+        INSERT INTO users (name, roles)
+        VALUES ($1, $2)
+    `, user.Name, pq.Array(user.Roles))
+
+    return err
+}
+
+// Retrieve user with roles
+func getUserWithRoles(db *sql.DB, id int) (User, error) {
+    var user User
+
+    err := db.QueryRow(`
+        SELECT id, name, roles
+        FROM users
+        WHERE id = $1
+    `, id).Scan(&amp;user.ID, &amp;user.Name, pq.Array(&amp;user.Roles))
+
+    return user, err
+}
+</code></pre>
+<h4 id="full-text-search"><a class="header" href="#full-text-search"><strong>Full-Text Search</strong></a></h4>
+<p>PostgreSQL has powerful full-text search capabilities:</p>
+<pre><code class="language-go">// Search products by terms
+func searchProducts(db *sql.DB, searchTerms string) ([]Product, error) {
+    products := []Product{}
+
+    rows, err := db.Query(`
+        SELECT id, name, description, price
+        FROM products
+        WHERE to_tsvector('english', name || ' ' || description) @@ to_tsquery('english', $1)
+        ORDER BY ts_rank(to_tsvector('english', name || ' ' || description), to_tsquery('english', $1)) DESC
+    `, searchTerms)
+
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    for rows.Next() {
+        var product Product
+        if err := rows.Scan(&amp;product.ID, &amp;product.Name, &amp;product.Description, &amp;product.Price); err != nil {
+            return nil, err
+        }
+        products = append(products, product)
+    }
+
+    return products, rows.Err()
+}
+</code></pre>
+<h2 id="204-object-relational-mapping-orm"><a class="header" href="#204-object-relational-mapping-orm"><strong>20.4 Object-Relational Mapping (ORM)</strong></a></h2>
+<p>While raw SQL offers maximum control, ORMs can simplify database operations by mapping database records to Go structs.</p>
+<h3 id="2041-using-gorm"><a class="header" href="#2041-using-gorm"><strong>20.4.1 Using GORM</strong></a></h3>
+<p>GORM is a popular ORM library for Go. Here's how to use it:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "log"
+    "time"
+
+    "gorm.io/driver/postgres"
+    "gorm.io/gorm"
+)
+
+// User model
+type User struct {
+    ID        uint      `gorm:"primaryKey"`
+    Username  string    `gorm:"size:100;not null;unique"`
+    Email     string    `gorm:"size:100;not null;unique"`
+    CreatedAt time.Time
+    UpdatedAt time.Time
+    DeletedAt gorm.DeletedAt `gorm:"index"`
+
+    // Has many relationship
+    Posts []Post
+}
+
+// Post model
+type Post struct {
+    ID        uint   `gorm:"primaryKey"`
+    Title     string `gorm:"size:200;not null"`
+    Content   string `gorm:"type:text"`
+    UserID    uint
+    CreatedAt time.Time
+    UpdatedAt time.Time
+}
+
+func main() {
+    // Connect to database
+    dsn := "user=postgres password=secret dbname=blog host=localhost port=5432 sslmode=disable"
+    db, err := gorm.Open(postgres.Open(dsn), &amp;gorm.Config{})
+    if err != nil {
+        log.Fatal("Failed to connect to database:", err)
+    }
+
+    // Auto-migrate schemas
+    db.AutoMigrate(&amp;User{}, &amp;Post{})
+
+    // Create a user
+    user := User{
+        Username: "johndoe",
+        Email:    "john@example.com",
+    }
+
+    result := db.Create(&amp;user)
+    if result.Error != nil {
+        log.Fatal("Failed to create user:", result.Error)
+    }
+
+    fmt.Printf("Created user with ID: %d\n", user.ID)
+
+    // Create a post for the user
+    post := Post{
+        Title:   "My First Post",
+        Content: "This is the content of my first post.",
+        UserID:  user.ID,
+    }
+
+    db.Create(&amp;post)
+
+    // Query with relationships
+    var userWithPosts User
+    db.Preload("Posts").First(&amp;userWithPosts, user.ID)
+
+    fmt.Printf("User: %s has %d posts\n", userWithPosts.Username, len(userWithPosts.Posts))
+
+    // Update user
+    db.Model(&amp;user).Updates(User{
+        Email: "newemail@example.com",
+    })
+
+    // Delete user (soft delete with DeletedAt)
+    db.Delete(&amp;user)
+}
+</code></pre>
+<p>GORM supports:</p>
+<ul>
+<li>Automatic migrations</li>
+<li>Associations (one-to-one, one-to-many, many-to-many)</li>
+<li>Hooks and callbacks</li>
+<li>Soft deletes</li>
+<li>Eager loading</li>
+<li>Transactions</li>
+<li>Scopes for reusable queries</li>
+</ul>
+<h3 id="2042-using-sqlx"><a class="header" href="#2042-using-sqlx"><strong>20.4.2 Using SQLx</strong></a></h3>
+<p>SQLx extends the standard <code>database/sql</code> package with additional functionality while staying close to raw SQL:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "log"
+    "time"
+
+    "github.com/jmoiron/sqlx"
+    _ "github.com/lib/pq"
+)
+
+// User struct with struct tags for mapping
+type User struct {
+    ID        int       `db:"id"`
+    Username  string    `db:"username"`
+    Email     string    `db:"email"`
+    CreatedAt time.Time `db:"created_at"`
+}
+
+func main() {
+    // Connect to database
+    db, err := sqlx.Connect("postgres", "user=postgres password=secret dbname=myapp host=localhost sslmode=disable")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // Create schema
+    schema := `
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username TEXT NOT NULL UNIQUE,
+            email TEXT NOT NULL UNIQUE,
+            created_at TIMESTAMP NOT NULL DEFAULT NOW()
+        );
+    `
+    db.MustExec(schema)
+
+    // Insert a user
+    result, err := db.Exec(
+        "INSERT INTO users (username, email, created_at) VALUES ($1, $2, $3)",
+        "johndoe",
+        "john@example.com",
+        time.Now(),
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    userID, _ := result.LastInsertId()
+    fmt.Printf("Created user with ID: %d\n", userID)
+
+    // Query a single user
+    user := User{}
+    err = db.Get(&amp;user, "SELECT * FROM users WHERE username = $1", "johndoe")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Retrieved user: %+v\n", user)
+
+    // Query multiple users
+    users := []User{}
+    err = db.Select(&amp;users, "SELECT * FROM users ORDER BY username")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Found %d users\n", len(users))
+
+    // Named queries
+    namedQuery := `
+        SELECT * FROM users
+        WHERE username = :username OR email = :email
+    `
+    params := map[string]interface{}{
+        "username": "johndoe",
+        "email":    "john@example.com",
+    }
+
+    rows, err := db.NamedQuery(namedQuery, params)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer rows.Close()
+
+    for rows.Next() {
+        var u User
+        err := rows.StructScan(&amp;u)
+        if err != nil {
+            log.Fatal(err)
+        }
+        fmt.Printf("User from named query: %+v\n", u)
+    }
+}
+</code></pre>
+<p>SQLx advantages:</p>
+<ul>
+<li>Minimal abstraction over <code>database/sql</code></li>
+<li>Struct mapping with tags</li>
+<li>Named queries</li>
+<li>Better error handling</li>
+<li>Transaction management</li>
+<li>Support for multiple statement queries</li>
+</ul>
+<h2 id="205-working-with-nosql-databases"><a class="header" href="#205-working-with-nosql-databases"><strong>20.5 Working with NoSQL Databases</strong></a></h2>
+<p>NoSQL databases are a good fit for many Go applications, especially those dealing with unstructured data or requiring high scalability.</p>
+<h3 id="2051-mongodb-with-go"><a class="header" href="#2051-mongodb-with-go"><strong>20.5.1 MongoDB with Go</strong></a></h3>
+<p>MongoDB is a popular document-oriented database. Here's how to use it with Go:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+    "time"
+
+    "go.mongodb.org/mongo-driver/bson"
+    "go.mongodb.org/mongo-driver/bson/primitive"
+    "go.mongodb.org/mongo-driver/mongo"
+    "go.mongodb.org/mongo-driver/mongo/options"
+)
+
+// User represents a user document in MongoDB
+type User struct {
+    ID        primitive.ObjectID `bson:"_id,omitempty"`
+    Username  string             `bson:"username"`
+    Email     string             `bson:"email"`
+    CreatedAt time.Time          `bson:"created_at"`
+    Metadata  map[string]interface{} `bson:"metadata,omitempty"`
+}
+
+func main() {
+    // Connect to MongoDB
+    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+    defer cancel()
+
+    client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer client.Disconnect(ctx)
+
+    // Check connection
+    err = client.Ping(ctx, nil)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println("Connected to MongoDB!")
+
+    // Get a collection
+    usersCollection := client.Database("myapp").Collection("users")
+
+    // Insert a user
+    user := User{
+        Username:  "johndoe",
+        Email:     "john@example.com",
+        CreatedAt: time.Now(),
+        Metadata: map[string]interface{}{
+            "preferences": map[string]interface{}{
+                "theme": "dark",
+                "notifications": true,
+            },
+            "lastLogin": time.Now(),
+        },
+    }
+
+    result, err := usersCollection.InsertOne(ctx, user)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Inserted user with ID: %v\n", result.InsertedID)
+
+    // Query for a user
+    var retrievedUser User
+    err = usersCollection.FindOne(ctx, bson.M{"username": "johndoe"}).Decode(&amp;retrievedUser)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Retrieved user: %+v\n", retrievedUser)
+
+    // Update a user
+    update := bson.M{
+        "$set": bson.M{
+            "email": "newemail@example.com",
+            "metadata.preferences.theme": "light",
+        },
+    }
+
+    updateResult, err := usersCollection.UpdateOne(
+        ctx,
+        bson.M{"username": "johndoe"},
+        update,
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Updated %v documents\n", updateResult.ModifiedCount)
+
+    // Find multiple documents
+    cursor, err := usersCollection.Find(ctx, bson.M{})
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer cursor.Close(ctx)
+
+    var users []User
+    if err = cursor.All(ctx, &amp;users); err != nil {
+        log.Fatal(err)
+    }
+
+    for _, u := range users {
+        fmt.Printf("Found user: %s (%s)\n", u.Username, u.Email)
+    }
+
+    // Delete a user
+    deleteResult, err := usersCollection.DeleteOne(ctx, bson.M{"username": "johndoe"})
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Deleted %v documents\n", deleteResult.DeletedCount)
+}
+</code></pre>
+<p>MongoDB with Go offers:</p>
+<ul>
+<li>Native BSON serialization</li>
+<li>Rich query capabilities</li>
+<li>Document-oriented storage for complex data</li>
+<li>Support for indexing and aggregations</li>
+<li>Transactions in recent versions</li>
+</ul>
+<h3 id="2052-redis-with-go"><a class="header" href="#2052-redis-with-go"><strong>20.5.2 Redis with Go</strong></a></h3>
+<p>Redis is an in-memory key-value store often used for caching, session management, and message brokering:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "encoding/json"
+    "fmt"
+    "log"
+    "time"
+
+    "github.com/go-redis/redis/v8"
+)
+
+// User represents a user in our application
+type User struct {
+    ID       int    `json:"id"`
+    Username string `json:"username"`
+    Email    string `json:"email"`
+}
+
+func main() {
+    // Create Redis client
+    rdb := redis.NewClient(&amp;redis.Options{
+        Addr:     "localhost:6379",
+        Password: "", // no password set
+        DB:       0,  // use default DB
+    })
+
+    ctx := context.Background()
+
+    // Test connection
+    pong, err := rdb.Ping(ctx).Result()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println("Redis connection successful:", pong)
+
+    // Store a string value
+    err = rdb.Set(ctx, "key", "value", 0).Err()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Retrieve a string value
+    val, err := rdb.Get(ctx, "key").Result()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println("key:", val)
+
+    // Store a user using JSON
+    user := User{
+        ID:       1,
+        Username: "johndoe",
+        Email:    "john@example.com",
+    }
+
+    userJSON, err := json.Marshal(user)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    err = rdb.Set(ctx, "user:1", userJSON, 24*time.Hour).Err()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Retrieve a user
+    userJSON, err = rdb.Get(ctx, "user:1").Bytes()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    var retrievedUser User
+    err = json.Unmarshal(userJSON, &amp;retrievedUser)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("Retrieved user: %+v\n", retrievedUser)
+
+    // Increment a counter
+    newVal, err := rdb.Incr(ctx, "counter").Result()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("Counter: %d\n", newVal)
+
+    // Working with a hash
+    err = rdb.HSet(ctx, "user:hash:1", map[string]interface{}{
+        "username": "johndoe",
+        "email":    "john@example.com",
+        "visits":   1,
+    }).Err()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Increment a hash field
+    newVisits, err := rdb.HIncrBy(ctx, "user:hash:1", "visits", 1).Result()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("User visits: %d\n", newVisits)
+
+    // Get all hash fields
+    fields, err := rdb.HGetAll(ctx, "user:hash:1").Result()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Printf("User hash: %v\n", fields)
+}
+</code></pre>
+<p>Redis with Go is great for:</p>
+<ul>
+<li>Caching</li>
+<li>Session management</li>
+<li>Rate limiting</li>
+<li>Distributed locks</li>
+<li>Pub/Sub messaging</li>
+<li>Leaderboards and counters</li>
+</ul>
+<h2 id="206-database-migrations"><a class="header" href="#206-database-migrations"><strong>20.6 Database Migrations</strong></a></h2>
+<p>As your application evolves, database schemas need to change. Migrations provide a way to manage these changes safely.</p>
+<h3 id="2061-using-golang-migrate"><a class="header" href="#2061-using-golang-migrate"><strong>20.6.1 Using golang-migrate</strong></a></h3>
+<p><code>golang-migrate</code> is a popular migration tool for Go projects:</p>
+<pre><code class="language-go">package main
+
+import (
+    "database/sql"
+    "log"
+
+    "github.com/golang-migrate/migrate/v4"
+    "github.com/golang-migrate/migrate/v4/database/postgres"
+    _ "github.com/golang-migrate/migrate/v4/source/file"
+    _ "github.com/lib/pq"
+)
+
+func main() {
+    // Connect to the database
+    db, err := sql.Open("postgres", "postgres://username:password@localhost:5432/myapp?sslmode=disable")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Create a driver instance
+    driver, err := postgres.WithInstance(db, &amp;postgres.Config{})
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Create a migrate instance
+    m, err := migrate.NewWithDatabaseInstance(
+        "file://migrations", // Migration files source
+        "postgres",          // Database name
+        driver,              // Database driver
+    )
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Apply all up migrations
+    if err := m.Up(); err != nil &amp;&amp; err != migrate.ErrNoChange {
+        log.Fatal(err)
+    }
+
+    log.Println("Migrations applied successfully")
+}
+</code></pre>
+<p>To use <code>golang-migrate</code>, you create migration files in a directory (e.g., <code>migrations/</code>):</p>
+<pre><code>migrations/
+  ├── 000001_create_users_table.up.sql
+  ├── 000001_create_users_table.down.sql
+  ├── 000002_add_status_to_users.up.sql
+  └── 000002_add_status_to_users.down.sql
+</code></pre>
+<p>Example migration files:</p>
+<pre><code class="language-sql">-- 000001_create_users_table.up.sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+</code></pre>
+<pre><code class="language-sql">-- 000001_create_users_table.down.sql
+DROP TABLE users;
+</code></pre>
+<pre><code class="language-sql">-- 000002_add_status_to_users.up.sql
+ALTER TABLE users ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'active';
+</code></pre>
+<pre><code class="language-sql">-- 000002_add_status_to_users.down.sql
+ALTER TABLE users DROP COLUMN status;
+</code></pre>
+<h3 id="2062-embedded-migrations"><a class="header" href="#2062-embedded-migrations"><strong>20.6.2 Embedded Migrations</strong></a></h3>
+<p>For simpler projects, you might embed migrations directly in your code:</p>
+<pre><code class="language-go">package main
+
+import (
+    "database/sql"
+    "log"
+
+    _ "github.com/lib/pq"
+)
+
+// Migrations to apply in order
+var migrations = []string{
+    `CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(100) NOT NULL UNIQUE,
+        email VARCHAR(100) NOT NULL UNIQUE,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    )`,
+
+    `CREATE TABLE IF NOT EXISTS posts (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(200) NOT NULL,
+        content TEXT,
+        user_id INTEGER REFERENCES users(id),
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    )`,
+
+    `ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'active'`,
+}
+
+func applyMigrations(db *sql.DB) error {
+    // Create migrations table if it doesn't exist
+    _, err := db.Exec(`
+        CREATE TABLE IF NOT EXISTS migrations (
+            id SERIAL PRIMARY KEY,
+            version INTEGER NOT NULL UNIQUE,
+            applied_at TIMESTAMP NOT NULL DEFAULT NOW()
+        )
+    `)
+    if err != nil {
+        return err
+    }
+
+    // Get the last applied migration version
+    var lastVersion int
+    row := db.QueryRow("SELECT COALESCE(MAX(version), 0) FROM migrations")
+    if err := row.Scan(&amp;lastVersion); err != nil {
+        return err
+    }
+
+    // Apply pending migrations
+    for i, migration := range migrations {
+        version := i + 1
+
+        if version &lt;= lastVersion {
+            continue
+        }
+
+        // Start a transaction for this migration
+        tx, err := db.Begin()
+        if err != nil {
+            return err
+        }
+
+        // Apply the migration
+        if _, err = tx.Exec(migration); err != nil {
+            tx.Rollback()
+            return err
+        }
+
+        // Record the migration
+        if _, err = tx.Exec("INSERT INTO migrations (version) VALUES ($1)", version); err != nil {
+            tx.Rollback()
+            return err
+        }
+
+        // Commit the transaction
+        if err = tx.Commit(); err != nil {
+            return err
+        }
+
+        log.Printf("Applied migration %d\n", version)
+    }
+
+    return nil
+}
+
+func main() {
+    // Connect to the database
+    db, err := sql.Open("postgres", "postgres://username:password@localhost:5432/myapp?sslmode=disable")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // Apply migrations
+    if err := applyMigrations(db); err != nil {
+        log.Fatal(err)
+    }
+
+    log.Println("Migrations applied successfully")
+}
+</code></pre>
+<h2 id="207-database-best-practices"><a class="header" href="#207-database-best-practices"><strong>20.7 Database Best Practices</strong></a></h2>
+<h3 id="2071-connection-management"><a class="header" href="#2071-connection-management"><strong>20.7.1 Connection Management</strong></a></h3>
+<ul>
+<li><strong>Use connection pooling</strong>: The <code>sql.DB</code> object already provides a connection pool</li>
+<li><strong>Set appropriate pool sizes</strong>: Configure <code>MaxOpenConns</code> and <code>MaxIdleConns</code> based on your application's needs</li>
+<li><strong>Set connection lifetime</strong>: Use <code>ConnMaxLifetime</code> to prevent stale connections</li>
+<li><strong>Check connections</strong>: Use <code>db.Ping()</code> to verify the connection is still alive</li>
+</ul>
+<h3 id="2072-query-optimization"><a class="header" href="#2072-query-optimization"><strong>20.7.2 Query Optimization</strong></a></h3>
+<ul>
+<li><strong>Use prepared statements</strong> for frequently executed queries</li>
+<li><strong>Implement pagination</strong> for large result sets</li>
+<li><strong>Choose appropriate indexes</strong> for your queries</li>
+<li><strong>Use database-specific features</strong> like JSON functions when beneficial</li>
+<li><strong>Optimize large transactions</strong> by breaking them into smaller ones when possible</li>
+</ul>
+<h3 id="2073-security"><a class="header" href="#2073-security"><strong>20.7.3 Security</strong></a></h3>
+<ul>
+<li><strong>Never concatenate user input into SQL queries</strong>: Use parameterized queries</li>
+<li><strong>Use connection strings securely</strong>: Store credentials in environment variables or a secure vault</li>
+<li><strong>Implement proper access control</strong>: Use database roles with minimal privileges</li>
+<li><strong>Encrypt sensitive data</strong>: Consider column-level encryption for PII</li>
+</ul>
+<h3 id="2074-testing"><a class="header" href="#2074-testing"><strong>20.7.4 Testing</strong></a></h3>
+<ul>
+<li><strong>Use database mocks</strong> for unit tests</li>
+<li><strong>Create test databases</strong> for integration tests</li>
+<li><strong>Reset the database state</strong> between tests</li>
+<li><strong>Use transactions</strong> to roll back changes after tests</li>
+<li><strong>Test with realistic data volumes</strong> to catch performance issues early</li>
+</ul>
+<h3 id="2075-repository-pattern"><a class="header" href="#2075-repository-pattern"><strong>20.7.5 Repository Pattern</strong></a></h3>
+<p>The repository pattern abstracts database access behind interfaces:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "database/sql"
+    "time"
+)
+
+// User represents a user entity
+type User struct {
+    ID        int
+    Username  string
+    Email     string
+    CreatedAt time.Time
+}
+
+// UserRepository defines operations for working with users
+type UserRepository interface {
+    Create(ctx context.Context, user User) (User, error)
+    GetByID(ctx context.Context, id int) (User, error)
+    GetByUsername(ctx context.Context, username string) (User, error)
+    Update(ctx context.Context, user User) error
+    Delete(ctx context.Context, id int) error
+}
+
+// PostgresUserRepository implements UserRepository for PostgreSQL
+type PostgresUserRepository struct {
+    db *sql.DB
+}
+
+// NewPostgresUserRepository creates a new PostgreSQL user repository
+func NewPostgresUserRepository(db *sql.DB) *PostgresUserRepository {
+    return &amp;PostgresUserRepository{db: db}
+}
+
+// Create adds a new user
+func (r *PostgresUserRepository) Create(ctx context.Context, user User) (User, error) {
+    query := `
+        INSERT INTO users (username, email, created_at)
+        VALUES ($1, $2, $3)
+        RETURNING id, created_at
+    `
+
+    err := r.db.QueryRowContext(ctx, query, user.Username, user.Email, time.Now()).
+        Scan(&amp;user.ID, &amp;user.CreatedAt)
+
+    return user, err
+}
+
+// GetByID retrieves a user by ID
+func (r *PostgresUserRepository) GetByID(ctx context.Context, id int) (User, error) {
+    query := `
+        SELECT id, username, email, created_at
+        FROM users
+        WHERE id = $1
+    `
+
+    var user User
+    err := r.db.QueryRowContext(ctx, query, id).
+        Scan(&amp;user.ID, &amp;user.Username, &amp;user.Email, &amp;user.CreatedAt)
+
+    return user, err
+}
+
+// GetByUsername retrieves a user by username
+func (r *PostgresUserRepository) GetByUsername(ctx context.Context, username string) (User, error) {
+    query := `
+        SELECT id, username, email, created_at
+        FROM users
+        WHERE username = $1
+    `
+
+    var user User
+    err := r.db.QueryRowContext(ctx, query, username).
+        Scan(&amp;user.ID, &amp;user.Username, &amp;user.Email, &amp;user.CreatedAt)
+
+    return user, err
+}
+
+// Update modifies an existing user
+func (r *PostgresUserRepository) Update(ctx context.Context, user User) error {
+    query := `
+        UPDATE users
+        SET username = $1, email = $2
+        WHERE id = $3
+    `
+
+    _, err := r.db.ExecContext(ctx, query, user.Username, user.Email, user.ID)
+    return err
+}
+
+// Delete removes a user
+func (r *PostgresUserRepository) Delete(ctx context.Context, id int) error {
+    query := `
+        DELETE FROM users
+        WHERE id = $1
+    `
+
+    _, err := r.db.ExecContext(ctx, query, id)
+    return err
+}
+
+// Using the repository in your application:
+func main() {
+    db, _ := sql.Open("postgres", "postgres://username:password@localhost:5432/myapp?sslmode=disable")
+
+    // Create repository
+    userRepo := NewPostgresUserRepository(db)
+
+    // Use repository methods
+    ctx := context.Background()
+
+    newUser := User{
+        Username: "johndoe",
+        Email:    "john@example.com",
+    }
+
+    createdUser, err := userRepo.Create(ctx, newUser)
+    if err != nil {
+        // Handle error
+    }
+
+    // Use createdUser...
+}
+</code></pre>
+<p>Benefits of the repository pattern:</p>
+<ul>
+<li><strong>Separation of concerns</strong>: Business logic is separated from data access</li>
+<li><strong>Testability</strong>: Easy to mock for unit tests</li>
+<li><strong>Swappable implementations</strong>: Change the database without changing business logic</li>
+<li><strong>Consistency</strong>: Standardized data access patterns</li>
+</ul>
+<h2 id="208-exercises"><a class="header" href="#208-exercises"><strong>20.8 Exercises</strong></a></h2>
+<h3 id="exercise-1-basic-sql-operations"><a class="header" href="#exercise-1-basic-sql-operations"><strong>Exercise 1: Basic SQL Operations</strong></a></h3>
+<p>Create a simple CLI application that performs CRUD operations on a database of books. Include the following functionality:</p>
+<ul>
+<li>Add a new book with title, author, and publication year</li>
+<li>List all books</li>
+<li>Find books by author</li>
+<li>Update book details</li>
+<li>Delete a book</li>
+</ul>
+<h3 id="exercise-2-working-with-relationships"><a class="header" href="#exercise-2-working-with-relationships"><strong>Exercise 2: Working with Relationships</strong></a></h3>
+<p>Extend Exercise 1 to include categories and authors as separate entities:</p>
+<ul>
+<li>Authors have names and biographies</li>
+<li>Categories have names and descriptions</li>
+<li>Books belong to one or more categories</li>
+<li>Books have a single author</li>
+</ul>
+<p>Implement queries that:</p>
+<ul>
+<li>Show all books by a specific author</li>
+<li>List books in a particular category</li>
+<li>Show authors who have written books in a specific category</li>
+</ul>
+<h3 id="exercise-3-implement-a-repository-layer"><a class="header" href="#exercise-3-implement-a-repository-layer"><strong>Exercise 3: Implement a Repository Layer</strong></a></h3>
+<p>Create a repository pattern implementation for a user management system:</p>
+<ul>
+<li>Define a <code>UserRepository</code> interface</li>
+<li>Create a PostgreSQL implementation</li>
+<li>Create an in-memory implementation for testing</li>
+<li>Write a simple service that uses the repository</li>
+<li>Write tests for the service using the in-memory repository</li>
+</ul>
+<h3 id="exercise-4-database-migrations"><a class="header" href="#exercise-4-database-migrations"><strong>Exercise 4: Database Migrations</strong></a></h3>
+<p>Implement a migration system for a blog application with:</p>
+<ul>
+<li>Users table</li>
+<li>Posts table</li>
+<li>Comments table</li>
+<li>Tags table</li>
+<li>Post-tag many-to-many relationship</li>
+</ul>
+<p>Create migrations for:</p>
+<ol>
+<li>The initial schema</li>
+<li>Adding user profile information</li>
+<li>Adding post view counts</li>
+<li>Adding soft delete to posts</li>
+</ol>
+<h3 id="exercise-5-build-a-redis-cache-layer"><a class="header" href="#exercise-5-build-a-redis-cache-layer"><strong>Exercise 5: Build a Redis Cache Layer</strong></a></h3>
+<p>Create a caching layer using Redis to improve performance of database queries:</p>
+<ul>
+<li>Implement a function to get a user by ID</li>
+<li>If the user is in the cache, return it</li>
+<li>If not, fetch from the database and store in the cache</li>
+<li>Add proper cache invalidation when a user is updated</li>
+<li>Add a TTL (time to live) for cache entries</li>
+<li>Implement cache statistics (hits/misses)</li>
+</ul>
+<h2 id="209-summary"><a class="header" href="#209-summary"><strong>20.9 Summary</strong></a></h2>
+<p>In this chapter, we've explored various approaches to working with databases in Go:</p>
+<ul>
+<li><strong>Standard Library</strong>: Using <code>database/sql</code> for SQL databases</li>
+<li><strong>PostgreSQL</strong>: Leveraging PostgreSQL-specific features</li>
+<li><strong>ORMs and Query Builders</strong>: Working with GORM and SQLx</li>
+<li><strong>NoSQL</strong>: Using MongoDB and Redis</li>
+<li><strong>Migrations</strong>: Managing database schema changes</li>
+<li><strong>Best Practices</strong>: Connection management, security, and the repository pattern</li>
+</ul>
+<p>Go's simplicity and performance make it an excellent choice for database applications. The standard library provides a solid foundation, while third-party packages offer higher-level abstractions when needed.</p>
+<p>When working with databases in Go, remember these key points:</p>
+<ol>
+<li>Use the right tool for the job: SQL for structured data, NoSQL for flexibility</li>
+<li>Manage database connections properly to avoid leaks and performance issues</li>
+<li>Use prepared statements and parameterized queries for security and performance</li>
+<li>Consider the repository pattern to abstract database operations</li>
+<li>Implement proper migration strategies to manage schema changes</li>
+<li>Test database interactions thoroughly</li>
+</ol>
+<p>By following these principles, you can build robust, efficient, and maintainable database-driven applications in Go.</p>
+<p><strong>Next Up</strong>: In Chapter 21, we'll explore building microservices in Go, leveraging our knowledge of databases along with web services to create distributed systems.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-19-Generics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-21-Building-RESTful-APIs.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-19-Generics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-21-Building-RESTful-APIs.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

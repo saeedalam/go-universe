@@ -1,0 +1,2668 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Microservices - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-22-Microservices.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-22-building-microservices-in-go"><a class="header" href="#chapter-22-building-microservices-in-go"><strong>Chapter 22: Building Microservices in Go</strong></a></h1>
+<p>Go has emerged as one of the most popular languages for building microservices due to its simplicity, performance, concurrency model, and small memory footprint. This chapter explores microservices architecture patterns and implementation techniques in Go, building on the RESTful API concepts from the previous chapter.</p>
+<h2 id="221-introduction-to-microservices"><a class="header" href="#221-introduction-to-microservices"><strong>22.1 Introduction to Microservices</strong></a></h2>
+<h3 id="2211-what-are-microservices"><a class="header" href="#2211-what-are-microservices"><strong>22.1.1 What Are Microservices?</strong></a></h3>
+<p>Microservices architecture is an approach to application development where a large application is built as a suite of small, independently deployable services. Each service runs in its own process, communicates through well-defined APIs, and is owned by a small team.</p>
+<p>Key characteristics of microservices include:</p>
+<ol>
+<li><strong>Service Independence</strong>: Each service can be developed, deployed, operated, and scaled independently</li>
+<li><strong>Domain-Driven Design</strong>: Services are organized around business capabilities</li>
+<li><strong>Decentralized Data Management</strong>: Each service manages its own database</li>
+<li><strong>Smart Endpoints, Dumb Pipes</strong>: Complex processing happens within services, while communication is simple</li>
+<li><strong>Designed for Failure</strong>: Services are resilient and can handle failures gracefully</li>
+<li><strong>Evolutionary Design</strong>: The architecture evolves over time based on business needs</li>
+</ol>
+<h3 id="2212-monolithic-vs-microservices-architecture"><a class="header" href="#2212-monolithic-vs-microservices-architecture"><strong>22.1.2 Monolithic vs. Microservices Architecture</strong></a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Aspect</th><th>Monolithic</th><th>Microservices</th></tr></thead><tbody>
+<tr><td>Development</td><td>Simple at first, becomes complex over time</td><td>Complex initially, simplifies with maturity</td></tr>
+<tr><td>Deployment</td><td>Single unit deployment</td><td>Independent service deployment</td></tr>
+<tr><td>Scaling</td><td>Scale entire application</td><td>Scale individual services as needed</td></tr>
+<tr><td>Reliability</td><td>Single point of failure</td><td>Isolated failures</td></tr>
+<tr><td>Technology</td><td>One technology stack</td><td>Polyglot architecture possible</td></tr>
+<tr><td>Team Structure</td><td>Organized by technical layers</td><td>Organized by business domains</td></tr>
+<tr><td>Data Management</td><td>Shared database</td><td>Database per service</td></tr>
+<tr><td>Communication</td><td>In-process function calls</td><td>Network calls (REST, gRPC, messaging)</td></tr>
+</tbody></table>
+</div>
+<h3 id="2213-when-to-use-microservices"><a class="header" href="#2213-when-to-use-microservices"><strong>22.1.3 When to Use Microservices</strong></a></h3>
+<p>Microservices are not a silver bullet. Consider these factors when deciding on an architecture:</p>
+<p><strong>Use microservices when:</strong></p>
+<ul>
+<li>Building large, complex applications</li>
+<li>Needing independent scaling of components</li>
+<li>Requiring frequent, independent deployments</li>
+<li>Working with multiple teams on the same application</li>
+<li>Planning for long-term evolution of the system</li>
+</ul>
+<p><strong>Consider monoliths when:</strong></p>
+<ul>
+<li>Building simple applications</li>
+<li>Starting a new project with uncertain requirements</li>
+<li>Working with a small team</li>
+<li>Lacking expertise in distributed systems</li>
+<li>Having tight deadlines for initial deployment</li>
+</ul>
+<h3 id="2214-gos-suitability-for-microservices"><a class="header" href="#2214-gos-suitability-for-microservices"><strong>22.1.4 Go's Suitability for Microservices</strong></a></h3>
+<p>Go offers several advantages for microservices development:</p>
+<ol>
+<li><strong>Fast Compilation</strong>: Quick feedback cycle during development</li>
+<li><strong>Small Binary Size</strong>: Lower container image sizes and faster deployments</li>
+<li><strong>Low Memory Footprint</strong>: Efficient resource utilization</li>
+<li><strong>Built-in Concurrency</strong>: Natural handling of concurrent requests</li>
+<li><strong>Standard Library HTTP Support</strong>: Solid foundation for service communication</li>
+<li><strong>Cross-Compilation</strong>: Build for different platforms easily</li>
+<li><strong>Simplicity</strong>: Easier to onboard new developers</li>
+</ol>
+<h2 id="222-designing-microservices-architecture"><a class="header" href="#222-designing-microservices-architecture"><strong>22.2 Designing Microservices Architecture</strong></a></h2>
+<h3 id="2221-service-decomposition-strategies"><a class="header" href="#2221-service-decomposition-strategies"><strong>22.2.1 Service Decomposition Strategies</strong></a></h3>
+<p>Splitting a system into microservices requires careful consideration:</p>
+<h4 id="domain-driven-design-ddd"><a class="header" href="#domain-driven-design-ddd"><strong>Domain-Driven Design (DDD)</strong></a></h4>
+<p>DDD provides a framework for defining service boundaries based on business domains:</p>
+<pre><code>Customer Domain:
+- Customer Registration
+- Customer Profile Management
+- Customer Authentication
+
+Order Domain:
+- Order Creation
+- Order Processing
+- Order Fulfillment
+
+Inventory Domain:
+- Stock Management
+- Warehouse Operations
+- Inventory Tracking
+</code></pre>
+<h4 id="business-capability-pattern"><a class="header" href="#business-capability-pattern"><strong>Business Capability Pattern</strong></a></h4>
+<p>Organize services around business capabilities:</p>
+<pre><code>User Service:
+- User registration, authentication, profiles
+
+Product Service:
+- Product catalog, pricing, inventory
+
+Order Service:
+- Order processing, payment, fulfillment
+
+Notification Service:
+- Email, SMS, push notifications
+</code></pre>
+<h4 id="strangler-pattern"><a class="header" href="#strangler-pattern"><strong>Strangler Pattern</strong></a></h4>
+<p>Gradually migrate from a monolith to microservices:</p>
+<ol>
+<li>Identify a bounded context to extract</li>
+<li>Create a new service for that context</li>
+<li>Redirect traffic from the monolith to the new service</li>
+<li>Repeat for other contexts</li>
+</ol>
+<h3 id="2222-service-communication-patterns"><a class="header" href="#2222-service-communication-patterns"><strong>22.2.2 Service Communication Patterns</strong></a></h3>
+<p>There are several ways microservices can communicate:</p>
+<h4 id="synchronous-communication"><a class="header" href="#synchronous-communication"><strong>Synchronous Communication</strong></a></h4>
+<ul>
+<li><strong>REST APIs</strong>: HTTP-based communication with JSON/XML payloads</li>
+<li><strong>gRPC</strong>: High-performance RPC framework using Protocol Buffers</li>
+<li><strong>GraphQL</strong>: Query language for APIs with client-specified data retrieval</li>
+</ul>
+<h4 id="asynchronous-communication"><a class="header" href="#asynchronous-communication"><strong>Asynchronous Communication</strong></a></h4>
+<ul>
+<li><strong>Message Queues</strong>: Point-to-point communication (RabbitMQ, Amazon SQS)</li>
+<li><strong>Pub/Sub</strong>: One-to-many communication (NATS, Kafka, Google Pub/Sub)</li>
+<li><strong>Event Streaming</strong>: Real-time event processing (Kafka, Amazon Kinesis)</li>
+</ul>
+<h4 id="communication-styles"><a class="header" href="#communication-styles"><strong>Communication Styles</strong></a></h4>
+<ul>
+<li><strong>Request/Response</strong>: Client makes a request and waits for a response</li>
+<li><strong>Event-Driven</strong>: Services emit and react to events</li>
+<li><strong>Command Query Responsibility Segregation (CQRS)</strong>: Separate read and write operations</li>
+</ul>
+<h3 id="2223-service-discovery-and-registration"><a class="header" href="#2223-service-discovery-and-registration"><strong>22.2.3 Service Discovery and Registration</strong></a></h3>
+<p>Services need to locate and communicate with each other:</p>
+<h4 id="service-registry"><a class="header" href="#service-registry"><strong>Service Registry</strong></a></h4>
+<p>A central repository of service locations:</p>
+<ul>
+<li><strong>Consul</strong>: Feature-rich service discovery with health checking</li>
+<li><strong>etcd</strong>: Distributed key-value store</li>
+<li><strong>ZooKeeper</strong>: Centralized service for configuration and synchronization</li>
+</ul>
+<h4 id="client-side-discovery"><a class="header" href="#client-side-discovery"><strong>Client-Side Discovery</strong></a></h4>
+<p>The client is responsible for determining the location of a service instance:</p>
+<pre><code class="language-go">package main
+
+import (
+    "log"
+
+    "github.com/hashicorp/consul/api"
+)
+
+func getServiceURL(serviceName string) (string, error) {
+    // Configure Consul client
+    config := api.DefaultConfig()
+    client, err := api.NewClient(config)
+    if err != nil {
+        return "", err
+    }
+
+    // Query for service
+    services, _, err := client.Catalog().Service(serviceName, "", nil)
+    if err != nil {
+        return "", err
+    }
+
+    if len(services) == 0 {
+        return "", fmt.Errorf("service '%s' not found", serviceName)
+    }
+
+    // Return first available instance
+    service := services[0]
+    return fmt.Sprintf("http://%s:%d", service.ServiceAddress, service.ServicePort), nil
+}
+</code></pre>
+<h4 id="server-side-discovery"><a class="header" href="#server-side-discovery"><strong>Server-Side Discovery</strong></a></h4>
+<p>A load balancer or router handles service discovery:</p>
+<pre><code>Client -&gt; API Gateway -&gt; Service Registry -&gt; Service Instance
+</code></pre>
+<h3 id="2224-api-gateway-pattern"><a class="header" href="#2224-api-gateway-pattern"><strong>22.2.4 API Gateway Pattern</strong></a></h3>
+<p>An API Gateway provides a single entry point for clients:</p>
+<pre><code>                   ┌─────────────────┐
+                   │                 │
+ ┌─────────┐       │  User Service   │
+ │         │       │                 │
+ │ Client  │◄─────►│                 │
+ │         │       └─────────────────┘
+ └─────────┘       ┌─────────────────┐
+      │            │                 │
+      │            │  Order Service  │
+      │            │                 │
+      ▼            │                 │
+┌───────────┐      └─────────────────┘
+│           │      ┌─────────────────┐
+│    API    │      │                 │
+│  Gateway  │◄────►│ Product Service │
+│           │      │                 │
+└───────────┘      │                 │
+                   └─────────────────┘
+</code></pre>
+<p>Benefits of an API Gateway:</p>
+<ul>
+<li><strong>Single entry point</strong> for all client requests</li>
+<li><strong>Request routing</strong> to appropriate services</li>
+<li><strong>Protocol translation</strong> (e.g., HTTP to gRPC)</li>
+<li><strong>Authentication and authorization</strong></li>
+<li><strong>Rate limiting and throttling</strong></li>
+<li><strong>Response caching</strong></li>
+<li><strong>Request/response transformation</strong></li>
+<li><strong>Service aggregation</strong></li>
+</ul>
+<h2 id="223-building-microservices-in-go"><a class="header" href="#223-building-microservices-in-go"><strong>22.3 Building Microservices in Go</strong></a></h2>
+<h3 id="2231-service-template"><a class="header" href="#2231-service-template"><strong>22.3.1 Service Template</strong></a></h3>
+<p>Let's define a template for a Go microservice:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "log"
+    "net/http"
+    "os"
+    "os/signal"
+    "syscall"
+    "time"
+
+    "github.com/gorilla/mux"
+)
+
+func main() {
+    // Create router
+    r := mux.NewRouter()
+
+    // Register routes
+    r.HandleFunc("/health", healthHandler).Methods("GET")
+    r.HandleFunc("/api/v1/resource", getResourcesHandler).Methods("GET")
+    r.HandleFunc("/api/v1/resource", createResourceHandler).Methods("POST")
+    r.HandleFunc("/api/v1/resource/{id}", getResourceHandler).Methods("GET")
+
+    // Create server
+    srv := &amp;http.Server{
+        Addr:         ":8080",
+        Handler:      r,
+        ReadTimeout:  10 * time.Second,
+        WriteTimeout: 10 * time.Second,
+        IdleTimeout:  60 * time.Second,
+    }
+
+    // Start server in a goroutine
+    go func() {
+        log.Println("Starting server on port 8080")
+        if err := srv.ListenAndServe(); err != nil &amp;&amp; err != http.ErrServerClosed {
+            log.Fatalf("Server failed to start: %v", err)
+        }
+    }()
+
+    // Graceful shutdown
+    quit := make(chan os.Signal, 1)
+    signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+    &lt;-quit
+
+    log.Println("Server is shutting down...")
+
+    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+    defer cancel()
+
+    if err := srv.Shutdown(ctx); err != nil {
+        log.Fatalf("Server forced to shutdown: %v", err)
+    }
+
+    log.Println("Server exited properly")
+}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte(`{"status":"healthy"}`))
+}
+
+func getResourcesHandler(w http.ResponseWriter, r *http.Request) {
+    // Implementation
+}
+
+func createResourceHandler(w http.ResponseWriter, r *http.Request) {
+    // Implementation
+}
+
+func getResourceHandler(w http.ResponseWriter, r *http.Request) {
+    // Implementation
+}
+</code></pre>
+<p>This template includes:</p>
+<ul>
+<li>Router setup with common endpoints</li>
+<li>Graceful shutdown handling</li>
+<li>Health check endpoint</li>
+<li>Appropriate timeout configurations</li>
+</ul>
+<h3 id="2232-service-configuration"><a class="header" href="#2232-service-configuration"><strong>22.3.2 Service Configuration</strong></a></h3>
+<p>Manage service configuration with environment variables:</p>
+<pre><code class="language-go">package config
+
+import (
+    "fmt"
+    "os"
+    "strconv"
+    "time"
+)
+
+// Config holds all configuration for the service
+type Config struct {
+    Server   ServerConfig
+    Database DatabaseConfig
+    Logging  LoggingConfig
+}
+
+// ServerConfig holds server configuration
+type ServerConfig struct {
+    Port            int
+    ReadTimeout     time.Duration
+    WriteTimeout    time.Duration
+    ShutdownTimeout time.Duration
+}
+
+// DatabaseConfig holds database configuration
+type DatabaseConfig struct {
+    Host     string
+    Port     int
+    User     string
+    Password string
+    Database string
+    SSLMode  string
+}
+
+// LoggingConfig holds logging configuration
+type LoggingConfig struct {
+    Level string
+}
+
+// Load returns configuration loaded from environment variables
+func Load() (*Config, error) {
+    port, err := strconv.Atoi(getEnv("SERVER_PORT", "8080"))
+    if err != nil {
+        return nil, fmt.Errorf("invalid port: %w", err)
+    }
+
+    dbPort, err := strconv.Atoi(getEnv("DB_PORT", "5432"))
+    if err != nil {
+        return nil, fmt.Errorf("invalid database port: %w", err)
+    }
+
+    readTimeout, err := time.ParseDuration(getEnv("SERVER_READ_TIMEOUT", "10s"))
+    if err != nil {
+        return nil, fmt.Errorf("invalid read timeout: %w", err)
+    }
+
+    writeTimeout, err := time.ParseDuration(getEnv("SERVER_WRITE_TIMEOUT", "10s"))
+    if err != nil {
+        return nil, fmt.Errorf("invalid write timeout: %w", err)
+    }
+
+    shutdownTimeout, err := time.ParseDuration(getEnv("SERVER_SHUTDOWN_TIMEOUT", "30s"))
+    if err != nil {
+        return nil, fmt.Errorf("invalid shutdown timeout: %w", err)
+    }
+
+    return &amp;Config{
+        Server: ServerConfig{
+            Port:            port,
+            ReadTimeout:     readTimeout,
+            WriteTimeout:    writeTimeout,
+            ShutdownTimeout: shutdownTimeout,
+        },
+        Database: DatabaseConfig{
+            Host:     getEnv("DB_HOST", "localhost"),
+            Port:     dbPort,
+            User:     getEnv("DB_USER", "postgres"),
+            Password: getEnv("DB_PASSWORD", "password"),
+            Database: getEnv("DB_NAME", "service"),
+            SSLMode:  getEnv("DB_SSLMODE", "disable"),
+        },
+        Logging: LoggingConfig{
+            Level: getEnv("LOG_LEVEL", "info"),
+        },
+    }, nil
+}
+
+// Helper function to get environment variable with a default value
+func getEnv(key, defaultValue string) string {
+    value := os.Getenv(key)
+    if value == "" {
+        return defaultValue
+    }
+    return value
+}
+</code></pre>
+<h3 id="2233-structured-logging"><a class="header" href="#2233-structured-logging"><strong>22.3.3 Structured Logging</strong></a></h3>
+<p>Implement structured logging for better observability:</p>
+<pre><code class="language-go">package logger
+
+import (
+    "os"
+
+    "go.uber.org/zap"
+    "go.uber.org/zap/zapcore"
+)
+
+// NewLogger creates a new structured logger
+func NewLogger(level string) (*zap.Logger, error) {
+    logLevel, err := zapcore.ParseLevel(level)
+    if err != nil {
+        return nil, err
+    }
+
+    config := zap.NewProductionEncoderConfig()
+    config.EncodeTime = zapcore.ISO8601TimeEncoder
+
+    core := zapcore.NewCore(
+        zapcore.NewJSONEncoder(config),
+        zapcore.AddSync(os.Stdout),
+        logLevel,
+    )
+
+    return zap.New(core, zap.AddCaller()), nil
+}
+
+// Example usage:
+// log, err := logger.NewLogger("info")
+// if err != nil {
+//     panic(err)
+// }
+// defer log.Sync()
+//
+// log.Info("Server starting",
+//     zap.Int("port", 8080),
+//     zap.String("environment", "production"))
+</code></pre>
+<h2 id="224-microservices-communication"><a class="header" href="#224-microservices-communication"><strong>22.4 Microservices Communication</strong></a></h2>
+<h3 id="2241-rest-based-communication"><a class="header" href="#2241-rest-based-communication"><strong>22.4.1 REST-based Communication</strong></a></h3>
+<p>REST is a common approach for microservice communication:</p>
+<pre><code class="language-go">package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+    "time"
+)
+
+// UserService client for REST communication
+type UserService struct {
+    baseURL    string
+    httpClient *http.Client
+}
+
+// NewUserService creates a new UserService client
+func NewUserService(baseURL string) *UserService {
+    return &amp;UserService{
+        baseURL: baseURL,
+        httpClient: &amp;http.Client{
+            Timeout: 5 * time.Second,
+        },
+    }
+}
+
+// User represents a user in the system
+type User struct {
+    ID        int    `json:"id"`
+    Username  string `json:"username"`
+    Email     string `json:"email"`
+    CreatedAt string `json:"created_at"`
+}
+
+// GetUser retrieves a user by ID
+func (s *UserService) GetUser(id int) (*User, error) {
+    url := fmt.Sprintf("%s/users/%d", s.baseURL, id)
+
+    resp, err := s.httpClient.Get(url)
+    if err != nil {
+        return nil, fmt.Errorf("failed to get user: %w", err)
+    }
+    defer resp.Body.Close()
+
+    if resp.StatusCode != http.StatusOK {
+        return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+    }
+
+    var user User
+    if err := json.NewDecoder(resp.Body).Decode(&amp;user); err != nil {
+        return nil, fmt.Errorf("failed to decode response: %w", err)
+    }
+
+    return &amp;user, nil
+}
+
+// CreateUser creates a new user
+func (s *UserService) CreateUser(user User) (*User, error) {
+    url := fmt.Sprintf("%s/users", s.baseURL)
+
+    data, err := json.Marshal(user)
+    if err != nil {
+        return nil, fmt.Errorf("failed to marshal user: %w", err)
+    }
+
+    resp, err := s.httpClient.Post(url, "application/json", bytes.NewBuffer(data))
+    if err != nil {
+        return nil, fmt.Errorf("failed to create user: %w", err)
+    }
+    defer resp.Body.Close()
+
+    if resp.StatusCode != http.StatusCreated {
+        return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+    }
+
+    var createdUser User
+    if err := json.NewDecoder(resp.Body).Decode(&amp;createdUser); err != nil {
+        return nil, fmt.Errorf("failed to decode response: %w", err)
+    }
+
+    return &amp;createdUser, nil
+}
+
+// Example usage:
+// userService := NewUserService("http://user-service:8080")
+// user, err := userService.GetUser(123)
+</code></pre>
+<p>While REST is simple to implement, it has limitations for microservices:</p>
+<ul>
+<li>Overhead of HTTP for each request</li>
+<li>No strict contract for API definition</li>
+<li>Limited to request/response pattern</li>
+<li>Serialization/deserialization costs with JSON</li>
+</ul>
+<h3 id="2242-grpc-communication"><a class="header" href="#2242-grpc-communication"><strong>22.4.2 gRPC Communication</strong></a></h3>
+<p>gRPC is a high-performance RPC framework that addresses many REST limitations:</p>
+<p>First, define your service using Protocol Buffers:</p>
+<pre><code class="language-protobuf">// user.proto
+syntax = "proto3";
+
+package user;
+option go_package = "github.com/yourorg/userservice/proto";
+
+import "google/protobuf/timestamp.proto";
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (User) {}
+  rpc CreateUser(CreateUserRequest) returns (User) {}
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse) {}
+  rpc UpdateUser(UpdateUserRequest) returns (User) {}
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {}
+}
+
+message GetUserRequest {
+  int64 id = 1;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+}
+
+message UpdateUserRequest {
+  int64 id = 1;
+  string username = 2;
+  string email = 3;
+}
+
+message DeleteUserRequest {
+  int64 id = 1;
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+}
+
+message ListUsersRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  int32 total = 2;
+}
+
+message User {
+  int64 id = 1;
+  string username = 2;
+  string email = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+</code></pre>
+<p>Implementing the gRPC server:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "log"
+    "net"
+    "time"
+
+    "google.golang.org/grpc"
+    "google.golang.org/protobuf/types/known/timestamppb"
+
+    pb "github.com/yourorg/userservice/proto"
+)
+
+type userServiceServer struct {
+    pb.UnimplementedUserServiceServer
+    // In a real implementation, add repository dependencies here
+}
+
+func (s *userServiceServer) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.User, error) {
+    // In a real implementation, fetch from database
+    // This is a mock response
+    return &amp;pb.User{
+        Id:        req.Id,
+        Username:  "testuser",
+        Email:     "test@example.com",
+        CreatedAt: timestamppb.New(time.Now()),
+    }, nil
+}
+
+func (s *userServiceServer) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.User, error) {
+    // In a real implementation, save to database
+    // This is a mock response
+    return &amp;pb.User{
+        Id:        123, // Generated ID
+        Username:  req.Username,
+        Email:     req.Email,
+        CreatedAt: timestamppb.New(time.Now()),
+    }, nil
+}
+
+func (s *userServiceServer) ListUsers(ctx context.Context, req *pb.ListUsersRequest) (*pb.ListUsersResponse, error) {
+    // Implementation omitted for brevity
+    return &amp;pb.ListUsersResponse{}, nil
+}
+
+func (s *userServiceServer) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.User, error) {
+    // Implementation omitted for brevity
+    return &amp;pb.User{}, nil
+}
+
+func (s *userServiceServer) DeleteUser(ctx context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
+    // Implementation omitted for brevity
+    return &amp;pb.DeleteUserResponse{Success: true}, nil
+}
+
+func main() {
+    lis, err := net.Listen("tcp", ":50051")
+    if err != nil {
+        log.Fatalf("failed to listen: %v", err)
+    }
+
+    grpcServer := grpc.NewServer()
+    pb.RegisterUserServiceServer(grpcServer, &amp;userServiceServer{})
+
+    log.Println("gRPC server starting on port 50051")
+    if err := grpcServer.Serve(lis); err != nil {
+        log.Fatalf("failed to serve: %v", err)
+    }
+}
+</code></pre>
+<p>Implementing the gRPC client:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "log"
+    "time"
+
+    "google.golang.org/grpc"
+    "google.golang.org/grpc/credentials/insecure"
+
+    pb "github.com/yourorg/userservice/proto"
+)
+
+func main() {
+    // Set up connection to server
+    conn, err := grpc.Dial("user-service:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+    if err != nil {
+        log.Fatalf("did not connect: %v", err)
+    }
+    defer conn.Close()
+
+    // Create client
+    client := pb.NewUserServiceClient(conn)
+
+    // Set timeout
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+    defer cancel()
+
+    // Get user
+    user, err := client.GetUser(ctx, &amp;pb.GetUserRequest{Id: 123})
+    if err != nil {
+        log.Fatalf("could not get user: %v", err)
+    }
+    log.Printf("User: %s (%s)", user.Username, user.Email)
+
+    // Create user
+    newUser, err := client.CreateUser(ctx, &amp;pb.CreateUserRequest{
+        Username: "newuser",
+        Email:    "new@example.com",
+    })
+    if err != nil {
+        log.Fatalf("could not create user: %v", err)
+    }
+    log.Printf("Created user with ID: %d", newUser.Id)
+}
+</code></pre>
+<p>Advantages of gRPC:</p>
+<ul>
+<li>Strongly typed contracts with Protocol Buffers</li>
+<li>Efficient binary serialization</li>
+<li>Built-in code generation for multiple languages</li>
+<li>Support for streaming (unary, server, client, and bidirectional)</li>
+<li>HTTP/2 for multiplexing requests and header compression</li>
+</ul>
+<h3 id="2243-event-driven-architecture"><a class="header" href="#2243-event-driven-architecture"><strong>22.4.3 Event-Driven Architecture</strong></a></h3>
+<p>Event-driven architecture enables loose coupling between services:</p>
+<pre><code>┌───────────┐     ┌─────────────┐     ┌───────────────┐
+│           │     │             │     │               │
+│  Service  │────►│  Message    │────►│  Service B    │
+│     A     │     │  Broker     │     │               │
+│           │     │             │     └───────────────┘
+└───────────┘     │             │     ┌───────────────┐
+                  │             │────►│               │
+                  │             │     │  Service C    │
+                  └─────────────┘     │               │
+                                      └───────────────┘
+</code></pre>
+<p>Using NATS for event-driven communication:</p>
+<pre><code class="language-go">package main
+
+import (
+    "encoding/json"
+    "log"
+    "time"
+
+    "github.com/nats-io/nats.go"
+)
+
+// UserCreatedEvent represents a user creation event
+type UserCreatedEvent struct {
+    ID        int       `json:"id"`
+    Username  string    `json:"username"`
+    Email     string    `json:"email"`
+    CreatedAt time.Time `json:"created_at"`
+}
+
+// PublishUserCreated publishes a user created event
+func PublishUserCreated(nc *nats.Conn, user UserCreatedEvent) error {
+    data, err := json.Marshal(user)
+    if err != nil {
+        return err
+    }
+
+    return nc.Publish("user.created", data)
+}
+
+// SubscribeToUserCreated subscribes to user created events
+func SubscribeToUserCreated(nc *nats.Conn, handler func(UserCreatedEvent)) error {
+    _, err := nc.Subscribe("user.created", func(msg *nats.Msg) {
+        var event UserCreatedEvent
+        if err := json.Unmarshal(msg.Data, &amp;event); err != nil {
+            log.Printf("Error unmarshaling event: %v", err)
+            return
+        }
+
+        handler(event)
+    })
+
+    return err
+}
+
+func main() {
+    // Connect to NATS
+    nc, err := nats.Connect(nats.DefaultURL)
+    if err != nil {
+        log.Fatalf("Error connecting to NATS: %v", err)
+    }
+    defer nc.Close()
+
+    // Subscribe to user created events
+    err = SubscribeToUserCreated(nc, func(event UserCreatedEvent) {
+        log.Printf("Received user created event: %+v", event)
+        // Process the event
+    })
+    if err != nil {
+        log.Fatalf("Error subscribing: %v", err)
+    }
+
+    // Publish a user created event
+    event := UserCreatedEvent{
+        ID:        123,
+        Username:  "newuser",
+        Email:     "new@example.com",
+        CreatedAt: time.Now(),
+    }
+
+    if err := PublishUserCreated(nc, event); err != nil {
+        log.Fatalf("Error publishing event: %v", err)
+    }
+
+    log.Println("Event published successfully")
+}
+</code></pre>
+<h3 id="2244-circuit-breaker-pattern"><a class="header" href="#2244-circuit-breaker-pattern"><strong>22.4.4 Circuit Breaker Pattern</strong></a></h3>
+<p>Implement circuit breakers to handle service failures gracefully:</p>
+<pre><code class="language-go">package main
+
+import (
+    "errors"
+    "fmt"
+    "time"
+
+    "github.com/sony/gobreaker"
+)
+
+// UserServiceClient with circuit breaker
+type UserServiceClient struct {
+    baseURL string
+    cb      *gobreaker.CircuitBreaker
+}
+
+// NewUserServiceClient creates a new client with circuit breaker
+func NewUserServiceClient(baseURL string) *UserServiceClient {
+    settings := gobreaker.Settings{
+        Name:        "user-service",
+        MaxRequests: 5,
+        Interval:    10 * time.Second,
+        Timeout:     30 * time.Second,
+        ReadyToTrip: func(counts gobreaker.Counts) bool {
+            failureRatio := float64(counts.TotalFailures) / float64(counts.Requests)
+            return counts.Requests &gt;= 10 &amp;&amp; failureRatio &gt;= 0.5
+        },
+        OnStateChange: func(name string, from gobreaker.State, to gobreaker.State) {
+            fmt.Printf("Circuit breaker '%s' changed from '%s' to '%s'\n", name, from, to)
+        },
+    }
+
+    return &amp;UserServiceClient{
+        baseURL: baseURL,
+        cb:      gobreaker.NewCircuitBreaker(settings),
+    }
+}
+
+// GetUser gets a user with circuit breaker protection
+func (c *UserServiceClient) GetUser(id int) (*User, error) {
+    result, err := c.cb.Execute(func() (interface{}, error) {
+        // Call the actual service (simplified here)
+        if id &lt; 0 {
+            return nil, errors.New("user not found")
+        }
+
+        return &amp;User{
+            ID:       id,
+            Username: "testuser",
+            Email:    "test@example.com",
+        }, nil
+    })
+
+    if err != nil {
+        return nil, err
+    }
+
+    return result.(*User), nil
+}
+
+// Example usage:
+// client := NewUserServiceClient("http://user-service:8080")
+// user, err := client.GetUser(123)
+</code></pre>
+<p>The circuit breaker pattern:</p>
+<ul>
+<li>Prevents cascading failures across services</li>
+<li>Allows failed services time to recover</li>
+<li>Provides fast failure responses instead of waiting for timeouts</li>
+<li>Automatically restores service when it becomes healthy</li>
+</ul>
+<h2 id="225-data-management-in-microservices"><a class="header" href="#225-data-management-in-microservices"><strong>22.5 Data Management in Microservices</strong></a></h2>
+<h3 id="2251-database-per-service"><a class="header" href="#2251-database-per-service"><strong>22.5.1 Database per Service</strong></a></h3>
+<p>Each microservice should own its data and have its own database:</p>
+<pre><code>┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│               │    │               │    │               │
+│ User Service  │    │ Order Service │    │Product Service│
+│               │    │               │    │               │
+└───────┬───────┘    └───────┬───────┘    └───────┬───────┘
+        │                    │                    │
+        ▼                    ▼                    ▼
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│               │    │               │    │               │
+│  User DB      │    │  Order DB     │    │  Product DB   │
+│               │    │               │    │               │
+└───────────────┘    └───────────────┘    └───────────────┘
+</code></pre>
+<p>Benefits of this approach:</p>
+<ul>
+<li>Independent scaling of databases</li>
+<li>Technology choice flexibility</li>
+<li>Isolation of failures</li>
+<li>Reduced contention</li>
+<li>Clear ownership boundaries</li>
+</ul>
+<p>Implementation example with user service:</p>
+<pre><code class="language-go">package repository
+
+import (
+    "context"
+    "fmt"
+    "time"
+
+    "github.com/jackc/pgx/v4/pgxpool"
+)
+
+// User represents a user entity
+type User struct {
+    ID        int       `json:"id"`
+    Username  string    `json:"username"`
+    Email     string    `json:"email"`
+    CreatedAt time.Time `json:"created_at"`
+}
+
+// UserRepository handles database operations for users
+type UserRepository struct {
+    pool *pgxpool.Pool
+}
+
+// NewUserRepository creates a new user repository
+func NewUserRepository(connString string) (*UserRepository, error) {
+    pool, err := pgxpool.Connect(context.Background(), connString)
+    if err != nil {
+        return nil, fmt.Errorf("failed to connect to database: %w", err)
+    }
+
+    return &amp;UserRepository{pool: pool}, nil
+}
+
+// Get retrieves a user by ID
+func (r *UserRepository) Get(ctx context.Context, id int) (*User, error) {
+    query := `SELECT id, username, email, created_at FROM users WHERE id = $1`
+
+    var user User
+    err := r.pool.QueryRow(ctx, query, id).Scan(
+        &amp;user.ID,
+        &amp;user.Username,
+        &amp;user.Email,
+        &amp;user.CreatedAt,
+    )
+    if err != nil {
+        return nil, fmt.Errorf("failed to get user: %w", err)
+    }
+
+    return &amp;user, nil
+}
+
+// Create inserts a new user
+func (r *UserRepository) Create(ctx context.Context, user User) (*User, error) {
+    query := `
+        INSERT INTO users (username, email, created_at)
+        VALUES ($1, $2, $3)
+        RETURNING id, created_at
+    `
+
+    err := r.pool.QueryRow(
+        ctx,
+        query,
+        user.Username,
+        user.Email,
+        time.Now(),
+    ).Scan(&amp;user.ID, &amp;user.CreatedAt)
+
+    if err != nil {
+        return nil, fmt.Errorf("failed to create user: %w", err)
+    }
+
+    return &amp;user, nil
+}
+
+// Close closes the repository
+func (r *UserRepository) Close() {
+    r.pool.Close()
+}
+</code></pre>
+<h3 id="2252-handling-data-consistency"><a class="header" href="#2252-handling-data-consistency"><strong>22.5.2 Handling Data Consistency</strong></a></h3>
+<p>In a microservices architecture, maintaining data consistency across services requires special patterns:</p>
+<h4 id="saga-pattern"><a class="header" href="#saga-pattern"><strong>Saga Pattern</strong></a></h4>
+<p>The Saga pattern manages distributed transactions across multiple services:</p>
+<pre><code>┌───────────┐      ┌───────────┐      ┌───────────┐
+│           │      │           │      │           │
+│  Service  │─────►│  Service  │─────►│  Service  │
+│     A     │      │     B     │      │     C     │
+│           │      │           │      │           │
+└───────────┘      └───────────┘      └───────────┘
+       ▲                  ▲                  ▲
+       │                  │                  │
+       ▼                  ▼                  ▼
+┌───────────┐      ┌───────────┐      ┌───────────┐
+│           │      │           │      │           │
+│Compensate │◄─────│Compensate │◄─────│Compensate │
+│     A     │      │     B     │      │     C     │
+│           │      │           │      │           │
+└───────────┘      └───────────┘      └───────────┘
+</code></pre>
+<p>Implementing a saga for order processing:</p>
+<pre><code class="language-go">package saga
+
+import (
+    "context"
+    "errors"
+    "log"
+)
+
+// Step represents a saga step
+type Step struct {
+    Execute    func(ctx context.Context) error
+    Compensate func(ctx context.Context) error
+}
+
+// Saga coordinates a distributed transaction
+type Saga struct {
+    name  string
+    steps []Step
+}
+
+// NewSaga creates a new saga
+func NewSaga(name string) *Saga {
+    return &amp;Saga{
+        name:  name,
+        steps: []Step{},
+    }
+}
+
+// AddStep adds a step to the saga
+func (s *Saga) AddStep(execute, compensate func(ctx context.Context) error) {
+    s.steps = append(s.steps, Step{
+        Execute:    execute,
+        Compensate: compensate,
+    })
+}
+
+// Execute executes the saga
+func (s *Saga) Execute(ctx context.Context) error {
+    log.Printf("Starting saga: %s", s.name)
+
+    executedSteps := 0
+
+    // Execute each step
+    for i, step := range s.steps {
+        if err := step.Execute(ctx); err != nil {
+            log.Printf("Step %d failed: %v", i, err)
+
+            // Compensate for executed steps in reverse order
+            for j := executedSteps - 1; j &gt;= 0; j-- {
+                if err := s.steps[j].Compensate(ctx); err != nil {
+                    log.Printf("Compensation for step %d failed: %v", j, err)
+                }
+            }
+
+            return errors.New("saga failed")
+        }
+        executedSteps++
+    }
+
+    log.Printf("Saga completed successfully: %s", s.name)
+    return nil
+}
+</code></pre>
+<p>Usage example for order processing:</p>
+<pre><code class="language-go">// Create a new saga for order processing
+orderSaga := saga.NewSaga("create-order")
+
+// Add steps with compensation
+orderSaga.AddStep(
+    // Step 1: Create order
+    func(ctx context.Context) error {
+        return orderService.Create(ctx, order)
+    },
+    // Compensation for step 1
+    func(ctx context.Context) error {
+        return orderService.Cancel(ctx, order.ID)
+    },
+)
+
+orderSaga.AddStep(
+    // Step 2: Reserve inventory
+    func(ctx context.Context) error {
+        return inventoryService.Reserve(ctx, order.ProductID, order.Quantity)
+    },
+    // Compensation for step 2
+    func(ctx context.Context) error {
+        return inventoryService.Release(ctx, order.ProductID, order.Quantity)
+    },
+)
+
+orderSaga.AddStep(
+    // Step 3: Process payment
+    func(ctx context.Context) error {
+        return paymentService.Process(ctx, order.ID, order.Amount)
+    },
+    // Compensation for step 3
+    func(ctx context.Context) error {
+        return paymentService.Refund(ctx, order.ID)
+    },
+)
+
+// Execute the saga
+if err := orderSaga.Execute(ctx); err != nil {
+    log.Printf("Order processing failed: %v", err)
+    return err
+}
+</code></pre>
+<h4 id="event-sourcing"><a class="header" href="#event-sourcing"><strong>Event Sourcing</strong></a></h4>
+<p>Event sourcing stores all changes to application state as a sequence of events:</p>
+<pre><code class="language-go">package eventsourcing
+
+import (
+    "context"
+    "fmt"
+    "time"
+)
+
+// Event represents a domain event
+type Event struct {
+    ID        string    `json:"id"`
+    Type      string    `json:"type"`
+    Data      []byte    `json:"data"`
+    Timestamp time.Time `json:"timestamp"`
+    AggregateID string  `json:"aggregate_id"`
+}
+
+// EventStore stores and retrieves events
+type EventStore interface {
+    SaveEvents(ctx context.Context, events []Event) error
+    GetEvents(ctx context.Context, aggregateID string) ([]Event, error)
+}
+
+// PostgresEventStore implements EventStore with PostgreSQL
+type PostgresEventStore struct {
+    // Implementation details omitted
+}
+
+// Aggregate is the base for event-sourced entities
+type Aggregate struct {
+    ID      string
+    Version int
+    Events  []Event
+}
+
+// ApplyEvent applies an event to the aggregate
+func (a *Aggregate) ApplyEvent(eventType string, data []byte) {
+    event := Event{
+        ID:          generateID(),
+        Type:        eventType,
+        Data:        data,
+        Timestamp:   time.Now(),
+        AggregateID: a.ID,
+    }
+
+    a.Events = append(a.Events, event)
+    a.Version++
+}
+
+// Save saves all uncommitted events
+func (a *Aggregate) Save(ctx context.Context, store EventStore) error {
+    if len(a.Events) == 0 {
+        return nil
+    }
+
+    if err := store.SaveEvents(ctx, a.Events); err != nil {
+        return fmt.Errorf("failed to save events: %w", err)
+    }
+
+    a.Events = nil
+    return nil
+}
+
+// Load loads events for an aggregate
+func (a *Aggregate) Load(ctx context.Context, store EventStore) error {
+    events, err := store.GetEvents(ctx, a.ID)
+    if err != nil {
+        return fmt.Errorf("failed to load events: %w", err)
+    }
+
+    for _, event := range events {
+        // Apply event to rebuild state
+        a.Version++
+    }
+
+    return nil
+}
+
+// generateID generates a unique ID
+func generateID() string {
+    // Implementation omitted
+    return "unique-id"
+}
+</code></pre>
+<h2 id="226-deployment-and-orchestration"><a class="header" href="#226-deployment-and-orchestration"><strong>22.6 Deployment and Orchestration</strong></a></h2>
+<h3 id="2261-containerization-with-docker"><a class="header" href="#2261-containerization-with-docker"><strong>22.6.1 Containerization with Docker</strong></a></h3>
+<p>Containerize microservices with Docker:</p>
+<pre><code class="language-dockerfile"># Build stage
+FROM golang:1.18-alpine AS build
+
+WORKDIR /app
+
+# Copy and download dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -o service ./cmd/service
+
+# Final stage
+FROM alpine:3.15
+
+# Add non-root user
+RUN addgroup -S appgroup &amp;&amp; adduser -S appuser -G appgroup
+
+# Set working directory
+WORKDIR /app
+
+# Copy binary from build stage
+COPY --from=build /app/service .
+COPY --from=build /app/configs ./configs
+
+# Set ownership
+RUN chown -R appuser:appgroup /app
+
+# Use non-root user
+USER appuser
+
+# Expose port
+EXPOSE 8080
+
+# Run the application
+CMD ["./service"]
+</code></pre>
+<p>Multi-service Docker Compose setup:</p>
+<pre><code class="language-yaml"># docker-compose.yml
+version: "3.8"
+
+services:
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - DB_HOST=user-db
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=users
+    depends_on:
+      - user-db
+    restart: on-failure
+
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    environment:
+      - DB_HOST=order-db
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=orders
+      - USER_SERVICE_URL=http://user-service:8080
+    depends_on:
+      - order-db
+      - user-service
+    restart: on-failure
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"
+    environment:
+      - DB_HOST=product-db
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=products
+    depends_on:
+      - product-db
+    restart: on-failure
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - USER_SERVICE_URL=http://user-service:8080
+      - ORDER_SERVICE_URL=http://order-service:8080
+      - PRODUCT_SERVICE_URL=http://product-service:8080
+    depends_on:
+      - user-service
+      - order-service
+      - product-service
+    restart: on-failure
+
+  user-db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=users
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+
+  order-db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=orders
+    volumes:
+      - order-db-data:/var/lib/postgresql/data
+
+  product-db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=products
+    volumes:
+      - product-db-data:/var/lib/postgresql/data
+
+  nats:
+    image: nats:2.7.4-alpine
+    ports:
+      - "4222:4222"
+
+volumes:
+  user-db-data:
+  order-db-data:
+  product-db-data:
+</code></pre>
+<h3 id="2262-orchestration-with-kubernetes"><a class="header" href="#2262-orchestration-with-kubernetes"><strong>22.6.2 Orchestration with Kubernetes</strong></a></h3>
+<p>Deploy microservices to Kubernetes:</p>
+<pre><code class="language-yaml"># user-service-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  labels:
+    app: user-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: yourregistry/user-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: user-db
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: password
+            - name: DB_NAME
+              value: users
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+
+---
+# user-service-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
+</code></pre>
+<p>Kubernetes configuration for API Gateway:</p>
+<pre><code class="language-yaml"># api-gateway-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: yourregistry/api-gateway:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: USER_SERVICE_URL
+              value: http://user-service
+            - name: ORDER_SERVICE_URL
+              value: http://order-service
+            - name: PRODUCT_SERVICE_URL
+              value: http://product-service
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+
+---
+# api-gateway-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  selector:
+    app: api-gateway
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
+</code></pre>
+<h2 id="227-observability"><a class="header" href="#227-observability"><strong>22.7 Observability</strong></a></h2>
+<h3 id="2271-distributed-tracing"><a class="header" href="#2271-distributed-tracing"><strong>22.7.1 Distributed Tracing</strong></a></h3>
+<p>Implement distributed tracing with OpenTelemetry:</p>
+<pre><code class="language-go">package main
+
+import (
+    "context"
+    "log"
+    "net/http"
+
+    "go.opentelemetry.io/otel"
+    "go.opentelemetry.io/otel/attribute"
+    "go.opentelemetry.io/otel/exporters/jaeger"
+    "go.opentelemetry.io/otel/sdk/resource"
+    "go.opentelemetry.io/otel/sdk/trace"
+    semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
+)
+
+// initTracer initializes a Jaeger tracer
+func initTracer(serviceName string) (*trace.TracerProvider, error) {
+    // Configure Jaeger exporter
+    exporter, err := jaeger.New(jaeger.WithCollectorEndpoint(
+        jaeger.WithEndpoint("http://jaeger:14268/api/traces"),
+    ))
+    if err != nil {
+        return nil, err
+    }
+
+    // Create resource with service information
+    res := resource.NewWithAttributes(
+        semconv.SchemaURL,
+        semconv.ServiceNameKey.String(serviceName),
+        attribute.String("environment", "production"),
+    )
+
+    // Create trace provider
+    tp := trace.NewTracerProvider(
+        trace.WithBatcher(exporter),
+        trace.WithResource(res),
+    )
+
+    // Register as global trace provider
+    otel.SetTracerProvider(tp)
+
+    return tp, nil
+}
+
+func main() {
+    // Initialize tracer
+    tp, err := initTracer("user-service")
+    if err != nil {
+        log.Fatalf("Failed to initialize tracer: %v", err)
+    }
+    defer tp.Shutdown(context.Background())
+
+    // Create a tracer
+    tracer := otel.Tracer("user-service")
+
+    // HTTP handler with tracing
+    http.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
+        // Create a span for this handler
+        ctx, span := tracer.Start(r.Context(), "get_users")
+        defer span.End()
+
+        // Add attributes to the span
+        span.SetAttributes(
+            attribute.String("http.method", r.Method),
+            attribute.String("http.path", r.URL.Path),
+        )
+
+        // Call service method with context containing span
+        users, err := getUsersWithTracing(ctx)
+        if err != nil {
+            span.RecordError(err)
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+
+        // Respond with data
+        // ...
+    })
+
+    // Start server
+    log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+// getUsersWithTracing demonstrates propagating context with tracing
+func getUsersWithTracing(ctx context.Context) ([]User, error) {
+    tracer := otel.Tracer("user-service")
+
+    // Create a child span
+    ctx, span := tracer.Start(ctx, "fetch_users_from_db")
+    defer span.End()
+
+    // Perform database operation
+    // ...
+
+    // Record span events
+    span.AddEvent("retrieved users from database",
+        attribute.Int("count", 10),
+    )
+
+    return []User{}, nil
+}
+</code></pre>
+<h3 id="2272-metrics-collection"><a class="header" href="#2272-metrics-collection"><strong>22.7.2 Metrics Collection</strong></a></h3>
+<p>Implement metrics with Prometheus:</p>
+<pre><code class="language-go">package main
+
+import (
+    "log"
+    "net/http"
+
+    "github.com/prometheus/client_golang/prometheus"
+    "github.com/prometheus/client_golang/prometheus/promauto"
+    "github.com/prometheus/client_golang/prometheus/promhttp"
+)
+
+var (
+    // Counter metrics
+    httpRequestsTotal = promauto.NewCounterVec(
+        prometheus.CounterOpts{
+            Name: "http_requests_total",
+            Help: "Total number of HTTP requests",
+        },
+        []string{"method", "endpoint", "status"},
+    )
+
+    // Gauge metrics
+    activeSessions = promauto.NewGauge(
+        prometheus.GaugeOpts{
+            Name: "active_sessions",
+            Help: "Number of active user sessions",
+        },
+    )
+
+    // Histogram metrics
+    requestDuration = promauto.NewHistogramVec(
+        prometheus.HistogramOpts{
+            Name:    "http_request_duration_seconds",
+            Help:    "HTTP request duration in seconds",
+            Buckets: prometheus.DefBuckets,
+        },
+        []string{"method", "endpoint"},
+    )
+)
+
+// metricsMiddleware collects HTTP metrics
+func metricsMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Create a response wrapper to capture status code
+        rw := newResponseWriter(w)
+
+        // Start timer
+        timer := prometheus.NewTimer(requestDuration.WithLabelValues(r.Method, r.URL.Path))
+
+        // Call the next handler
+        next.ServeHTTP(rw, r)
+
+        // Stop timer
+        timer.ObserveDuration()
+
+        // Increment request counter
+        httpRequestsTotal.WithLabelValues(r.Method, r.URL.Path, rw.Status()).Inc()
+    })
+}
+
+// responseWriter wraps http.ResponseWriter to capture status code
+type responseWriter struct {
+    http.ResponseWriter
+    statusCode int
+}
+
+func newResponseWriter(w http.ResponseWriter) *responseWriter {
+    return &amp;responseWriter{w, http.StatusOK}
+}
+
+func (rw *responseWriter) WriteHeader(code int) {
+    rw.statusCode = code
+    rw.ResponseWriter.WriteHeader(code)
+}
+
+func (rw *responseWriter) Status() string {
+    return http.StatusText(rw.statusCode)
+}
+
+func main() {
+    // Create router
+    mux := http.NewServeMux()
+
+    // Add endpoints
+    mux.Handle("/users", metricsMiddleware(http.HandlerFunc(usersHandler)))
+
+    // Expose Prometheus metrics endpoint
+    mux.Handle("/metrics", promhttp.Handler())
+
+    // Start server
+    log.Fatal(http.ListenAndServe(":8080", mux))
+}
+
+func usersHandler(w http.ResponseWriter, r *http.Request) {
+    // Implementation omitted
+}
+</code></pre>
+<h3 id="2273-centralized-logging"><a class="header" href="#2273-centralized-logging"><strong>22.7.3 Centralized Logging</strong></a></h3>
+<p>Implement structured logging with correlation IDs:</p>
+<pre><code class="language-go">package logger
+
+import (
+    "context"
+
+    "github.com/google/uuid"
+    "go.uber.org/zap"
+    "go.uber.org/zap/zapcore"
+)
+
+// contextKey is a type for context keys
+type contextKey string
+
+// Define context key for correlation ID
+const correlationIDKey contextKey = "correlation_id"
+
+// Logger wraps zap logger with correlation ID support
+type Logger struct {
+    logger *zap.Logger
+}
+
+// NewLogger creates a new logger
+func NewLogger() (*Logger, error) {
+    config := zap.NewProductionConfig()
+    config.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+
+    logger, err := config.Build()
+    if err != nil {
+        return nil, err
+    }
+
+    return &amp;Logger{logger: logger}, nil
+}
+
+// WithContext returns a logger with correlation ID from context
+func (l *Logger) WithContext(ctx context.Context) *zap.Logger {
+    correlationID := ctx.Value(correlationIDKey)
+    if correlationID == nil {
+        return l.logger
+    }
+
+    return l.logger.With(zap.String("correlation_id", correlationID.(string)))
+}
+
+// NewContext adds a correlation ID to context
+func NewContext(ctx context.Context) context.Context {
+    correlationID := uuid.New().String()
+    return context.WithValue(ctx, correlationIDKey, correlationID)
+}
+
+// GetCorrelationID gets correlation ID from context
+func GetCorrelationID(ctx context.Context) string {
+    correlationID := ctx.Value(correlationIDKey)
+    if correlationID == nil {
+        return ""
+    }
+    return correlationID.(string)
+}
+
+// Example usage:
+// logger, _ := logger.NewLogger()
+// ctx := logger.NewContext(context.Background())
+// logger.WithContext(ctx).Info("Processing request", zap.String("user_id", "123"))
+</code></pre>
+<h2 id="228-testing-microservices"><a class="header" href="#228-testing-microservices"><strong>22.8 Testing Microservices</strong></a></h2>
+<h3 id="2281-unit-testing"><a class="header" href="#2281-unit-testing"><strong>22.8.1 Unit Testing</strong></a></h3>
+<p>Test individual components in isolation:</p>
+<pre><code class="language-go">package service_test
+
+import (
+    "context"
+    "testing"
+
+    "github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/mock"
+
+    "github.com/yourorg/userservice/internal/domain"
+    "github.com/yourorg/userservice/internal/repository"
+    "github.com/yourorg/userservice/internal/service"
+)
+
+// MockUserRepository is a mock implementation of repository.UserRepository
+type MockUserRepository struct {
+    mock.Mock
+}
+
+func (m *MockUserRepository) Get(ctx context.Context, id int) (*domain.User, error) {
+    args := m.Called(ctx, id)
+    if args.Get(0) == nil {
+        return nil, args.Error(1)
+    }
+    return args.Get(0).(*domain.User), args.Error(1)
+}
+
+func (m *MockUserRepository) Create(ctx context.Context, user domain.User) (*domain.User, error) {
+    args := m.Called(ctx, user)
+    if args.Get(0) == nil {
+        return nil, args.Error(1)
+    }
+    return args.Get(0).(*domain.User), args.Error(1)
+}
+
+// TestUserService_GetUser tests the GetUser method
+func TestUserService_GetUser(t *testing.T) {
+    // Create mock repository
+    mockRepo := new(MockUserRepository)
+
+    // Create service with mock repository
+    userService := service.NewUserService(mockRepo)
+
+    // Create test data
+    expectedUser := &amp;domain.User{
+        ID:       123,
+        Username: "testuser",
+        Email:    "test@example.com",
+    }
+
+    // Set up expectations
+    mockRepo.On("Get", mock.Anything, 123).Return(expectedUser, nil)
+
+    // Call the service
+    user, err := userService.GetUser(context.Background(), 123)
+
+    // Assert results
+    assert.NoError(t, err)
+    assert.Equal(t, expectedUser.ID, user.ID)
+    assert.Equal(t, expectedUser.Username, user.Username)
+    assert.Equal(t, expectedUser.Email, user.Email)
+
+    // Verify expectations
+    mockRepo.AssertExpectations(t)
+}
+</code></pre>
+<h3 id="2282-integration-testing"><a class="header" href="#2282-integration-testing"><strong>22.8.2 Integration Testing</strong></a></h3>
+<p>Test interactions between services and external dependencies:</p>
+<pre><code class="language-go">package integration_test
+
+import (
+    "context"
+    "fmt"
+    "os"
+    "testing"
+
+    "github.com/jackc/pgx/v4/pgxpool"
+    "github.com/stretchr/testify/assert"
+    "github.com/stretchr/testify/require"
+    "github.com/testcontainers/testcontainers-go"
+    "github.com/testcontainers/testcontainers-go/wait"
+
+    "github.com/yourorg/userservice/internal/domain"
+    "github.com/yourorg/userservice/internal/repository"
+)
+
+func setupTestDatabase(t *testing.T) (*pgxpool.Pool, testcontainers.Container, error) {
+    // Create a PostgreSQL container
+    req := testcontainers.ContainerRequest{
+        Image:        "postgres:14-alpine",
+        ExposedPorts: []string{"5432/tcp"},
+        Env: map[string]string{
+            "POSTGRES_USER":     "testuser",
+            "POSTGRES_PASSWORD": "testpass",
+            "POSTGRES_DB":       "testdb",
+        },
+        WaitingFor: wait.ForLog("database system is ready to accept connections"),
+    }
+
+    container, err := testcontainers.GenericContainer(context.Background(), testcontainers.GenericContainerRequest{
+        ContainerRequest: req,
+        Started:          true,
+    })
+    if err != nil {
+        return nil, nil, err
+    }
+
+    // Get host and port
+    host, err := container.Host(context.Background())
+    if err != nil {
+        return nil, nil, err
+    }
+
+    port, err := container.MappedPort(context.Background(), "5432")
+    if err != nil {
+        return nil, nil, err
+    }
+
+    // Create connection string
+    connString := fmt.Sprintf("postgres://testuser:testpass@%s:%s/testdb", host, port.Port())
+
+    // Connect to database
+    pool, err := pgxpool.Connect(context.Background(), connString)
+    if err != nil {
+        return nil, nil, err
+    }
+
+    // Create users table
+    _, err = pool.Exec(context.Background(), `
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username TEXT NOT NULL,
+            email TEXT NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT NOW()
+        )
+    `)
+    if err != nil {
+        return nil, nil, err
+    }
+
+    return pool, container, nil
+}
+
+func TestUserRepository_Integration(t *testing.T) {
+    if testing.Short() {
+        t.Skip("Skipping integration test in short mode")
+    }
+
+    // Set up test database
+    pool, container, err := setupTestDatabase(t)
+    require.NoError(t, err)
+
+    // Clean up after test
+    defer func() {
+        pool.Close()
+        container.Terminate(context.Background())
+    }()
+
+    // Create repository
+    repo := repository.NewUserRepository(pool)
+
+    // Test creating a user
+    user := domain.User{
+        Username: "testuser",
+        Email:    "test@example.com",
+    }
+
+    createdUser, err := repo.Create(context.Background(), user)
+    assert.NoError(t, err)
+    assert.NotZero(t, createdUser.ID)
+    assert.Equal(t, user.Username, createdUser.Username)
+    assert.Equal(t, user.Email, createdUser.Email)
+
+    // Test getting a user
+    fetchedUser, err := repo.Get(context.Background(), createdUser.ID)
+    assert.NoError(t, err)
+    assert.Equal(t, createdUser.ID, fetchedUser.ID)
+    assert.Equal(t, createdUser.Username, fetchedUser.Username)
+    assert.Equal(t, createdUser.Email, fetchedUser.Email)
+}
+</code></pre>
+<h3 id="2283-consumer-driven-contract-testing"><a class="header" href="#2283-consumer-driven-contract-testing"><strong>22.8.3 Consumer-Driven Contract Testing</strong></a></h3>
+<p>Test service API contracts with Pact:</p>
+<pre><code class="language-go">package pact_test
+
+import (
+    "fmt"
+    "testing"
+
+    "github.com/pact-foundation/pact-go/dsl"
+    "github.com/pact-foundation/pact-go/types"
+    "github.com/stretchr/testify/assert"
+
+    "github.com/yourorg/orderservice/client"
+)
+
+func TestUserServiceClient_Pact(t *testing.T) {
+    // Create Pact
+    pact := dsl.Pact{
+        Consumer: "order-service",
+        Provider: "user-service",
+    }
+
+    // Set up expectations
+    pact.Setup(true)
+
+    // Define the interaction
+    pact.AddInteraction().
+        Given("User with ID 123 exists").
+        UponReceiving("A request for user 123").
+        WithRequest(dsl.Request{
+            Method: "GET",
+            Path:   dsl.String("/users/123"),
+            Headers: dsl.MapMatcher{
+                "Accept": dsl.String("application/json"),
+            },
+        }).
+        WillRespondWith(dsl.Response{
+            Status: 200,
+            Headers: dsl.MapMatcher{
+                "Content-Type": dsl.String("application/json"),
+            },
+            Body: dsl.Match(client.User{
+                ID:       123,
+                Username: "testuser",
+                Email:    "test@example.com",
+            }),
+        })
+
+    // Run the test
+    err := pact.Verify(func() error {
+        // Configure API client with Pact mock server URL
+        userClient := client.NewUserClient(fmt.Sprintf("http://localhost:%d", pact.Server.Port))
+
+        // Execute the API call
+        user, err := userClient.GetUser(123)
+        if err != nil {
+            return err
+        }
+
+        // Verify response
+        assert.Equal(t, 123, user.ID)
+        assert.Equal(t, "testuser", user.Username)
+        assert.Equal(t, "test@example.com", user.Email)
+
+        return nil
+    })
+
+    assert.NoError(t, err)
+
+    // Write the contract
+    pact.WritePact()
+}
+</code></pre>
+<h3 id="2284-end-to-end-testing"><a class="header" href="#2284-end-to-end-testing"><strong>22.8.4 End-to-End Testing</strong></a></h3>
+<p>Test the entire system using Docker Compose:</p>
+<pre><code class="language-go">package e2e_test
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "net/http"
+    "os"
+    "testing"
+    "time"
+
+    "github.com/stretchr/testify/assert"
+)
+
+func TestE2E_CreateOrder(t *testing.T) {
+    if testing.Short() {
+        t.Skip("Skipping e2e test in short mode")
+    }
+
+    // Get API gateway URL from environment variable
+    apiURL := os.Getenv("API_GATEWAY_URL")
+    if apiURL == "" {
+        apiURL = "http://localhost:8080" // Default for local testing
+    }
+
+    // Step 1: Create a user
+    userPayload := map[string]interface{}{
+        "username": "e2euser",
+        "email":    "e2e@example.com",
+    }
+
+    userJSON, _ := json.Marshal(userPayload)
+    resp, err := http.Post(fmt.Sprintf("%s/users", apiURL), "application/json", bytes.NewBuffer(userJSON))
+    assert.NoError(t, err)
+    assert.Equal(t, http.StatusCreated, resp.StatusCode)
+
+    var createdUser map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&amp;createdUser)
+    resp.Body.Close()
+
+    userID := int(createdUser["id"].(float64))
+
+    // Step 2: Create a product
+    productPayload := map[string]interface{}{
+        "name":     "Test Product",
+        "price":    99.99,
+        "quantity": 100,
+    }
+
+    productJSON, _ := json.Marshal(productPayload)
+    resp, err = http.Post(fmt.Sprintf("%s/products", apiURL), "application/json", bytes.NewBuffer(productJSON))
+    assert.NoError(t, err)
+    assert.Equal(t, http.StatusCreated, resp.StatusCode)
+
+    var createdProduct map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&amp;createdProduct)
+    resp.Body.Close()
+
+    productID := int(createdProduct["id"].(float64))
+
+    // Step 3: Create an order
+    orderPayload := map[string]interface{}{
+        "user_id": userID,
+        "items": []map[string]interface{}{
+            {
+                "product_id": productID,
+                "quantity":   2,
+                "price":      99.99,
+            },
+        },
+    }
+
+    orderJSON, _ := json.Marshal(orderPayload)
+    resp, err = http.Post(fmt.Sprintf("%s/orders", apiURL), "application/json", bytes.NewBuffer(orderJSON))
+    assert.NoError(t, err)
+    assert.Equal(t, http.StatusCreated, resp.StatusCode)
+
+    var createdOrder map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&amp;createdOrder)
+    resp.Body.Close()
+
+    orderID := int(createdOrder["id"].(float64))
+
+    // Step 4: Verify order status
+    // Wait for async processing
+    time.Sleep(2 * time.Second)
+
+    resp, err = http.Get(fmt.Sprintf("%s/orders/%d", apiURL, orderID))
+    assert.NoError(t, err)
+    assert.Equal(t, http.StatusOK, resp.StatusCode)
+
+    var order map[string]interface{}
+    json.NewDecoder(resp.Body).Decode(&amp;order)
+    resp.Body.Close()
+
+    assert.Equal(t, "completed", order["status"])
+    assert.Equal(t, userID, int(order["user_id"].(float64)))
+}
+</code></pre>
+<h2 id="229-resilience-patterns"><a class="header" href="#229-resilience-patterns"><strong>22.9 Resilience Patterns</strong></a></h2>
+<h3 id="2291-retry-pattern"><a class="header" href="#2291-retry-pattern"><strong>22.9.1 Retry Pattern</strong></a></h3>
+<p>Implement retries for transient failures:</p>
+<pre><code class="language-go">package retry
+
+import (
+    "context"
+    "errors"
+    "math"
+    "time"
+)
+
+// Options holds retry configuration
+type Options struct {
+    MaxRetries  int
+    InitialWait time.Duration
+    MaxWait     time.Duration
+    Multiplier  float64
+    Jitter      float64
+}
+
+// DefaultOptions returns default retry options
+func DefaultOptions() Options {
+    return Options{
+        MaxRetries:  3,
+        InitialWait: 100 * time.Millisecond,
+        MaxWait:     10 * time.Second,
+        Multiplier:  2.0,
+        Jitter:      0.1,
+    }
+}
+
+// Do executes the function with retries
+func Do(ctx context.Context, options Options, fn func() error) error {
+    var err error
+
+    for attempt := 0; attempt &lt;= options.MaxRetries; attempt++ {
+        // Execute the function
+        err = fn()
+        if err == nil {
+            return nil
+        }
+
+        // If this was the last attempt, return the error
+        if attempt == options.MaxRetries {
+            return err
+        }
+
+        // Calculate wait time with exponential backoff and jitter
+        waitTime := calculateWaitTime(attempt, options)
+
+        // Create a timer that will fire after waitTime
+        timer := time.NewTimer(waitTime)
+
+        // Wait for either the timer to fire or context to be canceled
+        select {
+        case &lt;-timer.C:
+            // Timer fired, continue with next attempt
+        case &lt;-ctx.Done():
+            // Context was canceled
+            timer.Stop()
+            return ctx.Err()
+        }
+    }
+
+    return err
+}
+
+// calculateWaitTime calculates wait time with exponential backoff and jitter
+func calculateWaitTime(attempt int, options Options) time.Duration {
+    // Calculate exponential backoff
+    waitTime := float64(options.InitialWait) * math.Pow(options.Multiplier, float64(attempt))
+
+    // Apply jitter
+    jitter := (options.Jitter * waitTime) * (2*rand.Float64() - 1)
+    waitTime = waitTime + jitter
+
+    // Cap at max wait time
+    if waitTime &gt; float64(options.MaxWait) {
+        waitTime = float64(options.MaxWait)
+    }
+
+    return time.Duration(waitTime)
+}
+
+// Usage example:
+// err := retry.Do(ctx, retry.DefaultOptions(), func() error {
+//     return userService.GetUser(123)
+// })
+</code></pre>
+<h3 id="2292-bulkhead-pattern"><a class="header" href="#2292-bulkhead-pattern"><strong>22.9.2 Bulkhead Pattern</strong></a></h3>
+<p>Isolate components to prevent cascading failures:</p>
+<pre><code class="language-go">package bulkhead
+
+import (
+    "context"
+    "errors"
+    "sync"
+)
+
+// Bulkhead implements the bulkhead pattern
+type Bulkhead struct {
+    maxConcurrent int
+    currentCount  int
+    mutex         sync.Mutex
+}
+
+// New creates a new bulkhead
+func New(maxConcurrent int) *Bulkhead {
+    return &amp;Bulkhead{
+        maxConcurrent: maxConcurrent,
+        currentCount:  0,
+    }
+}
+
+// Execute executes a function within the bulkhead
+func (b *Bulkhead) Execute(ctx context.Context, fn func() error) error {
+    // Acquire permission to execute
+    if !b.acquire() {
+        return errors.New("bulkhead full")
+    }
+
+    // Release permission when done
+    defer b.release()
+
+    // Execute the function
+    return fn()
+}
+
+// acquire acquires permission to execute
+func (b *Bulkhead) acquire() bool {
+    b.mutex.Lock()
+    defer b.mutex.Unlock()
+
+    if b.currentCount &gt;= b.maxConcurrent {
+        return false
+    }
+
+    b.currentCount++
+    return true
+}
+
+// release releases permission
+func (b *Bulkhead) release() {
+    b.mutex.Lock()
+    defer b.mutex.Unlock()
+
+    b.currentCount--
+    if b.currentCount &lt; 0 {
+        b.currentCount = 0
+    }
+}
+
+// Usage example:
+// bulkhead := bulkhead.New(10)
+// err := bulkhead.Execute(ctx, func() error {
+//     return userService.GetUser(123)
+// })
+</code></pre>
+<h3 id="2293-rate-limiting"><a class="header" href="#2293-rate-limiting"><strong>22.9.3 Rate Limiting</strong></a></h3>
+<p>Implement rate limiting to protect services:</p>
+<pre><code class="language-go">package ratelimit
+
+import (
+    "context"
+    "errors"
+    "sync"
+    "time"
+)
+
+// RateLimiter implements the token bucket algorithm
+type RateLimiter struct {
+    rate       float64    // tokens per second
+    capacity   float64    // maximum tokens
+    tokens     float64    // current tokens
+    lastRefill time.Time  // last time tokens were refilled
+    mutex      sync.Mutex // mutex for thread safety
+}
+
+// New creates a new rate limiter
+func New(rate, capacity float64) *RateLimiter {
+    return &amp;RateLimiter{
+        rate:       rate,
+        capacity:   capacity,
+        tokens:     capacity,
+        lastRefill: time.Now(),
+    }
+}
+
+// Allow checks if a request is allowed
+func (r *RateLimiter) Allow() bool {
+    r.mutex.Lock()
+    defer r.mutex.Unlock()
+
+    // Refill tokens based on time elapsed
+    now := time.Now()
+    elapsed := now.Sub(r.lastRefill).Seconds()
+    r.tokens += elapsed * r.rate
+
+    // Cap tokens at capacity
+    if r.tokens &gt; r.capacity {
+        r.tokens = r.capacity
+    }
+
+    // Update last refill time
+    r.lastRefill = now
+
+    // Check if we have enough tokens
+    if r.tokens &lt; 1.0 {
+        return false
+    }
+
+    // Consume a token
+    r.tokens -= 1.0
+    return true
+}
+
+// Execute executes a function with rate limiting
+func (r *RateLimiter) Execute(ctx context.Context, fn func() error) error {
+    if !r.Allow() {
+        return errors.New("rate limit exceeded")
+    }
+
+    return fn()
+}
+
+// Usage example:
+// limiter := ratelimit.New(10, 50) // 10 requests per second, burst of 50
+// err := limiter.Execute(ctx, func() error {
+//     return userService.GetUser(123)
+// })
+</code></pre>
+<h2 id="2210-microservices-best-practices"><a class="header" href="#2210-microservices-best-practices"><strong>22.10 Microservices Best Practices</strong></a></h2>
+<ol>
+<li>
+<p><strong>Design Services Around Business Domains</strong></p>
+<ul>
+<li>Use Domain-Driven Design (DDD) principles</li>
+<li>Organize teams around services (Conway's Law)</li>
+</ul>
+</li>
+<li>
+<p><strong>Implement Proper Service Boundaries</strong></p>
+<ul>
+<li>Each service should own its data</li>
+<li>Minimize cross-service dependencies</li>
+<li>Establish clear contracts between services</li>
+</ul>
+</li>
+<li>
+<p><strong>Use Asynchronous Communication When Possible</strong></p>
+<ul>
+<li>Reduce coupling between services</li>
+<li>Improve resilience to service failures</li>
+<li>Enable better scalability</li>
+</ul>
+</li>
+<li>
+<p><strong>Implement Comprehensive Observability</strong></p>
+<ul>
+<li>Distributed tracing</li>
+<li>Centralized logging</li>
+<li>Metrics and monitoring</li>
+<li>Health checks and service discovery</li>
+</ul>
+</li>
+<li>
+<p><strong>Design for Failure</strong></p>
+<ul>
+<li>Implement circuit breakers</li>
+<li>Use retries with backoff</li>
+<li>Implement fallbacks and graceful degradation</li>
+<li>Test failure scenarios</li>
+</ul>
+</li>
+<li>
+<p><strong>Automate Deployment and Scaling</strong></p>
+<ul>
+<li>Use containerization</li>
+<li>Implement CI/CD pipelines</li>
+<li>Adopt Kubernetes for orchestration</li>
+<li>Implement infrastructure as code</li>
+</ul>
+</li>
+<li>
+<p><strong>Secure Your Microservices</strong></p>
+<ul>
+<li>Use API gateways for authentication/authorization</li>
+<li>Implement service-to-service authentication</li>
+<li>Encrypt data in transit and at rest</li>
+<li>Regularly audit and update dependencies</li>
+</ul>
+</li>
+<li>
+<p><strong>Standardize Development Practices</strong></p>
+<ul>
+<li>Consistent logging formats</li>
+<li>Common error handling</li>
+<li>Standardized API design</li>
+<li>Shared libraries for common functionality</li>
+</ul>
+</li>
+<li>
+<p><strong>Version Your APIs</strong></p>
+<ul>
+<li>Use semantic versioning</li>
+<li>Support backward compatibility</li>
+<li>Implement graceful API deprecation</li>
+</ul>
+</li>
+<li>
+<p><strong>Start Small, Evolve Gradually</strong></p>
+<ul>
+<li>Begin with a monolith or a few services</li>
+<li>Split services as boundaries become clear</li>
+<li>Use the strangler pattern for migration</li>
+</ul>
+</li>
+</ol>
+<h2 id="2211-exercises"><a class="header" href="#2211-exercises"><strong>22.11 Exercises</strong></a></h2>
+<h3 id="exercise-1-create-a-basic-microservice"><a class="header" href="#exercise-1-create-a-basic-microservice"><strong>Exercise 1: Create a Basic Microservice</strong></a></h3>
+<p>Build a simple user service that provides CRUD operations via a RESTful API. Implement proper error handling, configuration management, and health checks.</p>
+<h3 id="exercise-2-service-communication"><a class="header" href="#exercise-2-service-communication"><strong>Exercise 2: Service Communication</strong></a></h3>
+<p>Extend your user service to communicate with a new order service. Implement both synchronous (REST or gRPC) and asynchronous (messaging) communication between the services.</p>
+<h3 id="exercise-3-resilience-patterns"><a class="header" href="#exercise-3-resilience-patterns"><strong>Exercise 3: Resilience Patterns</strong></a></h3>
+<p>Add resilience patterns to your services:</p>
+<ul>
+<li>Circuit breaker for service-to-service calls</li>
+<li>Retry mechanism for transient failures</li>
+<li>Rate limiting for API endpoints</li>
+</ul>
+<h3 id="exercise-4-observability"><a class="header" href="#exercise-4-observability"><strong>Exercise 4: Observability</strong></a></h3>
+<p>Implement observability in your microservices:</p>
+<ul>
+<li>Distributed tracing with OpenTelemetry</li>
+<li>Metrics collection with Prometheus</li>
+<li>Structured logging with correlation IDs</li>
+</ul>
+<h3 id="exercise-5-containerization-and-orchestration"><a class="header" href="#exercise-5-containerization-and-orchestration"><strong>Exercise 5: Containerization and Orchestration</strong></a></h3>
+<p>Containerize your microservices using Docker and deploy them using Docker Compose. For an extra challenge, deploy them to a Kubernetes cluster.</p>
+<h2 id="2212-summary"><a class="header" href="#2212-summary"><strong>22.12 Summary</strong></a></h2>
+<p>In this chapter, we've explored the fundamentals of building microservices in Go:</p>
+<ul>
+<li><strong>Microservices Architecture</strong>: We learned about the characteristics, benefits, and challenges of microservices</li>
+<li><strong>Service Design</strong>: We covered strategies for decomposing services and defining boundaries</li>
+<li><strong>Communication Patterns</strong>: We implemented REST, gRPC, and event-driven communication</li>
+<li><strong>Data Management</strong>: We explored database per service, sagas, and event sourcing</li>
+<li><strong>Resilience</strong>: We implemented circuit breakers, retries, and bulkheads</li>
+<li><strong>Observability</strong>: We added distributed tracing, metrics, and centralized logging</li>
+<li><strong>Deployment</strong>: We containerized services and orchestrated them with Kubernetes</li>
+<li><strong>Testing</strong>: We covered unit, integration, contract, and end-to-end testing</li>
+</ul>
+<p>Go's simplicity, performance, and concurrency model make it an excellent choice for microservices. By following the patterns and practices outlined in this chapter, you can build robust, scalable, and maintainable microservices architectures.</p>
+<p>Remember that microservices are not a silver bullet. Start with a well-designed monolith and migrate to microservices gradually as your system and team grow. Focus on business domains and clear service boundaries to maximize the benefits while minimizing the complexity.</p>
+<p><strong>Next Up</strong>: In the next chapter, we'll explore serverless computing with Go, building on the concepts we've learned about microservices to create even more scalable and cost-effective solutions.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-21-Building-RESTful-APIs.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-23-Clean-Code.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-21-Building-RESTful-APIs.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-23-Clean-Code.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

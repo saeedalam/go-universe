@@ -1,0 +1,1530 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Goroutines - Go Universe</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A comprehensive guide to Go programming language from basics to advanced topics">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../theme/custom.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Go Universe</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/saeedalam/go-universe/edit/main/src/chapters/Chapter-11-Goroutines.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="chapter-11-goroutines-and-concurrency-in-go"><a class="header" href="#chapter-11-goroutines-and-concurrency-in-go"><strong>Chapter 11: Goroutines and Concurrency in Go</strong></a></h1>
+<p>Go was designed from the ground up with concurrency in mind. The language's goroutines and channels provide an elegant and efficient way to write concurrent code that is both readable and safe. Unlike traditional threading models, Go's concurrency primitives make it possible to write highly concurrent applications without the complexity typically associated with thread management.</p>
+<p>In this chapter, we'll explore Go's approach to concurrency, from the fundamental concepts of goroutines to practical patterns for building robust concurrent systems. You'll learn how to leverage Go's concurrency model to create applications that efficiently utilize modern multi-core processors.</p>
+<h2 id="111-goroutine-fundamentals"><a class="header" href="#111-goroutine-fundamentals"><strong>11.1 Goroutine Fundamentals</strong></a></h2>
+<h3 id="1111-what-are-goroutines"><a class="header" href="#1111-what-are-goroutines"><strong>11.1.1 What Are Goroutines?</strong></a></h3>
+<p>A goroutine is a lightweight thread of execution managed by the Go runtime. Unlike operating system threads, goroutines are extremely lightweight, with minimal startup cost and small memory footprint. This efficiency allows Go programs to spawn thousands—even millions—of goroutines without exhausting system resources.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func sayHello() {
+	fmt.Println("Hello from goroutine!")
+}
+
+func main() {
+	// Start a new goroutine
+	go sayHello()
+
+	// Main goroutine continues execution
+	fmt.Println("Hello from main!")
+
+	// Give the goroutine time to execute
+	time.Sleep(100 * time.Millisecond)
+}
+</code></pre>
+<p>Key characteristics of goroutines:</p>
+<ul>
+<li><strong>Lightweight</strong>: A goroutine typically uses around 2KB of stack memory initially, which can grow and shrink as needed</li>
+<li><strong>Multiplexed</strong>: Many goroutines are multiplexed onto a smaller number of OS threads</li>
+<li><strong>Managed</strong>: The Go runtime handles scheduling, garbage collection, and stack management</li>
+<li><strong>Fast</strong>: Creating a goroutine is nearly instantaneous compared to thread creation</li>
+</ul>
+<h3 id="1112-goroutines-vs-os-threads"><a class="header" href="#1112-goroutines-vs-os-threads"><strong>11.1.2 Goroutines vs. OS Threads</strong></a></h3>
+<p>Goroutines differ from traditional OS threads in several important ways:</p>
+<div class="table-wrapper"><table><thead><tr><th>Feature</th><th>Goroutines</th><th>OS Threads</th></tr></thead><tbody>
+<tr><td>Memory usage</td><td>2-8KB initial stack</td><td>Often 1-2MB stack</td></tr>
+<tr><td>Creation time</td><td>Microseconds</td><td>Milliseconds</td></tr>
+<tr><td>Scheduling</td><td>Go runtime (cooperative)</td><td>OS kernel (preemptive)</td></tr>
+<tr><td>Communication</td><td>Designed for channels</td><td>Shared memory with locks</td></tr>
+<tr><td>Scalability</td><td>Can create millions</td><td>Limited to thousands</td></tr>
+</tbody></table>
+</div>
+<p>The Go runtime employs a M:N scheduler, where M goroutines are scheduled across N OS threads. This approach allows Go to efficiently utilize system resources while providing a simpler programming model.</p>
+<h3 id="1113-creating-goroutines"><a class="header" href="#1113-creating-goroutines"><strong>11.1.3 Creating Goroutines</strong></a></h3>
+<p>Creating a goroutine is straightforward—simply use the <code>go</code> keyword followed by a function call:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func printNumbers() {
+	for i := 1; i &lt;= 5; i++ {
+		time.Sleep(100 * time.Millisecond)
+		fmt.Printf("%d ", i)
+	}
+}
+
+func printLetters() {
+	for i := 'a'; i &lt;= 'e'; i++ {
+		time.Sleep(150 * time.Millisecond)
+		fmt.Printf("%c ", i)
+	}
+}
+
+func main() {
+	go printNumbers()
+	go printLetters()
+
+	// Wait long enough for both goroutines to complete
+	time.Sleep(2 * time.Second)
+	fmt.Println("\nDone!")
+}
+</code></pre>
+<p>You can also start a goroutine with an anonymous function:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	// Anonymous function goroutine
+	go func() {
+		for i := 0; i &lt; 3; i++ {
+			fmt.Printf("Anonymous goroutine: %d\n", i)
+			time.Sleep(100 * time.Millisecond)
+		}
+	}()
+
+	// Anonymous function with parameters
+	go func(msg string, count int) {
+		for i := 0; i &lt; count; i++ {
+			fmt.Printf("%s: %d\n", msg, i)
+			time.Sleep(150 * time.Millisecond)
+		}
+	}("Parameterized goroutine", 3)
+
+	// Wait for goroutines to finish
+	time.Sleep(1 * time.Second)
+}
+</code></pre>
+<p>Note that the <code>go</code> statement does not wait for the goroutine to complete. The function call executes concurrently with the rest of the program.</p>
+<h2 id="112-synchronization-with-waitgroups"><a class="header" href="#112-synchronization-with-waitgroups"><strong>11.2 Synchronization with WaitGroups</strong></a></h2>
+<p>Using <code>time.Sleep()</code> to wait for goroutines to finish is unreliable and inefficient. Go provides a more robust synchronization mechanism through the <code>sync</code> package.</p>
+<h3 id="1121-understanding-waitgroups"><a class="header" href="#1121-understanding-waitgroups"><strong>11.2.1 Understanding WaitGroups</strong></a></h3>
+<p>A WaitGroup is a counting semaphore that allows one goroutine to wait for a collection of goroutines to finish their work. The waiting goroutine calls <code>Add()</code> to set the number of goroutines to wait for, and each goroutine calls <code>Done()</code> when it finishes. Meanwhile, the waiting goroutine can call <code>Wait()</code> to block until all goroutines have finished.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func worker(id int, wg *sync.WaitGroup) {
+	// Notify the WaitGroup when this worker is done
+	defer wg.Done()
+
+	fmt.Printf("Worker %d starting\n", id)
+	time.Sleep(time.Second)
+	fmt.Printf("Worker %d done\n", id)
+}
+
+func main() {
+	var wg sync.WaitGroup
+
+	// Launch several workers
+	for i := 1; i &lt;= 5; i++ {
+		wg.Add(1)
+		go worker(i, &amp;wg)
+	}
+
+	// Wait for all workers to complete
+	wg.Wait()
+	fmt.Println("All workers completed")
+}
+</code></pre>
+<p>Key WaitGroup methods:</p>
+<ul>
+<li><code>Add(delta int)</code>: Adds delta to the WaitGroup counter</li>
+<li><code>Done()</code>: Decrements the WaitGroup counter by one</li>
+<li><code>Wait()</code>: Blocks until the WaitGroup counter is zero</li>
+</ul>
+<h3 id="1122-waitgroup-best-practices"><a class="header" href="#1122-waitgroup-best-practices"><strong>11.2.2 WaitGroup Best Practices</strong></a></h3>
+<p>When using WaitGroups, follow these best practices:</p>
+<ol>
+<li>
+<p><strong>Pass WaitGroups by pointer</strong>: A WaitGroup must be passed by pointer to ensure all goroutines reference the same instance.</p>
+</li>
+<li>
+<p><strong>Add before goroutine launch</strong>: Call <code>Add()</code> before launching the goroutine to avoid race conditions.</p>
+</li>
+<li>
+<p><strong>Use defer for Done()</strong>: Use <code>defer wg.Done()</code> at the beginning of the goroutine function to ensure it's called even if the function panics.</p>
+</li>
+<li>
+<p><strong>Match Add and Done calls</strong>: Ensure the number of <code>Done()</code> calls matches the number passed to <code>Add()</code>.</p>
+</li>
+</ol>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	var wg sync.WaitGroup
+
+	// Launch goroutines with different work durations
+	for i := 1; i &lt;= 3; i++ {
+		// Add to the WaitGroup before the goroutine starts
+		wg.Add(1)
+
+		go func(id int) {
+			// Ensure Done is called even if the goroutine panics
+			defer wg.Done()
+
+			// Simulate different work durations
+			duration := time.Duration(id) * 200 * time.Millisecond
+			fmt.Printf("Task %d working for %v\n", id, duration)
+			time.Sleep(duration)
+			fmt.Printf("Task %d completed\n", id)
+		}(i)
+	}
+
+	// Wait for all goroutines to finish
+	fmt.Println("Waiting for all tasks to complete...")
+	wg.Wait()
+	fmt.Println("All tasks completed!")
+}
+</code></pre>
+<h3 id="1123-common-waitgroup-mistakes"><a class="header" href="#1123-common-waitgroup-mistakes"><strong>11.2.3 Common WaitGroup Mistakes</strong></a></h3>
+<p>Avoid these common mistakes when working with WaitGroups:</p>
+<ol>
+<li>
+<p><strong>Forgetting to call Done()</strong>: This will cause <code>Wait()</code> to block indefinitely.</p>
+</li>
+<li>
+<p><strong>Adding to WaitGroup after Wait()</strong>: If a goroutine calls <code>Add()</code> after another goroutine has started waiting with <code>Wait()</code>, it can cause a panic.</p>
+</li>
+<li>
+<p><strong>Negative counter value</strong>: If you call <code>Done()</code> more times than <code>Add()</code>, the WaitGroup counter can become negative, causing a panic.</p>
+</li>
+<li>
+<p><strong>Copying a WaitGroup</strong>: WaitGroups contain internal synchronization and should not be copied after first use.</p>
+</li>
+</ol>
+<h2 id="113-channels-communication-between-goroutines"><a class="header" href="#113-channels-communication-between-goroutines"><strong>11.3 Channels: Communication Between Goroutines</strong></a></h2>
+<p>While WaitGroups help with synchronization, Go's channels provide a way for goroutines to communicate with each other. Channels implement Go's philosophy of "Do not communicate by sharing memory; instead, share memory by communicating."</p>
+<h3 id="1131-channel-basics"><a class="header" href="#1131-channel-basics"><strong>11.3.1 Channel Basics</strong></a></h3>
+<p>A channel is a typed conduit that allows you to send and receive values between goroutines. Channels are created using the <code>make()</code> function:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+	// Create a channel of integers
+	ch := make(chan int)
+
+	// Start a goroutine that sends a value
+	go func() {
+		ch &lt;- 42 // Send 42 to channel
+	}()
+
+	// Receive value from channel
+	value := &lt;-ch
+	fmt.Println("Received:", value)
+}
+</code></pre>
+<p>Key channel operations:</p>
+<ul>
+<li><code>ch &lt;- v</code>: Send value <code>v</code> to channel <code>ch</code></li>
+<li><code>v := &lt;-ch</code>: Receive from channel <code>ch</code> and assign value to <code>v</code></li>
+<li><code>make(chan T)</code>: Create a new channel of type <code>T</code></li>
+</ul>
+<p>Channels provide synchronization by design—a send operation blocks until a receiver is ready, and a receive operation blocks until a sender has provided a value.</p>
+<h3 id="1132-buffered-channels"><a class="header" href="#1132-buffered-channels"><strong>11.3.2 Buffered Channels</strong></a></h3>
+<p>By default, channels are unbuffered, meaning they have no capacity to store values. You can create buffered channels by providing a buffer size as the second argument to <code>make()</code>:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+	// Create a buffered channel with capacity of 3
+	ch := make(chan int, 3)
+
+	// Send values (won't block until buffer is full)
+	ch &lt;- 1
+	ch &lt;- 2
+	ch &lt;- 3
+
+	// Receive values
+	fmt.Println(&lt;-ch) // 1
+	fmt.Println(&lt;-ch) // 2
+	fmt.Println(&lt;-ch) // 3
+}
+</code></pre>
+<p>Buffered channels will only block sends when the buffer is full and will only block receives when the buffer is empty.</p>
+<h3 id="1133-channel-direction"><a class="header" href="#1133-channel-direction"><strong>11.3.3 Channel Direction</strong></a></h3>
+<p>Channel parameters can specify a direction, restricting them to either sending or receiving:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+// This function can only receive from the channel
+func receive(ch &lt;-chan int) {
+	value := &lt;-ch
+	fmt.Println("Received:", value)
+}
+
+// This function can only send to the channel
+func send(ch chan&lt;- int, value int) {
+	ch &lt;- value
+}
+
+func main() {
+	ch := make(chan int)
+
+	go send(ch, 42)
+	receive(ch)
+}
+</code></pre>
+<p>Channel direction constraints add type safety and make the code's intent clearer.</p>
+<h3 id="1134-closing-channels"><a class="header" href="#1134-closing-channels"><strong>11.3.4 Closing Channels</strong></a></h3>
+<p>A sender can close a channel to indicate that no more values will be sent:</p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func producer(ch chan&lt;- int) {
+	for i := 0; i &lt; 5; i++ {
+		ch &lt;- i
+	}
+	close(ch) // Signal that no more values will be sent
+}
+
+func main() {
+	ch := make(chan int)
+	go producer(ch)
+
+	// Receive until channel is closed
+	for value := range ch {
+		fmt.Println("Received:", value)
+	}
+
+	fmt.Println("Channel closed!")
+}
+</code></pre>
+<p>Important points about closing channels:</p>
+<ul>
+<li>Only the sender should close a channel, never the receiver</li>
+<li>Sending on a closed channel causes a panic</li>
+<li>Receiving from a closed channel returns the zero value immediately</li>
+<li>You can check if a channel is closed with <code>value, ok := &lt;-ch</code> (ok is false if channel is closed)</li>
+</ul>
+<h3 id="1135-select-statement"><a class="header" href="#1135-select-statement"><strong>11.3.5 Select Statement</strong></a></h3>
+<p>The <code>select</code> statement lets a goroutine wait on multiple channel operations simultaneously:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	ch1 := make(chan string)
+	ch2 := make(chan string)
+
+	go func() {
+		time.Sleep(1 * time.Second)
+		ch1 &lt;- "one"
+	}()
+
+	go func() {
+		time.Sleep(2 * time.Second)
+		ch2 &lt;- "two"
+	}()
+
+	// Wait for either channel to receive a value
+	for i := 0; i &lt; 2; i++ {
+		select {
+		case msg1 := &lt;-ch1:
+			fmt.Println("Received from ch1:", msg1)
+		case msg2 := &lt;-ch2:
+			fmt.Println("Received from ch2:", msg2)
+		case &lt;-time.After(3 * time.Second):
+			fmt.Println("Timeout!")
+			return
+		}
+	}
+}
+</code></pre>
+<p>The <code>select</code> statement:</p>
+<ul>
+<li>Blocks until one of its cases can proceed</li>
+<li>If multiple cases are ready, it chooses one at random</li>
+<li>The <code>default</code> case runs immediately if no other case is ready</li>
+<li>Can include a timeout case using <code>time.After()</code></li>
+</ul>
+<h2 id="114-managing-shared-state-and-race-conditions"><a class="header" href="#114-managing-shared-state-and-race-conditions"><strong>11.4 Managing Shared State and Race Conditions</strong></a></h2>
+<h3 id="1141-understanding-race-conditions"><a class="header" href="#1141-understanding-race-conditions"><strong>11.4.1 Understanding Race Conditions</strong></a></h3>
+<p>A race condition occurs when two or more goroutines access shared data concurrently, and at least one of them modifies the data. This can lead to unpredictable behavior, data corruption, and difficult-to-debug errors.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func main() {
+	counter := 0
+	var wg sync.WaitGroup
+
+	// Launch 1000 goroutines that each increment the counter
+	for i := 0; i &lt; 1000; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			counter++ // RACE CONDITION: Unsynchronized access
+		}()
+	}
+
+	wg.Wait()
+	fmt.Println("Final counter value:", counter) // May not be 1000!
+}
+</code></pre>
+<p>In this example, multiple goroutines read and increment the <code>counter</code> variable without synchronization. This is a classic race condition, and the final value of <code>counter</code> may not be 1000 as expected.</p>
+<h3 id="1142-detecting-race-conditions"><a class="header" href="#1142-detecting-race-conditions"><strong>11.4.2 Detecting Race Conditions</strong></a></h3>
+<p>Go provides a built-in race detector that helps identify race conditions:</p>
+<pre><code class="language-bash">go run -race main.go
+</code></pre>
+<p>When a race condition is detected, Go will print a warning that includes:</p>
+<ul>
+<li>The conflicting memory accesses</li>
+<li>The goroutines involved</li>
+<li>The stack traces showing where the race occurred</li>
+</ul>
+<h3 id="1143-mutual-exclusion-with-syncmutex"><a class="header" href="#1143-mutual-exclusion-with-syncmutex"><strong>11.4.3 Mutual Exclusion with sync.Mutex</strong></a></h3>
+<p>The <code>sync.Mutex</code> type provides mutual exclusion, ensuring that only one goroutine can access a critical section of code at a time:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func main() {
+	counter := 0
+	var mu sync.Mutex // Mutex for synchronizing access to counter
+	var wg sync.WaitGroup
+
+	// Launch 1000 goroutines that each increment the counter
+	for i := 0; i &lt; 1000; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+
+			mu.Lock()   // Acquire the lock
+			counter++   // Safe: Only one goroutine can execute this at a time
+			mu.Unlock() // Release the lock
+		}()
+	}
+
+	wg.Wait()
+	fmt.Println("Final counter value:", counter) // Will be 1000
+}
+</code></pre>
+<p>The <code>sync.Mutex</code> provides two methods:</p>
+<ul>
+<li><code>Lock()</code>: Acquires the lock, blocking if it's already held</li>
+<li><code>Unlock()</code>: Releases the lock</li>
+</ul>
+<p>Always ensure that every <code>Lock()</code> has a corresponding <code>Unlock()</code>, typically using <code>defer</code> for safety.</p>
+<h3 id="1144-readwrite-mutexes"><a class="header" href="#1144-readwrite-mutexes"><strong>11.4.4 Read/Write Mutexes</strong></a></h3>
+<p>When you have operations that only read shared data (without modifying it), you can use a <code>sync.RWMutex</code> for better performance:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	var rwMu sync.RWMutex
+	data := make(map[string]string)
+
+	// Writer goroutine
+	go func() {
+	for i := 0; i &lt; 5; i++ {
+			rwMu.Lock() // Exclusive lock for writing
+			data[fmt.Sprintf("key%d", i)] = fmt.Sprintf("value%d", i)
+			fmt.Println("Written:", i)
+			rwMu.Unlock()
+			time.Sleep(100 * time.Millisecond)
+		}
+	}()
+
+	// Reader goroutines
+	var wg sync.WaitGroup
+	for j := 0; j &lt; 3; j++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			for i := 0; i &lt; 10; i++ {
+				rwMu.RLock() // Shared lock for reading
+				fmt.Printf("Reader %d: data has %d entries\n", id, len(data))
+				rwMu.RUnlock()
+				time.Sleep(50 * time.Millisecond)
+			}
+		}(j)
+	}
+
+	wg.Wait()
+}
+</code></pre>
+<p>The <code>sync.RWMutex</code> provides:</p>
+<ul>
+<li><code>RLock()</code> / <code>RUnlock()</code>: Acquire/release a shared (read) lock</li>
+<li><code>Lock()</code> / <code>Unlock()</code>: Acquire/release an exclusive (write) lock</li>
+</ul>
+<p>Multiple readers can hold the lock simultaneously, but writers have exclusive access.</p>
+<h3 id="1145-atomic-operations"><a class="header" href="#1145-atomic-operations"><strong>11.4.5 Atomic Operations</strong></a></h3>
+<p>For simple counter operations, the <code>sync/atomic</code> package provides atomic operations that are often more efficient than using a mutex:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+	"sync/atomic"
+)
+
+func main() {
+	var counter int64 = 0
+	var wg sync.WaitGroup
+
+	// Launch 1000 goroutines that each increment the counter
+	for i := 0; i &lt; 1000; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			atomic.AddInt64(&amp;counter, 1) // Atomic increment
+		}()
+	}
+
+	wg.Wait()
+	fmt.Println("Final counter value:", counter) // Will be 1000
+}
+</code></pre>
+<p>The <code>sync/atomic</code> package includes functions for:</p>
+<ul>
+<li>Atomic addition/subtraction: <code>AddInt64</code>, <code>AddUint64</code>, etc.</li>
+<li>Load/store operations: <code>LoadInt64</code>, <code>StoreInt64</code>, etc.</li>
+<li>Compare-and-swap: <code>CompareAndSwapInt64</code>, etc.</li>
+<li>Swap operations: <code>SwapInt64</code>, etc.</li>
+</ul>
+<h3 id="1146-choosing-the-right-approach"><a class="header" href="#1146-choosing-the-right-approach"><strong>11.4.6 Choosing the Right Approach</strong></a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Approach</th><th>When to Use</th></tr></thead><tbody>
+<tr><td>Channels</td><td>For communicating between goroutines and for synchronization</td></tr>
+<tr><td>Mutex</td><td>For protecting shared resources with complex access patterns</td></tr>
+<tr><td>RWMutex</td><td>When reads are much more frequent than writes</td></tr>
+<tr><td>Atomic</td><td>For simple counter operations and simple shared state</td></tr>
+</tbody></table>
+</div>
+<p>Remember Go's concurrency philosophy: "Do not communicate by sharing memory; instead, share memory by communicating." When possible, prefer channels over shared memory and locks.</p>
+<h2 id="115-concurrency-patterns"><a class="header" href="#115-concurrency-patterns"><strong>11.5 Concurrency Patterns</strong></a></h2>
+<p>Go's concurrency primitives enable several powerful patterns that help solve common programming problems in an elegant and efficient way.</p>
+<h3 id="1151-worker-pools"><a class="header" href="#1151-worker-pools"><strong>11.5.1 Worker Pools</strong></a></h3>
+<p>A worker pool is a collection of goroutines that process tasks from a shared queue or channel. This pattern is useful for limiting the number of concurrent operations and managing resource usage:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+// Task represents a unit of work
+type Task struct {
+	ID  int
+	Job func() error
+}
+
+func main() {
+	// Create a task channel with buffer size 100
+	taskQueue := make(chan Task, 100)
+
+	// Create a WaitGroup to wait for all workers to finish
+	var wg sync.WaitGroup
+
+	// Number of workers to create
+	numWorkers := 3
+
+	// Launch worker goroutines
+	for i := 1; i &lt;= numWorkers; i++ {
+		wg.Add(1)
+		go func(workerID int) {
+			defer wg.Done()
+
+			// Process tasks until channel is closed
+			for task := range taskQueue {
+				fmt.Printf("Worker %d processing task %d\n", workerID, task.ID)
+				err := task.Job()
+				if err != nil {
+					fmt.Printf("Worker %d encountered error: %v\n", workerID, err)
+				}
+			}
+
+			fmt.Printf("Worker %d exiting\n", workerID)
+		}(i)
+	}
+
+	// Submit tasks to the worker pool
+	for i := 1; i &lt;= 10; i++ {
+		taskQueue &lt;- Task{
+			ID: i,
+			Job: func() error {
+				// Simulate work
+				time.Sleep(200 * time.Millisecond)
+				return nil
+			},
+		}
+	}
+
+	// Close the task channel to signal no more tasks
+	close(taskQueue)
+
+	// Wait for all workers to finish
+	wg.Wait()
+	fmt.Println("All workers have completed their tasks")
+}
+</code></pre>
+<p>The worker pool pattern provides:</p>
+<ul>
+<li>Controlled parallelism (limit on number of concurrent operations)</li>
+<li>Efficient resource utilization</li>
+<li>Simple task distribution among workers</li>
+</ul>
+<h3 id="1152-pipeline-pattern"><a class="header" href="#1152-pipeline-pattern"><strong>11.5.2 Pipeline Pattern</strong></a></h3>
+<p>Pipelines allow you to process data in stages, with each stage being a separate goroutine. This pattern is useful for data processing flows where the output of one stage becomes the input of the next:</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	// Define the pipeline stages
+	inputNumbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	// Stage 1: Generate numbers
+	generator := func(numbers []int) &lt;-chan int {
+		out := make(chan int)
+		go func() {
+			defer close(out)
+			for _, n := range numbers {
+				out &lt;- n
+			}
+		}()
+		return out
+	}
+
+	// Stage 2: Square the numbers
+	squarer := func(in &lt;-chan int) &lt;-chan int {
+		out := make(chan int)
+		go func() {
+			defer close(out)
+			for n := range in {
+				out &lt;- n * n
+			}
+		}()
+		return out
+	}
+
+	// Stage 3: Filter even numbers
+	filter := func(in &lt;-chan int) &lt;-chan int {
+		out := make(chan int)
+		go func() {
+			defer close(out)
+			for n := range in {
+				if n%2 == 0 {
+					out &lt;- n
+				}
+			}
+		}()
+		return out
+	}
+
+	// Connect the pipeline
+	numbersChan := generator(inputNumbers)
+	squaredChan := squarer(numbersChan)
+	filteredChan := filter(squaredChan)
+
+	// Consume the final results
+	fmt.Println("Even squares:")
+	for n := range filteredChan {
+		fmt.Println(n)
+	}
+}
+</code></pre>
+<p>The pipeline pattern provides:</p>
+<ul>
+<li>Clean separation of concerns</li>
+<li>Natural flow of data through the system</li>
+<li>Easy composition of operations</li>
+</ul>
+<h3 id="1153-fan-out-fan-in-pattern"><a class="header" href="#1153-fan-out-fan-in-pattern"><strong>11.5.3 Fan-Out, Fan-In Pattern</strong></a></h3>
+<p>The fan-out, fan-in pattern allows multiple goroutines to process data from a single source (fan-out), and then combine the results (fan-in):</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	// Source channel
+	source := make(chan int)
+
+	// Start source goroutine
+	go func() {
+		defer close(source)
+		for i := 1; i &lt;= 10; i++ {
+			source &lt;- i
+		}
+	}()
+
+	// Fan-out to multiple workers
+	numWorkers := 3
+	channels := make([]&lt;-chan int, numWorkers)
+
+	for i := 0; i &lt; numWorkers; i++ {
+		channels[i] = worker(i+1, source)
+	}
+
+	// Fan-in the results from all workers
+	results := fanIn(channels...)
+
+	// Print the merged results
+	for result := range results {
+		fmt.Println("Result:", result)
+	}
+}
+
+// worker processes items from the input channel
+func worker(id int, input &lt;-chan int) &lt;-chan int {
+	output := make(chan int)
+
+	go func() {
+		defer close(output)
+		for value := range input {
+			// Simulate different processing times
+			time.Sleep(time.Duration(id*100) * time.Millisecond)
+
+			// Process the value (just multiply by 10 in this example)
+			result := value * 10
+			fmt.Printf("Worker %d processed %d -&gt; %d\n", id, value, result)
+
+			output &lt;- result
+		}
+	}()
+
+	return output
+}
+
+// fanIn merges multiple channels into a single channel
+func fanIn(channels ...&lt;-chan int) &lt;-chan int {
+	var wg sync.WaitGroup
+	merged := make(chan int)
+
+	// Start an output goroutine for each input channel
+	output := func(ch &lt;-chan int) {
+		defer wg.Done()
+		for value := range ch {
+			merged &lt;- value
+		}
+	}
+
+	wg.Add(len(channels))
+	for _, ch := range channels {
+		go output(ch)
+	}
+
+	// Start a goroutine to close the merged channel when all input channels are done
+	go func() {
+		wg.Wait()
+		close(merged)
+	}()
+
+	return merged
+}
+</code></pre>
+<p>The fan-out, fan-in pattern is useful for:</p>
+<ul>
+<li>Parallelizing CPU-intensive work</li>
+<li>Processing items that can be handled independently</li>
+<li>Maximizing throughput by utilizing multiple cores</li>
+</ul>
+<h2 id="116-goroutines-best-practices"><a class="header" href="#116-goroutines-best-practices"><strong>11.6 Goroutines Best Practices</strong></a></h2>
+<p>Effective concurrency requires careful design and consideration. Here are important best practices for working with goroutines and concurrency in Go:</p>
+<h3 id="1161-design-guidelines"><a class="header" href="#1161-design-guidelines"><strong>11.6.1 Design Guidelines</strong></a></h3>
+<ol>
+<li>
+<p><strong>Start with Sequential Code</strong></p>
+<ul>
+<li>Begin with a working sequential implementation</li>
+<li>Add concurrency only when the benefits are clear</li>
+<li>Use profiling to identify bottlenecks before applying concurrency</li>
+</ul>
+</li>
+<li>
+<p><strong>Prefer Channels Over Shared Memory</strong></p>
+<ul>
+<li>Follow Go's philosophy: "Don't communicate by sharing memory; share memory by communicating"</li>
+<li>Use channels to pass data ownership between goroutines</li>
+<li>Minimize the use of locks and shared state</li>
+</ul>
+</li>
+<li>
+<p><strong>Establish Clear Ownership</strong></p>
+<ul>
+<li>Each piece of data should have a clear owner (typically one goroutine)</li>
+<li>Transfer ownership using channels</li>
+<li>When ownership must be shared, use proper synchronization</li>
+</ul>
+</li>
+</ol>
+<h3 id="1162-resource-management"><a class="header" href="#1162-resource-management"><strong>11.6.2 Resource Management</strong></a></h3>
+<ol>
+<li>
+<p><strong>Control Goroutine Creation</strong></p>
+<ul>
+<li>Avoid creating an unbounded number of goroutines</li>
+<li>Use worker pools to limit concurrent operations</li>
+<li>Consider the resource implications (memory, scheduling overhead)</li>
+</ul>
+</li>
+<li>
+<p><strong>Always Clean Up Goroutines</strong></p>
+<ul>
+<li>Ensure goroutines terminate properly</li>
+<li>Use context for cancellation</li>
+<li>Avoid goroutine leaks by providing exit mechanisms</li>
+</ul>
+</li>
+<li>
+<p><strong>Monitor Goroutine Count</strong></p>
+<ul>
+<li>Use <code>runtime.NumGoroutine()</code> to track active goroutines</li>
+<li>Consider instrumenting your application with metrics about goroutine counts</li>
+<li>Watch for unexpected growth in goroutine count</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"runtime"
+	"time"
+)
+
+func monitorGoroutines() {
+	for {
+		fmt.Printf("Active goroutines: %d\n", runtime.NumGoroutine())
+		time.Sleep(1 * time.Second)
+	}
+}
+
+func main() {
+	// Start a monitoring goroutine
+	go monitorGoroutines()
+
+	// Create 10 worker goroutines
+	for i := 0; i &lt; 10; i++ {
+		go func(id int) {
+			fmt.Printf("Worker %d starting\n", id)
+			time.Sleep(5 * time.Second)
+			fmt.Printf("Worker %d finished\n", id)
+		}(i)
+	}
+
+	// Wait long enough to see the goroutines finish
+	time.Sleep(10 * time.Second)
+}
+</code></pre>
+<h3 id="1163-error-handling"><a class="header" href="#1163-error-handling"><strong>11.6.3 Error Handling</strong></a></h3>
+<ol>
+<li>
+<p><strong>Don't Panic in Goroutines</strong></p>
+<ul>
+<li>Panics in a goroutine will only affect that goroutine</li>
+<li>Use error return values and check them</li>
+<li>If you must recover from panics, do it in each goroutine</li>
+</ul>
+</li>
+<li>
+<p><strong>Propagate Errors Through Channels</strong></p>
+<ul>
+<li>Create error types that include context</li>
+<li>Send errors through channels like any other value</li>
+<li>Consider using a dedicated error channel</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-go">package main
+
+import (
+	"errors"
+	"fmt"
+	"time"
+)
+
+type Result struct {
+	Value int
+	Err   error
+}
+
+func worker(id int) &lt;-chan Result {
+	results := make(chan Result)
+
+	go func() {
+		defer close(results)
+
+		// Simulate work
+		time.Sleep(time.Duration(id*100) * time.Millisecond)
+
+		// Simulate error for certain IDs
+		if id%3 == 0 {
+			results &lt;- Result{
+				Err: errors.New(fmt.Sprintf("worker %d failed", id)),
+			}
+			return
+		}
+
+		// Send successful result
+		results &lt;- Result{
+			Value: id * 10,
+			Err:   nil,
+		}
+	}()
+
+	return results
+}
+
+func main() {
+	// Launch several workers
+	numWorkers := 5
+	resultChannels := make([]&lt;-chan Result, numWorkers)
+
+	for i := 0; i &lt; numWorkers; i++ {
+		resultChannels[i] = worker(i)
+	}
+
+	// Process results
+	for i, ch := range resultChannels {
+		result := &lt;-ch
+		if result.Err != nil {
+			fmt.Printf("Worker %d returned error: %v\n", i, result.Err)
+		} else {
+			fmt.Printf("Worker %d returned value: %d\n", i, result.Value)
+		}
+	}
+}
+</code></pre>
+<h3 id="1164-testing-and-debugging"><a class="header" href="#1164-testing-and-debugging"><strong>11.6.4 Testing and Debugging</strong></a></h3>
+<ol>
+<li>
+<p><strong>Use the Race Detector</strong></p>
+<ul>
+<li>Run tests with the <code>-race</code> flag</li>
+<li>Run your application in development with race detection</li>
+<li>Fix all race conditions before deployment</li>
+</ul>
+</li>
+<li>
+<p><strong>Make Concurrency Deterministic for Testing</strong></p>
+<ul>
+<li>Use synchronization primitives to make tests deterministic</li>
+<li>Consider limiting parallelism during tests</li>
+<li>Write tests that explicitly check concurrency behavior</li>
+</ul>
+</li>
+<li>
+<p><strong>Structure for Testability</strong></p>
+<ul>
+<li>Separate concurrency mechanisms from core logic</li>
+<li>Use dependency injection to mock channels in tests</li>
+<li>Design for unit testing of concurrent components</li>
+</ul>
+</li>
+</ol>
+<h3 id="1165-performance-considerations"><a class="header" href="#1165-performance-considerations"><strong>11.6.5 Performance Considerations</strong></a></h3>
+<ol>
+<li>
+<p><strong>Balance Parallelism</strong></p>
+<ul>
+<li>More goroutines doesn't always mean better performance</li>
+<li>Consider using <code>runtime.GOMAXPROCS()</code> to control parallelism</li>
+<li>Profile before and after adding concurrency</li>
+</ul>
+</li>
+<li>
+<p><strong>Minimize Context Switching</strong></p>
+<ul>
+<li>Group related work together in the same goroutine</li>
+<li>Batch communications to reduce channel operations</li>
+<li>Be aware of the overhead of creating goroutines</li>
+</ul>
+</li>
+<li>
+<p><strong>Use Buffered Channels Appropriately</strong></p>
+<ul>
+<li>Unbuffered channels provide strong synchronization guarantees</li>
+<li>Buffered channels can improve throughput in bursty workloads</li>
+<li>Size buffers based on expected burst size, not arbitrary numbers</li>
+</ul>
+</li>
+</ol>
+<h2 id="117-exercises"><a class="header" href="#117-exercises"><strong>11.7 Exercises</strong></a></h2>
+<h3 id="exercise-1-basic-goroutines"><a class="header" href="#exercise-1-basic-goroutines"><strong>Exercise 1: Basic Goroutines</strong></a></h3>
+<p>Create a program that starts multiple goroutines, each printing different messages. Ensure proper synchronization so all messages are printed before the program exits.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func printMessage(msg string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	fmt.Println(msg)
+}
+
+func main() {
+	var wg sync.WaitGroup
+
+	messages := []string{
+		"Hello from goroutine 1",
+		"Hello from goroutine 2",
+		"Hello from goroutine 3",
+		"Hello from goroutine 4",
+		"Hello from goroutine 5",
+	}
+
+	wg.Add(len(messages))
+	for _, msg := range messages {
+		go printMessage(msg, &amp;wg)
+	}
+
+	wg.Wait()
+	fmt.Println("All goroutines have completed")
+}
+</code></pre>
+<h3 id="exercise-2-producer-consumer-pattern"><a class="header" href="#exercise-2-producer-consumer-pattern"><strong>Exercise 2: Producer-Consumer Pattern</strong></a></h3>
+<p>Implement a producer-consumer pattern using goroutines and channels. The producer should generate numbers, and the consumer should process them.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"math/rand"
+	"sync"
+	"time"
+)
+
+func producer(ch chan&lt;- int, count int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	defer close(ch)
+
+	for i := 0; i &lt; count; i++ {
+		num := rand.Intn(100)
+		fmt.Printf("Producing: %d\n", num)
+		ch &lt;- num
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
+func consumer(id int, ch &lt;-chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	for num := range ch {
+		fmt.Printf("Consumer %d processing: %d\n", id, num)
+		time.Sleep(150 * time.Millisecond)
+	}
+}
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+
+	dataChannel := make(chan int)
+	var wg sync.WaitGroup
+
+	// Start the producer
+	wg.Add(1)
+	go producer(dataChannel, 10, &amp;wg)
+
+	// Start multiple consumers
+	numConsumers := 3
+	for i := 1; i &lt;= numConsumers; i++ {
+		wg.Add(1)
+		go consumer(i, dataChannel, &amp;wg)
+	}
+
+	// Wait for all goroutines to finish
+	wg.Wait()
+	fmt.Println("All work completed")
+}
+</code></pre>
+<h3 id="exercise-3-concurrent-file-processing"><a class="header" href="#exercise-3-concurrent-file-processing"><strong>Exercise 3: Concurrent File Processing</strong></a></h3>
+<p>Write a program that concurrently processes multiple files. Each file should be processed in a separate goroutine, and the results should be aggregated.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"math/rand"
+	"sync"
+	"time"
+)
+
+// Simulated file processing function
+func processFile(filename string) (int, error) {
+	// Simulate processing time
+	processingTime := time.Duration(rand.Intn(500)) * time.Millisecond
+	time.Sleep(processingTime)
+
+	// Simulate file word count (random for this exercise)
+	wordCount := rand.Intn(1000)
+
+	fmt.Printf("Processed %s in %v: %d words\n", filename, processingTime, wordCount)
+	return wordCount, nil
+}
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+
+	// Simulated list of files
+	files := []string{
+		"file1.txt",
+		"file2.txt",
+		"file3.txt",
+		"file4.txt",
+		"file5.txt",
+	}
+
+	// Channel for results
+	type Result struct {
+		Filename string
+		WordCount int
+		Error error
+	}
+
+	resultChan := make(chan Result, len(files))
+
+	// Process each file in a separate goroutine
+	for _, file := range files {
+		go func(filename string) {
+			wordCount, err := processFile(filename)
+			resultChan &lt;- Result{
+				Filename: filename,
+				WordCount: wordCount,
+				Error: err,
+			}
+		}(file)
+	}
+
+	// Collect and aggregate results
+	totalWords := 0
+	for i := 0; i &lt; len(files); i++ {
+		result := &lt;-resultChan
+		if result.Error != nil {
+			fmt.Printf("Error processing %s: %v\n", result.Filename, result.Error)
+			continue
+		}
+		totalWords += result.WordCount
+	}
+
+	fmt.Printf("Total words across all files: %d\n", totalWords)
+}
+</code></pre>
+<h3 id="exercise-4-implementing-a-rate-limiter"><a class="header" href="#exercise-4-implementing-a-rate-limiter"><strong>Exercise 4: Implementing a Rate Limiter</strong></a></h3>
+<p>Implement a rate limiter using goroutines and channels that limits the number of concurrent operations to a specified rate.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+// RateLimiter controls the rate of operations
+type RateLimiter struct {
+	interval time.Duration
+	tokens   chan struct{}
+}
+
+// NewRateLimiter creates a new rate limiter
+func NewRateLimiter(rate int, interval time.Duration) *RateLimiter {
+	rl := &amp;RateLimiter{
+		interval: interval,
+		tokens:   make(chan struct{}, rate),
+	}
+
+	// Fill the token bucket
+	for i := 0; i &lt; rate; i++ {
+		rl.tokens &lt;- struct{}{}
+	}
+
+	// Refill tokens at the specified rate
+		go func() {
+		ticker := time.NewTicker(interval)
+		defer ticker.Stop()
+
+		for range ticker.C {
+			select {
+			case rl.tokens &lt;- struct{}{}:
+				// Token added
+			default:
+				// Bucket is full
+			}
+		}
+	}()
+
+	return rl
+}
+
+// Wait blocks until a token is available
+func (rl *RateLimiter) Wait() {
+	&lt;-rl.tokens
+}
+
+func main() {
+	// Create a rate limiter: 3 operations per second
+	limiter := NewRateLimiter(3, 1*time.Second)
+
+	var wg sync.WaitGroup
+
+	// Simulate 10 requests
+	for i := 1; i &lt;= 10; i++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+
+			// Wait for rate limiter
+			fmt.Printf("Request %d waiting for rate limiter at %s\n",
+					   id, time.Now().Format("15:04:05.000"))
+			limiter.Wait()
+
+			// Perform the operation
+			fmt.Printf("Request %d started at %s\n",
+					   id, time.Now().Format("15:04:05.000"))
+			time.Sleep(200 * time.Millisecond) // Simulate work
+			fmt.Printf("Request %d completed\n", id)
+		}(i)
+	}
+
+	wg.Wait()
+	fmt.Println("All requests completed")
+}
+</code></pre>
+<h3 id="exercise-5-implementing-a-timeout-pattern"><a class="header" href="#exercise-5-implementing-a-timeout-pattern"><strong>Exercise 5: Implementing a Timeout Pattern</strong></a></h3>
+<p>Create a function that performs a task but ensures it completes within a specified timeout period.</p>
+<pre><code class="language-go">package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+// performTask simulates a task that might take too long
+func performTask(timeout time.Duration) (string, error) {
+	// Create a channel for the result
+	resultCh := make(chan string)
+
+	// Start the task in a goroutine
+	go func() {
+		// Simulate work that takes a random amount of time
+		workTime := time.Duration(rand.Intn(2000)) * time.Millisecond
+		time.Sleep(workTime)
+
+		// Send the result
+		resultCh &lt;- fmt.Sprintf("Task completed in %v", workTime)
+	}()
+
+	// Wait for either the result or a timeout
+	select {
+	case result := &lt;-resultCh:
+		return result, nil
+	case &lt;-time.After(timeout):
+		return "", fmt.Errorf("task timed out after %v", timeout)
+	}
+}
+
+func main() {
+	rand.Seed(time.Now().UnixNano())
+
+	// Try the task with a 1-second timeout multiple times
+	for i := 1; i &lt;= 5; i++ {
+		fmt.Printf("Attempt %d: ", i)
+
+		result, err := performTask(1 * time.Second)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(result)
+		}
+	}
+}
+</code></pre>
+<h2 id="118-summary"><a class="header" href="#118-summary"><strong>11.8 Summary</strong></a></h2>
+<p>In this chapter, we've explored Go's powerful concurrency model:</p>
+<ul>
+<li>
+<p><strong>Goroutines</strong> provide lightweight concurrent execution, allowing thousands of tasks to run concurrently.</p>
+</li>
+<li>
+<p><strong>Synchronization</strong> with WaitGroups enables coordination between goroutines, ensuring all tasks complete before proceeding.</p>
+</li>
+<li>
+<p><strong>Channels</strong> facilitate safe communication between goroutines, implementing Go's philosophy of "share memory by communicating."</p>
+</li>
+<li>
+<p><strong>Race conditions</strong> can be avoided using mutexes, atomic operations, and properly designed concurrency patterns.</p>
+</li>
+<li>
+<p><strong>Concurrency patterns</strong> like worker pools, pipelines, and fan-out/fan-in provide templates for solving common concurrent programming problems.</p>
+</li>
+<li>
+<p><strong>Best practices</strong> help create reliable, efficient, and maintainable concurrent code.</p>
+</li>
+</ul>
+<p>Go's approach to concurrency makes it easy to write programs that efficiently utilize modern multi-core processors. By combining goroutines and channels with a clear understanding of concurrency patterns and best practices, you can build applications that are both concurrent and maintainable.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapters/Chapter-10-Structs.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapters/Chapter-12-Channels.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapters/Chapter-10-Structs.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapters/Chapter-12-Channels.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
